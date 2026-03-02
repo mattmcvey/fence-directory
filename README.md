@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FenceFind 🏗️
+
+Find trusted fence contractors near you. Compare ratings, read reviews, and get free estimates from licensed professionals.
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router, TypeScript)
+- **Styling:** Tailwind CSS
+- **Database:** Supabase (PostgreSQL + PostGIS)
+- **Hosting:** Vercel
+- **Data:** Google Places API scraper
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Opens at http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Supabase
 
-## Learn More
+1. Create a project at [supabase.com](https://supabase.com)
+2. Run `scripts/supabase-schema.sql` in the SQL Editor
+3. Copy your keys to `.env.local` (see `.env.example`)
 
-To learn more about Next.js, take a look at the following resources:
+### 2. Seed Data (Google Places)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+GOOGLE_PLACES_API_KEY=your_key npx tsx scripts/scrape-google-places.ts
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This scrapes fence contractors across 100+ US cities. Costs ~$5-15 in API credits (covered by Google's $200/mo free tier).
 
-## Deploy on Vercel
+### 3. Import to Supabase
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npx tsx scripts/import-to-supabase.ts
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. Deploy
+
+```bash
+npx vercel
+```
+
+## Pages
+
+| Route | Description |
+|-------|-------------|
+| `/` | Homepage with search, featured contractors, browse by state/city |
+| `/search?q=...` | Search results |
+| `/contractor/[slug]` | Contractor profile with Schema.org structured data |
+| `/state/[slug]` | State landing page (SEO) |
+| `/city/[slug]` | City landing page (SEO) |
+| `/states` | Browse all 50 states |
+| `/claim` | Business listing claim form |
+
+## Monetization
+
+- **Free listings:** Basic profile for all contractors
+- **Premium ($99/mo):** Featured placement, verified badge, lead notifications, analytics
+- **Lead gen:** Charge per quote request ($10-50/lead)
+
+## SEO Strategy
+
+- Pre-rendered state/city pages targeting "[city] fence contractor" searches
+- Schema.org LocalBusiness structured data on every contractor page
+- Auto-generated sitemap.xml
+- Content sections with fence cost guides and buying advice
