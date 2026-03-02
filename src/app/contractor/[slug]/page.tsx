@@ -1,9 +1,11 @@
-import { SEED_CONTRACTORS } from '@/lib/seed-data';
+import { getContractorBySlug, getAllContractorSlugs } from '@/lib/data';
 import { formatPhone, MATERIAL_LABELS, SERVICE_LABELS } from '@/lib/utils';
 import { Star, Shield, CheckCircle, Phone, Globe, MapPin, Clock, Award, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+
+export const revalidate = 3600;
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -11,7 +13,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const contractor = SEED_CONTRACTORS.find((c) => c.slug === slug);
+  const contractor = await getContractorBySlug(slug);
   if (!contractor) return { title: 'Contractor Not Found — FenceFind' };
   return {
     title: `${contractor.name} — Fence Contractor in ${contractor.city}, ${contractor.state} | FenceFind`,
@@ -20,12 +22,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-  return SEED_CONTRACTORS.map((c) => ({ slug: c.slug }));
+  const slugs = await getAllContractorSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export default async function ContractorPage({ params }: PageProps) {
   const { slug } = await params;
-  const contractor = SEED_CONTRACTORS.find((c) => c.slug === slug);
+  const contractor = await getContractorBySlug(slug);
   if (!contractor) notFound();
 
   return (

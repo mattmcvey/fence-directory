@@ -1,11 +1,15 @@
 import SearchBar from '@/components/SearchBar';
 import ContractorCard from '@/components/ContractorCard';
-import { SEED_CONTRACTORS, SEED_CITIES, MAJOR_STATES } from '@/lib/seed-data';
+import { getFeaturedContractors, getCities, getStates } from '@/lib/data';
 import { Shield, Star, DollarSign, Users, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
-export default function HomePage() {
-  const featuredContractors = SEED_CONTRACTORS.filter((c) => c.featured);
+export const revalidate = 3600; // Revalidate every hour
+
+export default async function HomePage() {
+  const featuredContractors = await getFeaturedContractors();
+  const cities = await getCities();
+  const states = getStates();
 
   return (
     <div>
@@ -70,7 +74,7 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Browse by State</h2>
           <p className="text-gray-600 mb-8">Find fence contractors in your state</p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {MAJOR_STATES.map((state) => (
+            {states.map((state) => (
               <Link
                 key={state.code}
                 href={`/state/${state.slug}`}
@@ -94,7 +98,7 @@ export default function HomePage() {
         <h2 className="text-3xl font-bold text-gray-900 mb-2">Popular Cities</h2>
         <p className="text-gray-600 mb-8">Most searched locations for fence contractors</p>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {SEED_CITIES.map((city) => (
+          {cities.map((city) => (
             <Link
               key={city.slug}
               href={`/city/${city.slug}`}
