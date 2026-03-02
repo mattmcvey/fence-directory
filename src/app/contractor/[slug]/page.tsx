@@ -1,0 +1,192 @@
+import { SEED_CONTRACTORS } from '@/lib/seed-data';
+import { formatPhone, MATERIAL_LABELS, SERVICE_LABELS } from '@/lib/utils';
+import { Star, Shield, CheckCircle, Phone, Globe, MapPin, Clock, Award, ChevronLeft } from 'lucide-react';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const contractor = SEED_CONTRACTORS.find((c) => c.slug === slug);
+  if (!contractor) return { title: 'Contractor Not Found — FenceFind' };
+  return {
+    title: `${contractor.name} — Fence Contractor in ${contractor.city}, ${contractor.state} | FenceFind`,
+    description: `${contractor.name} is a ${contractor.rating}-star rated fence contractor in ${contractor.city}, ${contractor.state}. ${contractor.description.slice(0, 120)}...`,
+  };
+}
+
+export async function generateStaticParams() {
+  return SEED_CONTRACTORS.map((c) => ({ slug: c.slug }));
+}
+
+export default async function ContractorPage({ params }: PageProps) {
+  const { slug } = await params;
+  const contractor = SEED_CONTRACTORS.find((c) => c.slug === slug);
+  if (!contractor) notFound();
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Link href="/search" className="inline-flex items-center gap-1 text-green-600 hover:text-green-700 mb-6 text-sm">
+        <ChevronLeft className="w-4 h-4" /> Back to search
+      </Link>
+
+      {contractor.featured && (
+        <div className="bg-green-50 border border-green-200 text-green-800 rounded-lg px-4 py-2 mb-6 inline-flex items-center gap-2 text-sm font-medium">
+          <Award className="w-4 h-4" /> Featured Contractor
+        </div>
+      )}
+
+      <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+        <div className="p-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{contractor.name}</h1>
+          <div className="flex flex-wrap items-center gap-4 text-gray-600 mb-6">
+            <div className="flex items-center gap-1">
+              <MapPin className="w-5 h-5 text-gray-400" />
+              {contractor.address}, {contractor.city}, {contractor.state} {contractor.zip}
+            </div>
+            <div className="flex items-center gap-1">
+              <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+              <span className="font-bold text-gray-900">{contractor.rating}</span>
+              <span className="text-gray-500">({contractor.reviewCount} reviews)</span>
+            </div>
+          </div>
+
+          <p className="text-gray-700 text-lg leading-relaxed mb-8">{contractor.description}</p>
+
+          {/* Contact buttons */}
+          <div className="flex flex-wrap gap-4 mb-8">
+            <a
+              href={`tel:${contractor.phone}`}
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
+            >
+              <Phone className="w-5 h-5" />
+              Call {formatPhone(contractor.phone)}
+            </a>
+            {contractor.website && (
+              <a
+                href={contractor.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-gray-300 hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
+              >
+                <Globe className="w-5 h-5" />
+                Visit Website
+              </a>
+            )}
+          </div>
+
+          {/* Details grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Services Offered</h2>
+              <div className="flex flex-wrap gap-2">
+                {contractor.services.map((s) => (
+                  <span key={s} className="bg-green-50 text-green-700 px-3 py-1.5 rounded-full text-sm font-medium">
+                    {SERVICE_LABELS[s] || s}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Fence Materials</h2>
+              <div className="flex flex-wrap gap-2">
+                {contractor.materials.map((m) => (
+                  <span key={m} className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-sm font-medium">
+                    {MATERIAL_LABELS[m] || m}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Trust badges */}
+          <div className="mt-8 pt-8 border-t border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Business Details</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {contractor.licensed && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Shield className="w-5 h-5 text-blue-500" />
+                  <span>Licensed</span>
+                </div>
+              )}
+              {contractor.insured && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Shield className="w-5 h-5 text-blue-500" />
+                  <span>Insured</span>
+                </div>
+              )}
+              {contractor.freeEstimates && (
+                <div className="flex items-center gap-2 text-sm">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span>Free Estimates</span>
+                </div>
+              )}
+              {contractor.yearsInBusiness && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Clock className="w-5 h-5 text-gray-400" />
+                  <span>{contractor.yearsInBusiness}+ Years</span>
+                </div>
+              )}
+              {contractor.verified && (
+                <div className="flex items-center gap-2 text-sm">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span>Verified</span>
+                </div>
+              )}
+              <div className="flex items-center gap-2 text-sm">
+                <MapPin className="w-5 h-5 text-gray-400" />
+                <span>{contractor.serviceRadius} mi radius</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Schema.org structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'LocalBusiness',
+            name: contractor.name,
+            description: contractor.description,
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: contractor.address,
+              addressLocality: contractor.city,
+              addressRegion: contractor.state,
+              postalCode: contractor.zip,
+              addressCountry: 'US',
+            },
+            telephone: formatPhone(contractor.phone),
+            url: contractor.website,
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: contractor.rating,
+              reviewCount: contractor.reviewCount,
+            },
+            geo: {
+              '@type': 'GeoCoordinates',
+              latitude: contractor.lat,
+              longitude: contractor.lng,
+            },
+            areaServed: {
+              '@type': 'GeoCircle',
+              geoMidpoint: {
+                '@type': 'GeoCoordinates',
+                latitude: contractor.lat,
+                longitude: contractor.lng,
+              },
+              geoRadius: `${contractor.serviceRadius} mi`,
+            },
+          }),
+        }}
+      />
+    </div>
+  );
+}
