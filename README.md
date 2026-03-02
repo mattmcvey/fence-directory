@@ -71,3 +71,4 @@ npx vercel
 - Schema.org LocalBusiness structured data on every contractor page
 - Auto-generated sitemap.xml
 - Content sections with fence cost guides and buying advice
+
