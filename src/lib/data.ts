@@ -37,6 +37,7 @@ function rowToContractor(row: any): Contractor {
     photos: row.photos || [],
     featured: row.featured || false,
     verified: row.verified || false,
+    claimed: row.claimed || false,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

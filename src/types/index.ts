@@ -24,6 +24,7 @@ export interface Contractor {
   photos: string[];
   featured: boolean;
   verified: boolean;
+  claimed: boolean;
   createdAt: string;
   updatedAt: string;
 }

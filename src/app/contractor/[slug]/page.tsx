@@ -4,6 +4,7 @@ import { Star, Shield, CheckCircle, Phone, Globe, MapPin, Clock, Award, ChevronL
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import QuoteForm from '@/components/QuoteForm';
 
 export const revalidate = 3600;
 
@@ -32,7 +33,7 @@ export default async function ContractorPage({ params }: PageProps) {
   if (!contractor) notFound();
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Link href="/search" className="inline-flex items-center gap-1 text-green-600 hover:text-green-700 mb-6 text-sm">
         <ChevronLeft className="w-4 h-4" /> Back to search
       </Link>
@@ -43,6 +44,9 @@ export default async function ContractorPage({ params }: PageProps) {
         </div>
       )}
 
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main content */}
+        <div className="lg:col-span-2">
       <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
         <div className="p-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">{contractor.name}</h1>
@@ -81,6 +85,22 @@ export default async function ContractorPage({ params }: PageProps) {
               </a>
             )}
           </div>
+
+          {/* Claim & Quote CTAs */}
+          {!contractor.claimed && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8">
+              <p className="text-amber-800 text-sm mb-2">
+                <strong>Is this your business?</strong> Claim this listing to update your info, respond to reviews, and get featured.
+              </p>
+              <Link
+                href={`/claim?id=${contractor.id}&business=${encodeURIComponent(contractor.name)}&city=${encodeURIComponent(contractor.city)}&state=${encodeURIComponent(contractor.state)}`}
+                className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+              >
+                <Shield className="w-4 h-4" />
+                Claim This Listing
+              </Link>
+            </div>
+          )}
 
           {/* Details grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -145,6 +165,15 @@ export default async function ContractorPage({ params }: PageProps) {
                 <span>{contractor.serviceRadius} mi radius</span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+        </div>
+
+        {/* Sidebar */}
+        <div className="lg:col-span-1">
+          <div className="sticky top-8">
+            <QuoteForm contractorId={contractor.id} contractorName={contractor.name} />
           </div>
         </div>
       </div>

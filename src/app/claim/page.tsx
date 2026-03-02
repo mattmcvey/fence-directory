@@ -1,19 +1,27 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { CheckCircle, Star, TrendingUp, Users } from 'lucide-react';
+import { Suspense } from 'react';
 
-export default function ClaimPage() {
+function ClaimForm() {
+  const searchParams = useSearchParams();
+  const prefillName = searchParams.get('business') || '';
+  const prefillCity = searchParams.get('city') || '';
+  const prefillState = searchParams.get('state') || '';
+  const contractorId = searchParams.get('id') || '';
+
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
-    businessName: '',
+    businessName: prefillName,
     contactName: '',
     email: '',
     phone: '',
-    city: '',
-    state: '',
+    city: prefillCity,
+    state: prefillState,
     website: '',
     message: '',
   });
@@ -27,7 +35,7 @@ export default function ClaimPage() {
       const res = await fetch('/api/claims', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, contractorId: contractorId || undefined }),
       });
 
       const data = await res.json();
@@ -241,5 +249,13 @@ export default function ClaimPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ClaimPage() {
+  return (
+    <Suspense>
+      <ClaimForm />
+    </Suspense>
   );
 }
