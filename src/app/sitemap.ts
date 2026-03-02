@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { SEED_CONTRACTORS, SEED_CITIES, MAJOR_STATES } from '@/lib/seed-data';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://fencefind.com';
+  const baseUrl = 'https://getfencefind.com';
 
   const staticPages = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 1 },

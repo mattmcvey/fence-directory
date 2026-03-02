@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://fencefind.com/sitemap.xml',
+    sitemap: 'https://getfencefind.com/sitemap.xml',
   };
 }
