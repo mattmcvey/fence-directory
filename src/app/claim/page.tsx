@@ -5,6 +5,8 @@ import { CheckCircle, Star, TrendingUp, Users } from 'lucide-react';
 
 export default function ClaimPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     businessName: '',
     contactName: '',
@@ -16,11 +18,31 @@ export default function ClaimPage() {
     message: '',
   });
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // TODO: Submit to Supabase
-    console.log('Claim submitted:', formData);
-    setSubmitted(true);
+    setSubmitting(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/claims', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong. Please try again.');
+        return;
+      }
+
+      setSubmitted(true);
+    } catch {
+      setError('Unable to submit. Please check your connection and try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -199,11 +221,17 @@ export default function ClaimPage() {
                   placeholder="Services, materials, years in business..."
                 />
               </div>
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
               <button
                 type="submit"
-                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold text-lg transition-colors"
+                disabled={submitting}
+                className="w-full bg-green-600 hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed text-white py-3 rounded-lg font-semibold text-lg transition-colors"
               >
-                Submit Free Listing
+                {submitting ? 'Submitting...' : 'Submit Free Listing'}
               </button>
               <p className="text-xs text-gray-500 text-center">
                 By submitting, you agree to our terms of service. No credit card required.
