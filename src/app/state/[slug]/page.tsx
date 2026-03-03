@@ -1,4 +1,4 @@
-import { MAJOR_STATES, SEED_CONTRACTORS } from '@/lib/seed-data';
+import { getStates, getContractorsByState, getCitiesByState } from '@/lib/data';
 import ContractorCard from '@/components/ContractorCard';
 import SearchBar from '@/components/SearchBar';
 import Link from 'next/link';
@@ -6,13 +6,16 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { MapPin } from 'lucide-react';
 
+export const revalidate = 3600;
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const state = MAJOR_STATES.find((s) => s.slug === slug);
+  const states = getStates();
+  const state = states.find((s) => s.slug === slug);
   if (!state) return { title: 'State Not Found — FenceFind' };
   return {
     title: `Fence Contractors in ${state.name} — Top Rated | FenceFind`,
@@ -21,20 +24,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-  return MAJOR_STATES.map((s) => ({ slug: s.slug }));
+  const states = getStates();
+  return states.map((s) => ({ slug: s.slug }));
 }
 
 export default async function StatePage({ params }: PageProps) {
   const { slug } = await params;
-  const state = MAJOR_STATES.find((s) => s.slug === slug);
+  const states = getStates();
+  const state = states.find((s) => s.slug === slug);
   if (!state) notFound();
 
-  const contractors = SEED_CONTRACTORS.filter((c) => c.state === state.code);
-  contractors.sort((a, b) => {
-    if (a.featured && !b.featured) return -1;
-    if (!a.featured && b.featured) return 1;
-    return b.rating - a.rating;
-  });
+  const [contractors, cities] = await Promise.all([
+    getContractorsByState(state.code),
+    getCitiesByState(state.code),
+  ]);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -48,11 +51,11 @@ export default async function StatePage({ params }: PageProps) {
       </p>
 
       {/* Cities in this state */}
-      {state.cities.length > 0 && (
+      {cities.length > 0 && (
         <div className="mb-10">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Cities in {state.name}</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {state.cities.map((city) => (
+            {cities.map((city) => (
               <Link
                 key={city.slug}
                 href={`/city/${city.slug}`}

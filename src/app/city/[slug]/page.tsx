@@ -1,10 +1,12 @@
-import { SEED_CITIES, SEED_CONTRACTORS } from '@/lib/seed-data';
-import { getDistanceMiles, stateCodeToName } from '@/lib/utils';
+import { getCityBySlug, getContractorsByCity, getCities } from '@/lib/data';
+import { stateCodeToName } from '@/lib/utils';
 import ContractorCard from '@/components/ContractorCard';
 import SearchBar from '@/components/SearchBar';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+
+export const revalidate = 3600;
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -12,7 +14,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const city = SEED_CITIES.find((c) => c.slug === slug);
+  const city = await getCityBySlug(slug);
   if (!city) return { title: 'City Not Found — FenceFind' };
   return {
     title: `Fence Contractors in ${city.name}, ${city.stateCode} — Top Rated | FenceFind`,
@@ -21,26 +23,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-  return SEED_CITIES.map((c) => ({ slug: c.slug }));
+  const cities = await getCities();
+  return cities.map((c) => ({ slug: c.slug }));
 }
 
 export default async function CityPage({ params }: PageProps) {
   const { slug } = await params;
-  const city = SEED_CITIES.find((c) => c.slug === slug);
+  const city = await getCityBySlug(slug);
   if (!city) notFound();
 
-  // Find contractors near this city (within 50 miles)
-  const contractorsWithDistance = SEED_CONTRACTORS
-    .map((c) => ({
-      contractor: c,
-      distance: getDistanceMiles(city.lat, city.lng, c.lat, c.lng),
-    }))
-    .filter((c) => c.distance <= 50)
-    .sort((a, b) => {
-      if (a.contractor.featured && !b.contractor.featured) return -1;
-      if (!a.contractor.featured && b.contractor.featured) return 1;
-      return a.distance - b.distance;
-    });
+  const contractors = await getContractorsByCity(city.name, city.stateCode);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -53,13 +45,12 @@ export default async function CityPage({ params }: PageProps) {
         {city.contractorCount}+ fence installers serving the {city.name} area
       </p>
 
-      {contractorsWithDistance.length > 0 ? (
+      {contractors.length > 0 ? (
         <div className="space-y-6">
-          {contractorsWithDistance.map(({ contractor, distance }) => (
+          {contractors.map((contractor) => (
             <ContractorCard
               key={contractor.id}
               contractor={contractor}
-              distance={distance}
             />
           ))}
         </div>
@@ -89,7 +80,7 @@ export default async function CityPage({ params }: PageProps) {
           <p>
             Looking for a fence contractor in {city.name}, {stateCodeToName(city.stateCode)}? FenceFind connects
             homeowners with {city.contractorCount}+ licensed and insured fence professionals serving the
-            {city.name} metropolitan area.
+            {' '}{city.name} metropolitan area.
           </p>
           <p>
             Popular fence types in {city.name} include wood privacy fences, vinyl fencing, chain link, and
@@ -112,8 +103,8 @@ export default async function CityPage({ params }: PageProps) {
             '@type': 'ItemList',
             name: `Fence Contractors in ${city.name}, ${city.stateCode}`,
             description: `Top-rated fence contractors serving ${city.name}, ${stateCodeToName(city.stateCode)}`,
-            numberOfItems: contractorsWithDistance.length,
-            itemListElement: contractorsWithDistance.map(({ contractor }, i) => ({
+            numberOfItems: contractors.length,
+            itemListElement: contractors.map((contractor, i) => ({
               '@type': 'ListItem',
               position: i + 1,
               item: {
@@ -124,11 +115,11 @@ export default async function CityPage({ params }: PageProps) {
                   addressLocality: contractor.city,
                   addressRegion: contractor.state,
                 },
-                aggregateRating: {
+                aggregateRating: contractor.reviewCount > 0 ? {
                   '@type': 'AggregateRating',
                   ratingValue: contractor.rating,
                   reviewCount: contractor.reviewCount,
-                },
+                } : undefined,
               },
             })),
           }),
