@@ -1,33 +1,43 @@
 import { MetadataRoute } from 'next';
-import { SEED_CONTRACTORS, SEED_CITIES, MAJOR_STATES } from '@/lib/seed-data';
+import { getCities, getAllContractorSlugs, getStates } from '@/lib/data';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://getfencefind.com';
 
-  const staticPages = [
-    { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 1 },
-    { url: `${baseUrl}/states`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.8 },
-    { url: `${baseUrl}/claim`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
+  const [cities, contractorSlugs, states] = await Promise.all([
+    getCities(),
+    getAllContractorSlugs(),
+    Promise.resolve(getStates()),
+  ]);
+
+  const staticPages: MetadataRoute.Sitemap = [
+    { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily', priority: 1 },
+    { url: `${baseUrl}/states`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/claim`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/pricing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/guides/fence-cost`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/guides/choosing-material`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
   ];
 
-  const statePages = MAJOR_STATES.map((state) => ({
+  const statePages: MetadataRoute.Sitemap = states.map((state) => ({
     url: `${baseUrl}/state/${state.slug}`,
     lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
+    changeFrequency: 'weekly',
     priority: 0.8,
   }));
 
-  const cityPages = SEED_CITIES.map((city) => ({
+  const cityPages: MetadataRoute.Sitemap = cities.map((city) => ({
     url: `${baseUrl}/city/${city.slug}`,
     lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
+    changeFrequency: 'weekly',
     priority: 0.7,
   }));
 
-  const contractorPages = SEED_CONTRACTORS.map((c) => ({
-    url: `${baseUrl}/contractor/${c.slug}`,
+  const contractorPages: MetadataRoute.Sitemap = contractorSlugs.map((slug) => ({
+    url: `${baseUrl}/contractor/${slug}`,
     lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
+    changeFrequency: 'weekly',
     priority: 0.6,
   }));
 
