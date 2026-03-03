@@ -25,12 +25,14 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-semibold mb-4">Resources</h4>
+            <h4 className="text-white font-semibold mb-4">Guides</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/about" className="hover:text-green-400 transition-colors">About Us</Link></li>
-              <li><Link href="/claim" className="hover:text-green-400 transition-colors">List Your Business</Link></li>
+              <li><Link href="/guides" className="hover:text-green-400 transition-colors">All Guides</Link></li>
               <li><Link href="/guides/fence-cost" className="hover:text-green-400 transition-colors">Fence Cost Guide</Link></li>
-              <li><Link href="/guides/choosing-material" className="hover:text-green-400 transition-colors">Choosing Materials</Link></li>
+              <li><Link href="/guides/wood-vs-vinyl" className="hover:text-green-400 transition-colors">Wood vs Vinyl</Link></li>
+              <li><Link href="/guides/privacy-fence" className="hover:text-green-400 transition-colors">Privacy Fences</Link></li>
+              <li><Link href="/guides/getting-quotes" className="hover:text-green-400 transition-colors">Getting Quotes</Link></li>
+              <li><Link href="/guides/fence-permits" className="hover:text-green-400 transition-colors">Permit Guide</Link></li>
             </ul>
           </div>
           <div>
