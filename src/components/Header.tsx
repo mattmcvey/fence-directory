@@ -31,9 +31,15 @@ export default function Header() {
             </Link>
             <Link
               href="/claim"
+              className="text-gray-600 hover:text-green-600 transition-colors text-sm font-medium"
+            >
+              List Free
+            </Link>
+            <Link
+              href="/pro/signup"
               className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
             >
-              List Your Business
+              Go Pro →
             </Link>
           </nav>
 
@@ -76,9 +82,16 @@ export default function Header() {
             <Link
               href="/claim"
               onClick={() => setMobileMenuOpen(false)}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg text-center font-medium transition-colors mt-2"
+              className="text-gray-700 hover:bg-green-50 hover:text-green-600 px-4 py-3 rounded-lg transition-colors font-medium"
             >
-              List Your Business
+              List Free
+            </Link>
+            <Link
+              href="/pro/signup"
+              onClick={() => setMobileMenuOpen(false)}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg text-center font-medium transition-colors mt-1"
+            >
+              Go Pro — Free Trial →
             </Link>
           </nav>
         </div>

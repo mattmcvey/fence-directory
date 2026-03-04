@@ -96,10 +96,10 @@ export default function PricingPage() {
           </div>
           <p className="text-sm text-green-700 mb-6">One fence job pays for a full year</p>
           <Link
-            href="/claim?plan=pro"
+            href="/pro/signup"
             className="block w-full text-center bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition-colors mb-8"
           >
-            Start Pro — 14-Day Free Trial
+            Start Free Trial →
           </Link>
           <ul className="space-y-3">
             {proFeatures.map((f) => (

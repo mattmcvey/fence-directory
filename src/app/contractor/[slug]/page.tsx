@@ -1,6 +1,6 @@
 import { getContractorBySlug, getAllContractorSlugs } from '@/lib/data';
 import { formatPhone, MATERIAL_LABELS, SERVICE_LABELS } from '@/lib/utils';
-import { Star, Shield, CheckCircle, Phone, Globe, MapPin, Clock, Award, ChevronLeft } from 'lucide-react';
+import { Star, Shield, CheckCircle, Phone, Globe, MapPin, Clock, Award, ChevronLeft, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
@@ -115,17 +115,26 @@ export default async function ContractorPage({ params }: PageProps) {
 
           {/* Claim & Quote CTAs */}
           {!contractor.claimed && (
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8">
-              <p className="text-amber-800 text-sm mb-2">
-                <strong>Is this your business?</strong> Claim this listing to update your info, respond to reviews, and get featured.
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4 sm:p-6 mb-8">
+              <p className="font-bold text-gray-900 mb-1">Is this your business?</p>
+              <p className="text-gray-600 text-sm mb-4">
+                Get unlimited leads, featured placement, and a verified Pro badge. 14-day free trial.
               </p>
-              <Link
-                href={`/claim?id=${contractor.id}&business=${encodeURIComponent(contractor.name)}&city=${encodeURIComponent(contractor.city)}&state=${encodeURIComponent(contractor.state)}`}
-                className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-              >
-                <Shield className="w-4 h-4" />
-                Claim This Listing
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Link
+                  href={`/pro/signup?id=${contractor.id}&business=${encodeURIComponent(contractor.name)}&city=${encodeURIComponent(contractor.city)}&state=${encodeURIComponent(contractor.state)}`}
+                  className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors"
+                >
+                  <Zap className="w-4 h-4" />
+                  Start Pro — Free Trial
+                </Link>
+                <Link
+                  href={`/claim?id=${contractor.id}&business=${encodeURIComponent(contractor.name)}&city=${encodeURIComponent(contractor.city)}&state=${encodeURIComponent(contractor.state)}`}
+                  className="inline-flex items-center gap-2 border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                >
+                  Claim Free Listing
+                </Link>
+              </div>
             </div>
           )}
 
