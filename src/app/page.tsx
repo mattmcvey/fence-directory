@@ -3,8 +3,21 @@ import ContractorCard from '@/components/ContractorCard';
 import { getFeaturedContractors, getCities, getStates } from '@/lib/data';
 import { Shield, Star, DollarSign, Users, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { websiteSchema, ogMeta } from '@/lib/seo';
+import { Metadata } from 'next';
 
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  title: 'FenceFind — Find Trusted Fence Contractors Near You | Free Estimates',
+  description: 'Compare top-rated fence contractors in your area. Read verified reviews, compare pricing for wood, vinyl & chain link fences, and get free estimates from licensed installers across all 50 states.',
+  keywords: 'fence contractor, fence installer, fence company near me, fence installation, fence cost, fence repair, wood fence, vinyl fence, chain link fence, fence estimate',
+  ...ogMeta({
+    title: 'FenceFind — Find Trusted Fence Contractors Near You',
+    description: 'Compare top-rated fence contractors. Read reviews, compare pricing, and get free estimates from licensed installers.',
+    path: '/',
+  }),
+};
 
 export default async function HomePage() {
   const featuredContractors = await getFeaturedContractors();
@@ -13,6 +26,12 @@ export default async function HomePage() {
 
   return (
     <div>
+      {/* Website schema for sitelinks search box */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema()) }}
+      />
+
       {/* Hero */}
       <section className="bg-gradient-to-br from-green-700 via-green-600 to-green-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 md:py-28 text-center">

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import QuoteForm from '@/components/QuoteForm';
+import { localBusinessSchema, breadcrumbSchema, ogMeta } from '@/lib/seo';
 
 export const revalidate = 3600;
 
@@ -16,9 +17,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const contractor = await getContractorBySlug(slug);
   if (!contractor) return { title: 'Contractor Not Found — FenceFind' };
+  const title = `${contractor.name} — Fence Contractor in ${contractor.city}, ${contractor.state} | FenceFind`;
+  const description = `${contractor.name} is a ${contractor.rating}-star rated fence contractor in ${contractor.city}, ${contractor.state}. Licensed & insured. ${contractor.description.slice(0, 100)}. Get a free estimate today.`;
   return {
-    title: `${contractor.name} — Fence Contractor in ${contractor.city}, ${contractor.state} | FenceFind`,
-    description: `${contractor.name} is a ${contractor.rating}-star rated fence contractor in ${contractor.city}, ${contractor.state}. ${contractor.description.slice(0, 120)}...`,
+    title,
+    description,
+    ...ogMeta({ title, description, path: `/contractor/${slug}` }),
   };
 }
 
@@ -32,11 +36,34 @@ export default async function ContractorPage({ params }: PageProps) {
   const contractor = await getContractorBySlug(slug);
   if (!contractor) notFound();
 
+  const citySlug = `${contractor.city}-${contractor.state}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Link href="/search" className="inline-flex items-center gap-1 text-green-600 hover:text-green-700 mb-6 text-sm">
-        <ChevronLeft className="w-4 h-4" /> Back to search
-      </Link>
+      {/* Structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema(contractor)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: contractor.city, url: `/city/${citySlug}` },
+            { name: contractor.name, url: `/contractor/${contractor.slug}` },
+          ])),
+        }}
+      />
+
+      {/* Breadcrumbs */}
+      <nav className="text-sm text-gray-500 mb-4 flex flex-wrap gap-1">
+        <Link href="/" className="hover:text-green-600">Home</Link>
+        <span>/</span>
+        <Link href={`/city/${citySlug}`} className="hover:text-green-600">{contractor.city}, {contractor.state}</Link>
+        <span>/</span>
+        <span className="text-gray-900 truncate max-w-[200px]">{contractor.name}</span>
+      </nav>
 
       {contractor.featured && (
         <div className="bg-green-50 border border-green-200 text-green-800 rounded-lg px-4 py-2 mb-6 inline-flex items-center gap-2 text-sm font-medium">
@@ -178,47 +205,21 @@ export default async function ContractorPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Schema.org structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'LocalBusiness',
-            name: contractor.name,
-            description: contractor.description,
-            address: {
-              '@type': 'PostalAddress',
-              streetAddress: contractor.address,
-              addressLocality: contractor.city,
-              addressRegion: contractor.state,
-              postalCode: contractor.zip,
-              addressCountry: 'US',
-            },
-            telephone: formatPhone(contractor.phone),
-            url: contractor.website,
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              ratingValue: contractor.rating,
-              reviewCount: contractor.reviewCount,
-            },
-            geo: {
-              '@type': 'GeoCoordinates',
-              latitude: contractor.lat,
-              longitude: contractor.lng,
-            },
-            areaServed: {
-              '@type': 'GeoCircle',
-              geoMidpoint: {
-                '@type': 'GeoCoordinates',
-                latitude: contractor.lat,
-                longitude: contractor.lng,
-              },
-              geoRadius: `${contractor.serviceRadius} mi`,
-            },
-          }),
-        }}
-      />
+      {/* Related links for internal SEO */}
+      <div className="mt-8 bg-gray-50 rounded-xl p-6">
+        <h3 className="font-bold text-gray-900 mb-3">More in {contractor.city}</h3>
+        <div className="flex flex-wrap gap-3">
+          <Link href={`/city/${citySlug}`} className="text-green-600 hover:text-green-700 text-sm">
+            All {contractor.city} contractors →
+          </Link>
+          <Link href={`/fence-cost/${citySlug}`} className="text-green-600 hover:text-green-700 text-sm">
+            Fence cost in {contractor.city} →
+          </Link>
+          <Link href="/guides/getting-quotes" className="text-green-600 hover:text-green-700 text-sm">
+            How to get quotes →
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

@@ -9,9 +9,27 @@ import PageviewTracker from '@/components/PageviewTracker';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'FenceFind — Find Trusted Fence Contractors Near You',
+  metadataBase: new URL('https://getfencefind.com'),
+  title: {
+    default: 'FenceFind — Find Trusted Fence Contractors Near You',
+    template: '%s',
+  },
   description: 'Compare top-rated fence contractors in your area. Read reviews, get free estimates, and find licensed fence installers for wood, vinyl, chain link, and more.',
-  keywords: 'fence contractor, fence installer, fence company near me, fence installation, fence repair, wood fence, vinyl fence, chain link fence',
+  keywords: 'fence contractor, fence installer, fence company near me, fence installation, fence repair, wood fence, vinyl fence, chain link fence, fence cost',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    // Google Search Console verification (already done via DNS)
+  },
 };
 
 export default function RootLayout({
