@@ -23,10 +23,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const guides = [
     'fence-cost', 'choosing-material', 'wood-vs-vinyl', 'fence-permits',
     'privacy-fence', 'chain-link-fence', 'fence-repair', 'how-long-fence-installation',
-    'fence-roi', 'getting-quotes',
+    'fence-roi', 'getting-quotes', 'best-time-to-install',
   ];
   const guidePages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/guides`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/fence-cost-by-state`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     ...guides.map((guide) => ({
       url: `${baseUrl}/guides/${guide}`,
       lastModified: new Date(),

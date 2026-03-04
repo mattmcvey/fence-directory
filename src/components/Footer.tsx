@@ -33,6 +33,8 @@ export default function Footer() {
               <li><Link href="/guides/privacy-fence" className="hover:text-green-400 transition-colors">Privacy Fences</Link></li>
               <li><Link href="/guides/getting-quotes" className="hover:text-green-400 transition-colors">Getting Quotes</Link></li>
               <li><Link href="/guides/fence-permits" className="hover:text-green-400 transition-colors">Permit Guide</Link></li>
+              <li><Link href="/fence-cost-by-state" className="hover:text-green-400 transition-colors">Cost by State</Link></li>
+              <li><Link href="/guides/best-time-to-install" className="hover:text-green-400 transition-colors">Best Time to Install</Link></li>
             </ul>
           </div>
           <div>

@@ -68,6 +68,12 @@ const guides = [
     description: 'How to request estimates, compare bids, spot red flags, and choose the right contractor.',
     icon: '📝',
   },
+  {
+    slug: 'best-time-to-install',
+    title: 'Best Time to Install a Fence',
+    description: 'Season-by-season guide to fence installation timing. Save 10-25% by installing at the right time.',
+    icon: '📅',
+  },
 ];
 
 export default function GuidesPage() {
