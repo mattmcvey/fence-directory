@@ -11,6 +11,7 @@ function ClaimForm() {
   const prefillCity = searchParams.get('city') || '';
   const prefillState = searchParams.get('state') || '';
   const contractorId = searchParams.get('id') || '';
+  const plan = searchParams.get('plan') || '';
 
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -43,6 +44,28 @@ function ClaimForm() {
       if (!res.ok) {
         setError(data.error || 'Something went wrong. Please try again.');
         return;
+      }
+
+      // If they came from the Pro plan, redirect to Stripe checkout
+      if (plan === 'pro') {
+        try {
+          const stripeRes = await fetch('/api/stripe/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contractorId: data.contractorId || contractorId,
+              contractorName: formData.businessName,
+              email: formData.email,
+            }),
+          });
+          const stripeData = await stripeRes.json();
+          if (stripeData.url) {
+            window.location.href = stripeData.url;
+            return;
+          }
+        } catch {
+          // If Stripe fails, still show success for the free claim
+        }
       }
 
       setSubmitted(true);
@@ -102,13 +125,13 @@ function ClaimForm() {
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 text-lg">Grow Your Business</h3>
-                <p className="text-gray-600">Premium listings get priority placement and direct lead notifications. Upgrade anytime.</p>
+                <p className="text-gray-600">Pro listings get featured placement, unlimited leads, and direct notifications. Upgrade anytime.</p>
               </div>
             </div>
           </div>
 
           <div className="mt-10 bg-gray-50 rounded-xl p-6">
-            <h3 className="font-semibold text-gray-900 mb-3">Free vs Premium</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">Free vs Pro</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="font-medium text-gray-900 mb-2">Free Listing</p>
@@ -120,14 +143,14 @@ function ClaimForm() {
                 </ul>
               </div>
               <div>
-                <p className="font-medium text-green-600 mb-2">Premium — $99/mo</p>
+                <p className="font-medium text-green-600 mb-2">Pro — $199/mo</p>
                 <ul className="space-y-1 text-gray-600">
+                  <li>✓ Unlimited leads</li>
                   <li>✓ Featured placement</li>
-                  <li>✓ Verified badge</li>
+                  <li>✓ Verified Pro badge</li>
                   <li>✓ Unlimited photos</li>
                   <li>✓ Lead notifications</li>
-                  <li>✓ Analytics dashboard</li>
-                  <li>✓ Priority support</li>
+                  <li>✓ 14-day free trial</li>
                 </ul>
               </div>
             </div>
@@ -137,7 +160,9 @@ function ClaimForm() {
         {/* Right: Form */}
         <div>
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Get Started — Free</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              {plan === 'pro' ? 'Start Your Pro Trial' : 'Get Started — Free'}
+            </h2>
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Business Name *</label>
@@ -239,10 +264,12 @@ function ClaimForm() {
                 disabled={submitting}
                 className="w-full bg-green-600 hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed text-white py-3 rounded-lg font-semibold text-lg transition-colors"
               >
-                {submitting ? 'Submitting...' : 'Submit Free Listing'}
+                {submitting ? 'Submitting...' : plan === 'pro' ? 'Continue to Pro Setup →' : 'Submit Free Listing'}
               </button>
               <p className="text-xs text-gray-500 text-center">
-                By submitting, you agree to our terms of service. No credit card required.
+                {plan === 'pro'
+                  ? 'You\'ll be taken to secure checkout. 14-day free trial — cancel anytime.'
+                  : 'By submitting, you agree to our terms of service. No credit card required.'}
               </p>
             </form>
           </div>

@@ -63,7 +63,7 @@ export default function AboutPage() {
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Are You a Fence Contractor?</h2>
         <p className="text-gray-700 mb-6">
           Join FenceFind to reach homeowners actively searching for fence services. Basic listings are
-          free — upgrade to premium for featured placement and lead notifications.
+          free — upgrade to Pro for featured placement, unlimited leads, and direct notifications.
         </p>
         <Link
           href="/claim"

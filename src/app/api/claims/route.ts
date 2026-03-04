@@ -18,7 +18,7 @@ export async function POST(request: Request) {
 
     const supabase = getServiceClient();
 
-    const { error } = await supabase.from('claim_requests').insert({
+    const { data: insertData, error } = await supabase.from('claim_requests').insert({
       business_name: businessName.trim(),
       contact_name: contactName.trim(),
       email: email.trim(),
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
       message: message?.trim() || undefined,
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, contractorId: contractorId || null });
   } catch {
     return NextResponse.json(
       { error: 'Invalid request' },
