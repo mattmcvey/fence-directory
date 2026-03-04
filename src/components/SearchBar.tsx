@@ -17,7 +17,6 @@ export default function SearchBar({ size = 'md', defaultValue = '', className = 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (location.trim()) {
-      const slug = location.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
       router.push(`/search?q=${encodeURIComponent(location.trim())}`);
     }
   };
@@ -26,21 +25,22 @@ export default function SearchBar({ size = 'md', defaultValue = '', className = 
 
   return (
     <form onSubmit={handleSubmit} className={`w-full max-w-2xl ${className}`}>
-      <div className={`flex items-center bg-white rounded-full shadow-lg border border-gray-200 ${isLarge ? 'p-2' : 'p-1'}`}>
-        <MapPin className={`${isLarge ? 'ml-4 w-6 h-6' : 'ml-3 w-5 h-5'} text-gray-400 flex-shrink-0`} />
+      {/* Desktop: single row pill */}
+      <div className={`flex items-center bg-white rounded-full shadow-lg border border-gray-200 ${isLarge ? 'p-1.5 sm:p-2' : 'p-1'}`}>
+        <MapPin className={`${isLarge ? 'ml-3 sm:ml-4 w-5 h-5 sm:w-6 sm:h-6' : 'ml-3 w-5 h-5'} text-gray-400 flex-shrink-0`} />
         <input
           type="text"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          placeholder="Enter your city or zip code..."
-          className={`flex-1 outline-none bg-transparent text-gray-800 placeholder-gray-400 ${isLarge ? 'px-4 py-3 text-lg' : 'px-3 py-2 text-base'}`}
+          placeholder={isLarge ? 'City or zip code...' : 'Enter your city or zip code...'}
+          className={`flex-1 min-w-0 outline-none bg-transparent text-gray-800 placeholder-gray-400 ${isLarge ? 'px-2 sm:px-4 py-2.5 sm:py-3 text-base sm:text-lg' : 'px-3 py-2 text-base'}`}
         />
         <button
           type="submit"
-          className={`bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center transition-colors flex-shrink-0 ${isLarge ? 'px-8 py-3 text-lg font-semibold' : 'px-6 py-2 text-base font-medium'}`}
+          className={`bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center transition-colors flex-shrink-0 ${isLarge ? 'p-3 sm:px-8 sm:py-3 text-base sm:text-lg font-semibold' : 'p-2.5 sm:px-6 sm:py-2 text-base font-medium'}`}
         >
-          <Search className={`${isLarge ? 'w-5 h-5 mr-2' : 'w-4 h-4 mr-1.5'}`} />
-          Search
+          <Search className={`${isLarge ? 'w-5 h-5 sm:mr-2' : 'w-4 h-4 sm:mr-1.5'}`} />
+          <span className="hidden sm:inline">Search</span>
         </button>
       </div>
     </form>

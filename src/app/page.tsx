@@ -15,11 +15,11 @@ export default async function HomePage() {
     <div>
       {/* Hero */}
       <section className="bg-gradient-to-br from-green-700 via-green-600 to-green-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            Find Trusted Fence<br />Contractors Near You
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 md:py-28 text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
+            Find Trusted Fence<br className="hidden sm:block" /> Contractors Near You
           </h1>
-          <p className="text-green-100 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
+          <p className="text-green-100 text-base sm:text-lg md:text-xl mb-8 sm:mb-10 max-w-2xl mx-auto">
             Compare top-rated fence installers, read reviews, and get free estimates from licensed professionals in your area.
           </p>
           <SearchBar size="lg" className="mx-auto" />

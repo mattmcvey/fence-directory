@@ -1,9 +1,14 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
-import { Fence } from 'lucide-react';
+import { Fence, Menu, X } from 'lucide-react';
 
 export default function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
-    <header className="bg-white border-b border-gray-200">
+    <header className="bg-white border-b border-gray-200 relative z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-2">
@@ -12,9 +17,14 @@ export default function Header() {
             </div>
             <span className="text-xl font-bold text-gray-900">FenceFind</span>
           </Link>
+
+          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8">
             <Link href="/states" className="text-gray-600 hover:text-green-600 transition-colors text-sm font-medium">
               Browse by State
+            </Link>
+            <Link href="/guides" className="text-gray-600 hover:text-green-600 transition-colors text-sm font-medium">
+              Guides
             </Link>
             <Link href="/about" className="text-gray-600 hover:text-green-600 transition-colors text-sm font-medium">
               About
@@ -26,8 +36,53 @@ export default function Header() {
               List Your Business
             </Link>
           </nav>
+
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden absolute top-16 inset-x-0 bg-white border-b border-gray-200 shadow-lg z-50">
+          <nav className="flex flex-col px-4 py-4 gap-1">
+            <Link
+              href="/states"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-gray-700 hover:bg-green-50 hover:text-green-600 px-4 py-3 rounded-lg transition-colors font-medium"
+            >
+              Browse by State
+            </Link>
+            <Link
+              href="/guides"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-gray-700 hover:bg-green-50 hover:text-green-600 px-4 py-3 rounded-lg transition-colors font-medium"
+            >
+              Guides
+            </Link>
+            <Link
+              href="/about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-gray-700 hover:bg-green-50 hover:text-green-600 px-4 py-3 rounded-lg transition-colors font-medium"
+            >
+              About
+            </Link>
+            <Link
+              href="/claim"
+              onClick={() => setMobileMenuOpen(false)}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg text-center font-medium transition-colors mt-2"
+            >
+              List Your Business
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

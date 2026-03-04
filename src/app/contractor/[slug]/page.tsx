@@ -48,12 +48,12 @@ export default async function ContractorPage({ params }: PageProps) {
         {/* Main content */}
         <div className="lg:col-span-2">
       <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
-        <div className="p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{contractor.name}</h1>
-          <div className="flex flex-wrap items-center gap-4 text-gray-600 mb-6">
-            <div className="flex items-center gap-1">
-              <MapPin className="w-5 h-5 text-gray-400" />
-              {contractor.address}, {contractor.city}, {contractor.state} {contractor.zip}
+        <div className="p-4 sm:p-6 lg:p-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{contractor.name}</h1>
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-4 text-gray-600 mb-6">
+            <div className="flex items-center gap-1 text-sm sm:text-base">
+              <MapPin className="w-5 h-5 text-gray-400 flex-shrink-0" />
+              <span>{contractor.address}, {contractor.city}, {contractor.state} {contractor.zip}</span>
             </div>
             <div className="flex items-center gap-1">
               <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
@@ -62,10 +62,10 @@ export default async function ContractorPage({ params }: PageProps) {
             </div>
           </div>
 
-          <p className="text-gray-700 text-lg leading-relaxed mb-8">{contractor.description}</p>
+          <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-6 sm:mb-8">{contractor.description}</p>
 
           {/* Contact buttons */}
-          <div className="flex flex-wrap gap-4 mb-8">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
             <a
               href={`tel:${contractor.phone}`}
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
