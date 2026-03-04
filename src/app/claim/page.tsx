@@ -48,24 +48,23 @@ function ClaimForm() {
 
       // If they came from the Pro plan, redirect to Stripe checkout
       if (plan === 'pro') {
-        try {
-          const stripeRes = await fetch('/api/stripe/checkout', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contractorId: data.contractorId || contractorId,
-              contractorName: formData.businessName,
-              email: formData.email,
-            }),
-          });
-          const stripeData = await stripeRes.json();
-          if (stripeData.url) {
-            window.location.href = stripeData.url;
-            return;
-          }
-        } catch {
-          // If Stripe fails, still show success for the free claim
+        const stripeRes = await fetch('/api/stripe/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contractorId: data.contractorId || contractorId || undefined,
+            claimId: data.claimId || undefined,
+            contractorName: formData.businessName,
+            email: formData.email,
+          }),
+        });
+        const stripeData = await stripeRes.json();
+        if (stripeData.url) {
+          window.location.href = stripeData.url;
+          return;
         }
+        // If Stripe fails, show error but don't block — they still got the free claim
+        setError('Claim submitted! But we couldn\'t start checkout. Please contact us or try again from the pricing page.');
       }
 
       setSubmitted(true);

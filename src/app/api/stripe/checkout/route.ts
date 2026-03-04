@@ -4,14 +4,16 @@ import { stripe } from '@/lib/stripe';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { contractorId, contractorName, email } = body;
+    const { contractorId, claimId, contractorName, email } = body;
 
-    if (!contractorId || !email) {
+    if (!email) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing email' },
         { status: 400 }
       );
     }
+
+    const refId = contractorId || claimId || 'new';
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -26,13 +28,15 @@ export async function POST(request: NextRequest) {
       subscription_data: {
         trial_period_days: 14,
         metadata: {
-          contractorId,
+          contractorId: contractorId || '',
+          claimId: claimId || '',
           contractorName: contractorName || '',
           app: 'fencefind',
         },
       },
       metadata: {
-        contractorId,
+        contractorId: contractorId || '',
+        claimId: claimId || '',
         contractorName: contractorName || '',
         app: 'fencefind',
       },

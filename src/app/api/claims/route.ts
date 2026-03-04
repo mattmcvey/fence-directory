@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       website: website?.trim() || null,
       message: message?.trim() || null,
       contractor_id: contractorId || null,
-    });
+    }).select('id');
 
     if (error) {
       console.error('Supabase insert error:', error);
@@ -37,6 +37,8 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
+
+    const claimId = insertData?.[0]?.id;
 
     // Send email notification (non-blocking — don't fail the request if email fails)
     await notifyClaimSubmission({
@@ -50,7 +52,7 @@ export async function POST(request: Request) {
       message: message?.trim() || undefined,
     });
 
-    return NextResponse.json({ success: true, contractorId: contractorId || null });
+    return NextResponse.json({ success: true, contractorId: contractorId || null, claimId: claimId || null });
   } catch {
     return NextResponse.json(
       { error: 'Invalid request' },
