@@ -141,20 +141,36 @@ export default async function CityPage({ params }: PageProps) {
         </div>
       )}
 
-      {/* Cost CTA */}
-      <div className="mt-10 bg-blue-50 border border-blue-200 rounded-xl p-6 sm:p-8">
-        <h2 className="text-xl font-bold text-gray-900 mb-2">
-          How Much Does a Fence Cost in {city.name}?
-        </h2>
-        <p className="text-gray-600 mb-4">
-          Average fence installation in {city.name} costs ${costs.project.low.toLocaleString()}–${costs.project.high.toLocaleString()}. See full pricing breakdown by material.
-        </p>
-        <Link
-          href={`/fence-cost/${slug}`}
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors"
-        >
-          See {city.name} Fence Prices <ArrowRight className="w-4 h-4" />
-        </Link>
+      {/* Cost + Permit CTAs */}
+      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-2">
+            Fence Cost in {city.name}
+          </h2>
+          <p className="text-gray-600 text-sm mb-4">
+            Average: ${costs.project.low.toLocaleString()}–${costs.project.high.toLocaleString()}. Full breakdown by material.
+          </p>
+          <Link
+            href={`/fence-cost/${slug}`}
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            See Prices <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-2">
+            Fence Permits in {city.name}
+          </h2>
+          <p className="text-gray-600 text-sm mb-4">
+            Height limits, setback rules, permit costs, and how to apply.
+          </p>
+          <Link
+            href={`/fence-permits/${slug}`}
+            className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            Permit Guide <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
 
       {/* SEO content + FAQ */}
@@ -205,14 +221,14 @@ export default async function CityPage({ params }: PageProps) {
           <Link href={`/fence-cost/${slug}`} className="text-green-600 hover:text-green-700 flex items-center gap-2 text-sm">
             <ArrowRight className="w-3 h-3" /> Fence cost in {city.name}
           </Link>
-          <Link href="/guides/fence-cost" className="text-green-600 hover:text-green-700 flex items-center gap-2 text-sm">
-            <ArrowRight className="w-3 h-3" /> National fence cost guide
+          <Link href={`/fence-permits/${slug}`} className="text-green-600 hover:text-green-700 flex items-center gap-2 text-sm">
+            <ArrowRight className="w-3 h-3" /> Fence permits in {city.name}
           </Link>
           <Link href="/guides/getting-quotes" className="text-green-600 hover:text-green-700 flex items-center gap-2 text-sm">
             <ArrowRight className="w-3 h-3" /> How to get fence quotes
           </Link>
           <Link href="/guides/fence-permits" className="text-green-600 hover:text-green-700 flex items-center gap-2 text-sm">
-            <ArrowRight className="w-3 h-3" /> Fence permit requirements
+            <ArrowRight className="w-3 h-3" /> National permit guide
           </Link>
         </div>
       </section>

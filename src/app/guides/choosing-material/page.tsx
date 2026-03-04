@@ -88,8 +88,28 @@ function RatingDots({ value, max = 5 }: { value: number; max?: number }) {
 }
 
 export default function ChoosingMaterialPage() {
+  const faqs = [
+    { q: 'What is the best fence material for privacy?', a: 'Wood and vinyl are the best materials for privacy fences. Both can be installed as solid panels at 6 feet tall. Wood offers more style options while vinyl requires less maintenance.' },
+    { q: 'What is the cheapest fence material?', a: 'Chain link is the cheapest fence material at $10–25 per linear foot installed. Wood is the next most affordable at $15–35 per foot, especially if you choose pressure-treated pine.' },
+    { q: 'What fence material lasts the longest?', a: 'Wrought iron and aluminum fences last 50+ years with minimal maintenance. Vinyl lasts 20–30 years. Wood lasts 15–20 years but requires regular staining and maintenance.' },
+    { q: 'Which fence material is best for dogs?', a: 'Chain link and wood privacy fences are both great for dogs. Chain link is affordable and durable, while wood privacy fences prevent dogs from seeing and reacting to passersby.' },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: faqs.map(({ q, a }) => ({
+              '@type': 'Question', name: q,
+              acceptedAnswer: { '@type': 'Answer', text: a },
+            })),
+          }),
+        }}
+      />
       <h1 className="text-4xl font-bold text-gray-900 mb-4">
         How to Choose the Right Fence Material
       </h1>

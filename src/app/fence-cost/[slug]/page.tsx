@@ -236,8 +236,8 @@ export default async function FenceCostPage({ params }: PageProps) {
           <Link href="/guides/getting-quotes" className="text-green-600 hover:text-green-700 flex items-center gap-2">
             <ArrowRight className="w-4 h-4" /> How to get fence quotes
           </Link>
-          <Link href="/guides/fence-permits" className="text-green-600 hover:text-green-700 flex items-center gap-2">
-            <ArrowRight className="w-4 h-4" /> Fence permit guide
+          <Link href={`/fence-permits/${slug}`} className="text-green-600 hover:text-green-700 flex items-center gap-2">
+            <ArrowRight className="w-4 h-4" /> Fence permits in {city.name}
           </Link>
           <Link href="/guides/wood-vs-vinyl" className="text-green-600 hover:text-green-700 flex items-center gap-2">
             <ArrowRight className="w-4 h-4" /> Wood vs vinyl comparison

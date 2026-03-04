@@ -58,6 +58,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  // Fence permit pages
+  const fencePermitPages: MetadataRoute.Sitemap = cities.map((city) => ({
+    url: `${baseUrl}/fence-permits/${city.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }));
+
   // Contractor pages
   const contractorPages: MetadataRoute.Sitemap = contractorSlugs.map((slug) => ({
     url: `${baseUrl}/contractor/${slug}`,
@@ -72,6 +80,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...statePages,
     ...cityPages,
     ...fenceCostPages,
+    ...fencePermitPages,
     ...contractorPages,
   ];
 }
