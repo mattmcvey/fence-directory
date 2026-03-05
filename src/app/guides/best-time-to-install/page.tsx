@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { faqSchema, breadcrumbSchema, ogMeta } from '@/lib/seo';
 import { ArrowRight, Sun, Snowflake, Leaf, Flower2 } from 'lucide-react';
+import RelatedLinks from '@/components/RelatedLinks';
 
 const title = 'Best Time to Install a Fence (2026) — Season-by-Season Guide | FenceFind';
 const description = 'When is the best time to install a fence? Compare spring, summer, fall, and winter installation. Learn how season affects cost, scheduling, and quality. Save 10-20% with off-season timing.';
@@ -253,6 +254,8 @@ export default function BestTimeToInstallPage() {
           </Link>
         </div>
       </section>
+
+      <RelatedLinks pageType="guide" guideSlug="best-time-to-install" />
     </div>
   );
 }

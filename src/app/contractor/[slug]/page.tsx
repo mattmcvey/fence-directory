@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import QuoteForm from '@/components/QuoteForm';
+import RelatedLinks from '@/components/RelatedLinks';
 import { localBusinessSchema, breadcrumbSchema, ogMeta } from '@/lib/seo';
 
 export const revalidate = 3600;
@@ -215,20 +216,11 @@ export default async function ContractorPage({ params }: PageProps) {
       </div>
 
       {/* Related links for internal SEO */}
-      <div className="mt-8 bg-gray-50 rounded-xl p-6">
-        <h3 className="font-bold text-gray-900 mb-3">More in {contractor.city}</h3>
-        <div className="flex flex-wrap gap-3">
-          <Link href={`/city/${citySlug}`} className="text-green-600 hover:text-green-700 text-sm">
-            All {contractor.city} contractors →
-          </Link>
-          <Link href={`/fence-cost/${citySlug}`} className="text-green-600 hover:text-green-700 text-sm">
-            Fence cost in {contractor.city} →
-          </Link>
-          <Link href="/guides/getting-quotes" className="text-green-600 hover:text-green-700 text-sm">
-            How to get quotes →
-          </Link>
-        </div>
-      </div>
+      <RelatedLinks
+        pageType="contractor"
+        cityName={contractor.city}
+        stateCode={contractor.state}
+      />
     </div>
   );
 }

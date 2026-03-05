@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import SearchBar from '@/components/SearchBar';
 import Link from 'next/link';
+import RelatedLinks from '@/components/RelatedLinks';
 
 export const metadata: Metadata = {
   title: 'How to Choose the Right Fence Material — Complete Guide | FenceFind',
@@ -188,6 +189,8 @@ export default function ChoosingMaterialPage() {
         </p>
         <SearchBar size="lg" className="mx-auto" />
       </div>
+
+      <RelatedLinks pageType="guide" guideSlug="choosing-material" />
     </div>
   );
 }

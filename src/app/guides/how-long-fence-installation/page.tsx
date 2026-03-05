@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import RelatedLinks from '@/components/RelatedLinks';
 
 export const metadata: Metadata = {
   title: 'How Long Does Fence Installation Take? Timeline Guide | FenceFind',
@@ -91,6 +92,8 @@ export default function HowLongFenceInstallationPage() {
       <div className="text-sm text-gray-500">
         <p>Related guides: <Link href="/guides/getting-quotes" className="text-green-600 hover:underline">Getting Quotes</Link> · <Link href="/guides/fence-permits" className="text-green-600 hover:underline">Permit Guide</Link> · <Link href="/guides/fence-cost" className="text-green-600 hover:underline">Cost Guide</Link></p>
       </div>
+
+      <RelatedLinks pageType="guide" guideSlug="how-long-fence-installation" />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         '@context': 'https://schema.org', '@type': 'Article',

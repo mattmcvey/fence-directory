@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { ArrowRight } from 'lucide-react';
+import RelatedLinks from '@/components/RelatedLinks';
 
 export const revalidate = 3600;
 
@@ -215,23 +216,12 @@ export default async function CityPage({ params }: PageProps) {
       </section>
 
       {/* Related links */}
-      <section className="mt-10 bg-gray-50 rounded-xl p-6">
-        <h3 className="font-bold text-gray-900 mb-3">Related</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <Link href={`/fence-cost/${slug}`} className="text-green-600 hover:text-green-700 flex items-center gap-2 text-sm">
-            <ArrowRight className="w-3 h-3" /> Fence cost in {city.name}
-          </Link>
-          <Link href={`/fence-permits/${slug}`} className="text-green-600 hover:text-green-700 flex items-center gap-2 text-sm">
-            <ArrowRight className="w-3 h-3" /> Fence permits in {city.name}
-          </Link>
-          <Link href="/guides/getting-quotes" className="text-green-600 hover:text-green-700 flex items-center gap-2 text-sm">
-            <ArrowRight className="w-3 h-3" /> How to get fence quotes
-          </Link>
-          <Link href="/guides/fence-permits" className="text-green-600 hover:text-green-700 flex items-center gap-2 text-sm">
-            <ArrowRight className="w-3 h-3" /> National permit guide
-          </Link>
-        </div>
-      </section>
+      <RelatedLinks
+        pageType="city"
+        currentSlug={slug}
+        cityName={city.name}
+        stateCode={city.stateCode}
+      />
     </div>
   );
 }

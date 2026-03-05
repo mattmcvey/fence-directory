@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import RelatedLinks from '@/components/RelatedLinks';
 
 export const metadata: Metadata = {
   title: 'Does a Fence Increase Home Value? ROI Guide (2026) | FenceFind',
@@ -86,6 +87,8 @@ export default function FenceRoiPage() {
       <div className="text-sm text-gray-500">
         <p>Related guides: <Link href="/guides/fence-cost" className="text-green-600 hover:underline">Fence Cost Guide</Link> · <Link href="/guides/choosing-material" className="text-green-600 hover:underline">Choosing Materials</Link> · <Link href="/guides/wood-vs-vinyl" className="text-green-600 hover:underline">Wood vs Vinyl</Link></p>
       </div>
+
+      <RelatedLinks pageType="guide" guideSlug="fence-roi" />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         '@context': 'https://schema.org', '@type': 'Article',

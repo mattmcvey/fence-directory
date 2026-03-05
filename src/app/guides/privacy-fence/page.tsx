@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import RelatedLinks from '@/components/RelatedLinks';
 
 export const metadata: Metadata = {
   title: 'Privacy Fence Ideas, Costs & Installation Guide (2026) | FenceFind',
@@ -107,6 +108,8 @@ export default function PrivacyFencePage() {
       <div className="text-sm text-gray-500">
         <p>Related guides: <Link href="/guides/wood-vs-vinyl" className="text-green-600 hover:underline">Wood vs Vinyl</Link> · <Link href="/guides/fence-cost" className="text-green-600 hover:underline">Cost Guide</Link> · <Link href="/guides/fence-permits" className="text-green-600 hover:underline">Permit Guide</Link></p>
       </div>
+
+      <RelatedLinks pageType="guide" guideSlug="privacy-fence" />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         '@context': 'https://schema.org', '@type': 'Article',

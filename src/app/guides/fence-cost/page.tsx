@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import SearchBar from '@/components/SearchBar';
+import RelatedLinks from '@/components/RelatedLinks';
 
 export const metadata: Metadata = {
   title: 'Fence Installation Cost Guide 2026 — Average Prices by Material | FenceFind',
@@ -119,6 +120,9 @@ export default function FenceCostGuidePage() {
         <p className="text-gray-600 mb-6">Find licensed fence contractors in your area and request free estimates.</p>
         <SearchBar size="lg" className="mx-auto" />
       </div>
+
+      {/* Related resources */}
+      <RelatedLinks pageType="guide" guideSlug="fence-cost" />
 
       {/* Schema.org */}
       <script

@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import RelatedLinks from '@/components/RelatedLinks';
 
 export const metadata: Metadata = {
   title: 'Wood vs Vinyl Fence: Pros, Cons & Cost Comparison (2026) | FenceFind',
@@ -166,6 +167,8 @@ export default function WoodVsVinylPage() {
       <div className="text-sm text-gray-500">
         <p>Related guides: <Link href="/guides/fence-cost" className="text-green-600 hover:underline">Fence Cost Guide</Link> · <Link href="/guides/choosing-material" className="text-green-600 hover:underline">Choosing Materials</Link> · <Link href="/guides/privacy-fence" className="text-green-600 hover:underline">Privacy Fence Guide</Link></p>
       </div>
+
+      <RelatedLinks pageType="guide" guideSlug="wood-vs-vinyl" />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         '@context': 'https://schema.org', '@type': 'Article',
