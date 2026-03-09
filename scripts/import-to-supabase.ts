@@ -41,6 +41,48 @@ function inferMaterials(name: string): string[] {
   return materials;
 }
 
+function generateDescription(c: ScrapedContractor, materials: string[], services: string[]): string {
+  const parts: string[] = [];
+
+  // Opening with rating info if available
+  if (c.rating >= 4.0 && c.reviewCount >= 5) {
+    parts.push(`${c.name} is a ${c.rating}-star rated fence contractor in ${c.city}, ${c.state} with ${c.reviewCount} reviews.`);
+  } else {
+    parts.push(`${c.name} is a fence contractor serving ${c.city}, ${c.state} and surrounding areas.`);
+  }
+
+  // Second sentence: materials + services detail
+  const materialLabels: Record<string, string> = {
+    'wood': 'wood',
+    'vinyl': 'vinyl',
+    'chain-link': 'chain link',
+    'wrought-iron': 'wrought iron',
+    'aluminum': 'aluminum',
+    'steel': 'steel',
+    'composite': 'composite',
+    'bamboo': 'bamboo',
+  };
+
+  const matNames = materials.map(m => materialLabels[m] || m);
+  const hasGates = services.includes('gates');
+  const hasRepair = services.includes('repair');
+  const hasCommercial = services.includes('commercial');
+
+  const extras: string[] = [];
+  if (hasRepair) extras.push('repair');
+  if (hasGates) extras.push('gate installation');
+  if (hasCommercial) extras.push('commercial projects');
+
+  let detail = `They specialize in ${matNames.join(', ')} fencing`;
+  if (extras.length > 0) {
+    detail += ` and offer ${extras.join(', ')}`;
+  }
+  detail += '. Free estimates available.';
+  parts.push(detail);
+
+  return parts.join(' ');
+}
+
 interface ScrapedContractor {
   googlePlaceId: string;
   name: string;
@@ -84,21 +126,23 @@ async function main() {
 
     const rows = batch.map((c) => {
       const baseSlug = slugify(`${c.name}-${c.city}`);
+      const services = inferServices(c.name);
+      const materials = inferMaterials(c.name);
       return {
         google_place_id: c.googlePlaceId,
         name: c.name,
         slug: `${baseSlug}-${c.googlePlaceId.slice(-6)}`,
         phone: c.phone || null,
         website: c.website || null,
-        description: `${c.name} is a fence contractor serving the ${c.city}, ${c.state} area.`,
+        description: generateDescription(c, materials, services),
         address: c.address,
         city: c.city,
         state: c.state,
         location: `POINT(${c.lng} ${c.lat})`,
         rating: c.rating || 0,
         review_count: c.reviewCount || 0,
-        services: inferServices(c.name),
-        materials: inferMaterials(c.name),
+        services,
+        materials,
         free_estimates: true,
         google_maps_url: c.googleMapsUrl || null,
       };
