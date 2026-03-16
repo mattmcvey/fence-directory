@@ -77,7 +77,20 @@ export default async function ContractorPage({ params }: PageProps) {
         <div className="lg:col-span-2">
       <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
         <div className="p-4 sm:p-6 lg:p-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{contractor.name}</h1>
+          <div className="flex flex-wrap items-center gap-3 mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{contractor.name}</h1>
+            {contractor.claimed && contractor.verified ? (
+              <span className="inline-flex items-center gap-1.5 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                <Shield className="w-4 h-4" />
+                Verified Pro
+              </span>
+            ) : contractor.claimed ? (
+              <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                <CheckCircle className="w-4 h-4" />
+                Claimed Business
+              </span>
+            ) : null}
+          </div>
           <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-4 text-gray-600 mb-6">
             <div className="flex items-center gap-1 text-sm sm:text-base">
               <MapPin className="w-5 h-5 text-gray-400 flex-shrink-0" />

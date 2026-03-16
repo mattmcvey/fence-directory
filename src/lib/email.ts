@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM_EMAIL = 'FenceFind <noreply@getfencefind.com>';
-const NOTIFY_EMAIL = 'matt.mcvey49@gmail.com';
+const NOTIFY_EMAIL = 'matt@getfencefind.com';
 
 export async function notifyClaimSubmission(claim: {
   businessName: string;
