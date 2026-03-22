@@ -138,7 +138,8 @@ async function main() {
         address: c.address,
         city: c.city,
         state: c.state,
-        location: `POINT(${c.lng} ${c.lat})`,
+        // lat/lng stored in scraped JSON but not imported — PostGIS location column
+        // can be populated later if geo search is needed
         rating: c.rating || 0,
         review_count: c.reviewCount || 0,
         services,
