@@ -74,7 +74,7 @@ export async function searchContractors(query: string): Promise<Contractor[]> {
   const { data, error } = await supabase
     .from('contractors')
     .select('*')
-    .or(`city.ilike.%${query}%,state.ilike.%${query}%,name.ilike.%${query}%,zip.ilike.%${query}%`)
+    .or(`city.ilike.%${query}%,state.ilike.%${query}%,name.ilike.%${query}%,zip.ilike.%${query}%,address.ilike.%${query}%`)
     .order('featured', { ascending: false })
     .order('rating', { ascending: false })
     .limit(50);
