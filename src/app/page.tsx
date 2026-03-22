@@ -1,6 +1,6 @@
 import SearchBar from '@/components/SearchBar';
 import ContractorCard from '@/components/ContractorCard';
-import { getFeaturedContractors, getCities, getStates, getSiteStats } from '@/lib/data';
+import { getFeaturedContractors, getCities, getStatesWithCounts, getSiteStats } from '@/lib/data';
 import { Shield, Star, DollarSign, Users, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { websiteSchema, ogMeta } from '@/lib/seo';
@@ -20,12 +20,20 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [featuredContractors, cities, stats] = await Promise.all([
+  const [featuredContractors, allCities, allStates, stats] = await Promise.all([
     getFeaturedContractors(),
     getCities(),
+    getStatesWithCounts(),
     getSiteStats(),
   ]);
-  const states = getStates();
+  const topStates = allStates
+    .filter(s => s.contractorCount > 0)
+    .sort((a, b) => b.contractorCount - a.contractorCount)
+    .slice(0, 10);
+  const topCities = allCities
+    .filter(c => c.contractorCount > 0)
+    .sort((a, b) => b.contractorCount - a.contractorCount)
+    .slice(0, 10);
 
   return (
     <div>
@@ -96,7 +104,7 @@ export default async function HomePage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Browse by State</h2>
           <p className="text-gray-600 mb-8">Find fence contractors in your state</p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {states.map((state) => (
+            {topStates.map((state) => (
               <Link
                 key={state.code}
                 href={`/state/${state.slug}`}
@@ -120,7 +128,7 @@ export default async function HomePage() {
         <h2 className="text-3xl font-bold text-gray-900 mb-2">Popular Cities</h2>
         <p className="text-gray-600 mb-8">Most searched locations for fence contractors</p>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {cities.map((city) => (
+          {topCities.map((city) => (
             <Link
               key={city.slug}
               href={`/city/${city.slug}`}
@@ -131,6 +139,11 @@ export default async function HomePage() {
               <div className="text-xs text-gray-400 mt-1">{city.contractorCount} contractors</div>
             </Link>
           ))}
+        </div>
+        <div className="text-center mt-8">
+          <Link href="/states" className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1">
+            View all cities <ChevronRight className="w-4 h-4" />
+          </Link>
         </div>
       </section>
 
