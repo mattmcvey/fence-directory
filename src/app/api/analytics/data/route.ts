@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServiceClient } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
-  // Simple auth check — require admin key
+
   const authKey = request.headers.get('x-admin-key');
   const expectedKey = process.env.ANALYTICS_ADMIN_KEY;
 
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   since.setDate(since.getDate() - days);
   const sinceISO = since.toISOString();
 
-  // Fetch all pageviews in range
+
   const { data: pageviews, error } = await supabase
     .from('pageviews')
     .select('*')
@@ -31,11 +31,11 @@ export async function GET(request: NextRequest) {
 
   const rows = pageviews || [];
 
-  // Aggregate stats
+
   const totalPageviews = rows.length;
   const uniqueVisitors = new Set(rows.filter(r => r.is_unique).map(r => r.session_id)).size;
 
-  // Top pages
+
   const pageCounts: Record<string, { views: number; unique: number }> = {};
   for (const r of rows) {
     if (!pageCounts[r.path]) pageCounts[r.path] = { views: 0, unique: 0 };
@@ -47,11 +47,11 @@ export async function GET(request: NextRequest) {
     .sort((a, b) => b.views - a.views)
     .slice(0, 20);
 
-  // Top referrers
+
   const refCounts: Record<string, number> = {};
   for (const r of rows) {
     const ref = r.referrer || '(direct)';
-    // Normalize referrer to domain
+
     let domain = ref;
     try {
       if (ref !== '(direct)') domain = new URL(ref).hostname;
@@ -63,21 +63,21 @@ export async function GET(request: NextRequest) {
     .sort((a, b) => b.count - a.count)
     .slice(0, 10);
 
-  // Devices
+
   const deviceCounts: Record<string, number> = {};
   for (const r of rows) {
     const d = r.device_type || 'unknown';
     deviceCounts[d] = (deviceCounts[d] || 0) + 1;
   }
 
-  // Browsers
+
   const browserCounts: Record<string, number> = {};
   for (const r of rows) {
     const b = r.browser || 'unknown';
     browserCounts[b] = (browserCounts[b] || 0) + 1;
   }
 
-  // Countries
+
   const countryCounts: Record<string, number> = {};
   for (const r of rows) {
     const c = r.country || 'unknown';
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
     .sort((a, b) => b.count - a.count)
     .slice(0, 10);
 
-  // Daily trend
+
   const dailyCounts: Record<string, { views: number; visitors: number }> = {};
   for (const r of rows) {
     const day = r.created_at.split('T')[0];

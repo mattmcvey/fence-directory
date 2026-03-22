@@ -1,11 +1,9 @@
-/**
- * SEO utilities — structured data generators, meta helpers
- */
+
 
 const SITE_URL = 'https://getfencefind.com';
 const SITE_NAME = 'FenceFind';
 
-// ─── Breadcrumb Schema ───
+
 export function breadcrumbSchema(items: { name: string; url: string }[]) {
   return {
     '@context': 'https://schema.org',
@@ -19,7 +17,7 @@ export function breadcrumbSchema(items: { name: string; url: string }[]) {
   };
 }
 
-// ─── FAQ Schema ───
+
 export function faqSchema(questions: { q: string; a: string }[]) {
   return {
     '@context': 'https://schema.org',
@@ -35,7 +33,7 @@ export function faqSchema(questions: { q: string; a: string }[]) {
   };
 }
 
-// ─── LocalBusiness Schema (for contractor pages) ───
+
 export function localBusinessSchema(contractor: {
   name: string;
   description: string;
@@ -80,7 +78,7 @@ export function localBusinessSchema(contractor: {
   };
 }
 
-// ─── Service Schema (for fence cost pages) ───
+
 export function serviceSchema(city: string, state: string) {
   return {
     '@context': 'https://schema.org',
@@ -104,7 +102,7 @@ export function serviceSchema(city: string, state: string) {
   };
 }
 
-// ─── Website Schema (for homepage) ───
+
 export function websiteSchema() {
   return {
     '@context': 'https://schema.org',
@@ -123,7 +121,7 @@ export function websiteSchema() {
   };
 }
 
-// ─── Open Graph helpers ───
+
 export function ogMeta(opts: {
   title: string;
   description: string;
@@ -150,8 +148,7 @@ export function ogMeta(opts: {
   };
 }
 
-// ─── Fence cost data by region (for programmatic pages) ───
-// Regional cost adjustments based on cost of living
+
 const REGION_COST_MULTIPLIER: Record<string, number> = {
   CA: 1.35, NY: 1.30, MA: 1.25, CT: 1.25, NJ: 1.25, WA: 1.20,
   CO: 1.15, OR: 1.15, MD: 1.15, VA: 1.10, IL: 1.10, MN: 1.10,
@@ -165,7 +162,7 @@ const REGION_COST_MULTIPLIER: Record<string, number> = {
 export function getCostData(stateCode: string) {
   const mult = REGION_COST_MULTIPLIER[stateCode] || 1.0;
 
-  // Base national averages per linear foot (installed)
+
   const base = {
     wood: { low: 15, high: 35, avg: 25 },
     vinyl: { low: 20, high: 40, avg: 30 },
@@ -184,7 +181,7 @@ export function getCostData(stateCode: string) {
     };
   }
 
-  // Total project cost (assuming 150 linear feet average yard)
+
   const projectLow = Math.round(150 * base.chainLink.low * mult);
   const projectHigh = Math.round(150 * base.wroughtIron.high * mult);
   const projectAvg = Math.round(150 * base.wood.avg * mult);
@@ -192,7 +189,7 @@ export function getCostData(stateCode: string) {
   return { materials: adjusted, project: { low: projectLow, high: projectHigh, avg: projectAvg }, multiplier: mult };
 }
 
-// Material display names
+
 export const COST_MATERIAL_NAMES: Record<string, string> = {
   wood: 'Wood',
   vinyl: 'Vinyl',

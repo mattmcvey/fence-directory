@@ -8,7 +8,7 @@ export async function POST(request: Request) {
 
     const { contractorId, contractorName, name, email, phone, zip, fenceType, material, approximateLength, message } = body;
 
-    // Validate required fields
+
     if (!contractorId || !name || !email || !zip) {
       return NextResponse.json(
         { error: 'Missing required fields' },
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Send email notification
+
     await notifyQuoteRequest({
       contractorName: contractorName || 'Unknown',
       name: name.trim(),

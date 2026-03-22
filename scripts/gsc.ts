@@ -1,19 +1,12 @@
-/**
- * Google Search Console utilities
- * Usage:
- *   npx tsx scripts/gsc.ts submit-sitemap
- *   npx tsx scripts/gsc.ts request-indexing <url>
- *   npx tsx scripts/gsc.ts indexing-status
- *   npx tsx scripts/gsc.ts performance [days]
- */
+
 
 import { google } from 'googleapis';
 import * as fs from 'fs';
 import * as path from 'path';
 
 const SITE_URL = 'https://getfencefind.com';
-// Search Console requires the site URL in a specific format
-const SITE_PROPERTY = 'sc-domain:getfencefind.com'; // or 'https://getfencefind.com/'
+
+const SITE_PROPERTY = 'sc-domain:getfencefind.com';
 
 const KEY_PATH = path.join(__dirname, '..', 'gsc-service-account.json');
 
@@ -43,7 +36,7 @@ async function submitSitemap() {
     });
     console.log(`✅ Sitemap submitted: ${sitemapUrl}`);
   } catch (e: any) {
-    // Try alternate site URL format
+
     try {
       await searchconsole.sitemaps.submit({
         siteUrl: `${SITE_URL}/`,
@@ -83,7 +76,7 @@ async function batchRequestIndexing(urls: string[]) {
     try {
       await requestIndexing(url);
       success++;
-      // Rate limit: ~1 request per second
+
       await new Promise(r => setTimeout(r, 1200));
     } catch {
       failed++;
@@ -104,7 +97,7 @@ async function getPerformance(days: number = 30) {
   const formatDate = (d: Date) => d.toISOString().split('T')[0];
 
   try {
-    // Try domain property first, then URL prefix
+
     let res;
     try {
       res = await searchconsole.searchanalytics.query({
@@ -149,7 +142,7 @@ async function getPerformance(days: number = 30) {
       );
     }
 
-    // Also get top pages
+
     let pagesRes;
     try {
       pagesRes = await searchconsole.searchanalytics.query({
@@ -229,7 +222,7 @@ async function checkIndexingStatus() {
   }
 }
 
-// ─── CLI ───
+
 const command = process.argv[2];
 
 switch (command) {
@@ -242,14 +235,14 @@ switch (command) {
     if (url) {
       requestIndexing(url);
     } else {
-      // Batch: index high-priority new pages
+
       const priorityPages = [
         '/',
         '/states',
         '/guides',
         '/guides/fence-cost',
         '/guides/fence-permits',
-        // Top cities - fence cost
+
         '/fence-cost/denver-co',
         '/fence-cost/dallas-tx',
         '/fence-cost/los-angeles-ca',
@@ -260,7 +253,7 @@ switch (command) {
         '/fence-cost/jacksonville-fl',
         '/fence-cost/charlotte-nc',
         '/fence-cost/austin-tx',
-        // Top cities - fence permits
+
         '/fence-permits/denver-co',
         '/fence-permits/dallas-tx',
         '/fence-permits/los-angeles-ca',

@@ -27,9 +27,9 @@ export async function POST(request: NextRequest) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         const contractorId = session.metadata?.contractorId;
-        
+
         if (contractorId) {
-          // Upgrade contractor to pro
+
           await supabase
             .from('contractors')
             .update({
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
 
         if (contractorId) {
           const isActive = ['active', 'trialing'].includes(subscription.status);
-          
+
           await supabase
             .from('contractors')
             .update({
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
         const contractorId = subscription.metadata?.contractorId;
 
         if (contractorId) {
-          // Downgrade to free
+
           await supabase
             .from('contractors')
             .update({

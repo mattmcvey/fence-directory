@@ -36,7 +36,7 @@ export async function notifyClaimSubmission(claim: {
     });
   } catch (error) {
     console.error('Failed to send claim notification email:', error);
-    // Don't throw — email failure shouldn't block the claim submission
+
   }
 }
 

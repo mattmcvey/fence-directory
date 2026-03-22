@@ -1,9 +1,4 @@
-/**
- * Import scraped contractor data into Supabase
- * 
- * Usage: 
- *   NEXT_PUBLIC_SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npx tsx scripts/import-to-supabase.ts
- */
+
 
 import { createClient } from '@supabase/supabase-js';
 import * as fs from 'fs';
@@ -36,7 +31,7 @@ function inferMaterials(name: string): string[] {
   if (lower.includes('iron') || lower.includes('ornamental')) materials.push('wrought-iron');
   if (lower.includes('aluminum')) materials.push('aluminum');
   if (lower.includes('steel')) materials.push('steel');
-  // Default materials if none detected from name
+
   if (materials.length === 0) materials.push('wood', 'vinyl', 'chain-link');
   return materials;
 }
@@ -44,14 +39,14 @@ function inferMaterials(name: string): string[] {
 function generateDescription(c: ScrapedContractor, materials: string[], services: string[]): string {
   const parts: string[] = [];
 
-  // Opening with rating info if available
+
   if (c.rating >= 4.0 && c.reviewCount >= 5) {
     parts.push(`${c.name} is a ${c.rating}-star rated fence contractor in ${c.city}, ${c.state} with ${c.reviewCount} reviews.`);
   } else {
     parts.push(`${c.name} is a fence contractor serving ${c.city}, ${c.state} and surrounding areas.`);
   }
 
-  // Second sentence: materials + services detail
+
   const materialLabels: Record<string, string> = {
     'wood': 'wood',
     'vinyl': 'vinyl',
@@ -119,7 +114,7 @@ async function main() {
   let skipped = 0;
   let errors = 0;
 
-  // Process in batches of 50
+
   const batchSize = 50;
   for (let i = 0; i < contractors.length; i += batchSize) {
     const batch = contractors.slice(i, i + batchSize);
@@ -138,8 +133,8 @@ async function main() {
         address: c.address,
         city: c.city,
         state: c.state,
-        // lat/lng stored in scraped JSON but not imported — PostGIS location column
-        // can be populated later if geo search is needed
+
+
         rating: c.rating || 0,
         review_count: c.reviewCount || 0,
         services,
@@ -160,7 +155,7 @@ async function main() {
       imported += batch.length;
     }
 
-    // Progress
+
     const pct = Math.round(((i + batch.length) / contractors.length) * 100);
     process.stdout.write(`\r   Progress: ${pct}% (${imported} imported, ${errors} errors)`);
   }
@@ -169,7 +164,7 @@ async function main() {
   console.log(`   Imported: ${imported}`);
   console.log(`   Errors: ${errors}`);
 
-  // Update city counts
+
   console.log('\n📊 Updating city contractor counts...');
   const { data: cities } = await supabase
     .from('contractors')
@@ -191,7 +186,7 @@ async function main() {
         .upsert({
           name: city,
           state_code: state,
-          state: city, // Will need proper state name mapping
+          state: city,
           slug: slugify(`${city}-${state}`),
           contractor_count: count,
         }, { onConflict: 'slug' });

@@ -28,7 +28,7 @@ const GUIDE_INFO: Record<string, { title: string; tags: string[] }> = {
 
 function getRelatedGuides(currentSlug?: string, limit = 3): { slug: string; title: string }[] {
   if (!currentSlug) {
-    // For city/contractor pages, return most useful guides
+
     return [
       { slug: 'fence-cost', title: GUIDE_INFO['fence-cost'].title },
       { slug: 'choosing-material', title: GUIDE_INFO['choosing-material'].title },
@@ -61,7 +61,7 @@ export default async function RelatedLinks({
   const links: { href: string; label: string }[] = [];
 
   if (pageType === 'guide') {
-    // Guide pages link to top cities and related guides
+
     const cities = await getCities();
     const topCities = cities.slice(0, 3);
     for (const city of topCities) {
@@ -78,7 +78,7 @@ export default async function RelatedLinks({
       });
     }
   } else if (pageType === 'city') {
-    // City pages link to relevant guides
+
     const relatedGuides = getRelatedGuides();
     for (const guide of relatedGuides) {
       links.push({
@@ -97,7 +97,7 @@ export default async function RelatedLinks({
       });
     }
   } else if (pageType === 'contractor') {
-    // Contractor pages link to city page and guides
+
     if (cityName && stateCode) {
       const citySlug = `${cityName}-${stateCode}`.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       links.push({

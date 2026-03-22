@@ -8,7 +8,7 @@ export async function POST(request: Request) {
 
     const { businessName, contactName, email, phone, city, state, website, message, contractorId } = body;
 
-    // Validate required fields
+
     if (!businessName || !contactName || !email || !phone || !city || !state) {
       return NextResponse.json(
         { error: 'Missing required fields' },
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
     const claimId = insertData?.[0]?.id;
 
-    // Send email notification (non-blocking — don't fail the request if email fails)
+
     await notifyClaimSubmission({
       businessName: businessName.trim(),
       contactName: contactName.trim(),

@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Google Search Console verification (already done via DNS)
+
   },
 };
 

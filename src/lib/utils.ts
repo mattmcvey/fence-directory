@@ -23,7 +23,7 @@ export function getDistanceMiles(
   lat2: number,
   lng2: number
 ): number {
-  const R = 3959; // Earth's radius in miles
+  const R = 3959;
   const dLat = toRad(lat2 - lat1);
   const dLng = toRad(lng2 - lng1);
   const a =

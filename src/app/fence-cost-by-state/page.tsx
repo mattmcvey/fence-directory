@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   ...ogMeta({ title, description, path: '/fence-cost-by-state' }),
 };
 
-// All 50 states with codes
+
 const ALL_STATES: { name: string; code: string; slug: string }[] = [
   { name: 'Alabama', code: 'AL', slug: 'alabama' }, { name: 'Alaska', code: 'AK', slug: 'alaska' },
   { name: 'Arizona', code: 'AZ', slug: 'arizona' }, { name: 'Arkansas', code: 'AR', slug: 'arkansas' },

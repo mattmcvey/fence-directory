@@ -16,7 +16,7 @@ export interface Contractor {
   reviewCount: number;
   services: FenceService[];
   materials: FenceMaterial[];
-  serviceRadius: number; // miles
+  serviceRadius: number;
   yearsInBusiness?: number;
   licensed: boolean;
   insured: boolean;

@@ -46,7 +46,7 @@ function ClaimForm() {
         return;
       }
 
-      // If they came from the Pro plan, redirect to Stripe checkout
+
       if (plan === 'pro') {
         const stripeRes = await fetch('/api/stripe/checkout', {
           method: 'POST',
@@ -63,7 +63,7 @@ function ClaimForm() {
           window.location.href = stripeData.url;
           return;
         }
-        // If Stripe fails, show error but don't block — they still got the free claim
+
         setError('Claim submitted! But we couldn\'t start checkout. Please contact us or try again from the pricing page.');
       }
 

@@ -48,7 +48,7 @@ export default function AnalyticsDashboard() {
   }, [days, adminKey]);
 
   useEffect(() => {
-    // Check localStorage for saved key
+
     const saved = localStorage.getItem('ff_admin_key');
     if (saved) {
       setAdminKey(saved);
@@ -92,7 +92,7 @@ export default function AnalyticsDashboard() {
     );
   }
 
-  // Find max for chart scaling
+
   const maxViews = data ? Math.max(...data.dailyTrend.map(d => d.views), 1) : 1;
 
   return (

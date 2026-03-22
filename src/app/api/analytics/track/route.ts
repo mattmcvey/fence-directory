@@ -6,12 +6,12 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
     const supabase = getServiceClient();
 
-    // Get geo info from Vercel headers (free on Vercel)
+
     const country = request.headers.get('x-vercel-ip-country') || null;
     const city = request.headers.get('x-vercel-ip-city') || null;
     const region = request.headers.get('x-vercel-ip-country-region') || null;
 
-    // Check if this session has been seen before (for unique visitor tracking)
+
     const { count } = await supabase
       .from('pageviews')
       .select('*', { count: 'exact', head: true })

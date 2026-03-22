@@ -1,7 +1,5 @@
-/**
- * Data access layer — reads from Supabase.
- * Returns empty results when Supabase is not configured (local dev without env vars).
- */
+
+
 import { supabase } from './supabase';
 import { Contractor, City, State } from '@/types';
 
@@ -228,7 +226,7 @@ export async function getSiteStats(): Promise<{
   return { contractorCount, avgRating, cityCount, freeEstimatePercent };
 }
 
-// All 50 US states — static reference data
+
 const ALL_STATES: { name: string; code: string; slug: string }[] = [
   { name: 'Alabama', code: 'AL', slug: 'alabama' },
   { name: 'Alaska', code: 'AK', slug: 'alaska' },

@@ -156,8 +156,8 @@ export default function BestTimeToInstallPage() {
       <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-10">
         <p className="text-green-800 font-semibold text-lg mb-2">💡 Quick Answer</p>
         <p className="text-green-700">
-          <strong>Fall (September–October)</strong> is the best time for most homeowners — you get lower prices, good weather, and easy scheduling. 
-          <strong> Winter</strong> is cheapest but only works in warmer states. 
+          <strong>Fall (September–October)</strong> is the best time for most homeowners — you get lower prices, good weather, and easy scheduling.
+          <strong> Winter</strong> is cheapest but only works in warmer states.
           <strong> Summer</strong> is the most expensive and hardest to schedule.
         </p>
       </div>

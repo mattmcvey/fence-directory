@@ -5,7 +5,7 @@ import { BLOG_POSTS } from '@/lib/blog-data';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://getfencefind.com';
 
-  // Fixed dates — avoid new Date() which makes Google think everything updates daily
+
   const CONTENT_UPDATED = '2026-03-01';
   const SITE_UPDATED = '2026-03-05';
 
@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/about`, lastModified: CONTENT_UPDATED, changeFrequency: 'monthly', priority: 0.5 },
   ];
 
-  // Guide pages
+
   const guides = [
     'fence-cost', 'choosing-material', 'wood-vs-vinyl', 'fence-permits',
     'privacy-fence', 'chain-link-fence', 'fence-repair', 'how-long-fence-installation',
@@ -41,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  // Blog pages
+
   const blogPages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/blog`, lastModified: SITE_UPDATED, changeFrequency: 'weekly', priority: 0.8 },
     ...BLOG_POSTS.map((post) => ({
@@ -59,7 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  // City pages (high priority — local landing pages)
+
   const cityPages: MetadataRoute.Sitemap = cities.map((city) => ({
     url: `${baseUrl}/city/${city.slug}`,
     lastModified: CONTENT_UPDATED,
@@ -67,7 +67,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  // Fence cost pages (high priority — money keywords)
+
   const fenceCostPages: MetadataRoute.Sitemap = cities.map((city) => ({
     url: `${baseUrl}/fence-cost/${city.slug}`,
     lastModified: CONTENT_UPDATED,
@@ -75,7 +75,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  // Fence permit pages
+
   const fencePermitPages: MetadataRoute.Sitemap = cities.map((city) => ({
     url: `${baseUrl}/fence-permits/${city.slug}`,
     lastModified: CONTENT_UPDATED,
@@ -83,7 +83,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // Contractor pages — use a fixed date since we don't have updated_at available in slugs-only query
+
   const contractorPages: MetadataRoute.Sitemap = contractorSlugs.map((slug) => ({
     url: `${baseUrl}/contractor/${slug}`,
     lastModified: CONTENT_UPDATED,

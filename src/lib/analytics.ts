@@ -1,5 +1,4 @@
-// Client-side pageview tracker
-// Sends pageview data to our API route
+
 
 function getDeviceType(): string {
   if (typeof window === 'undefined') return 'unknown';
@@ -31,14 +30,14 @@ function getOS(): string {
   return 'Other';
 }
 
-// Generate a daily session hash (privacy-friendly, like Vercel)
+
 function getSessionId(): string {
   const today = new Date().toISOString().split('T')[0];
   const key = `ff_sid_${today}`;
   let sid = sessionStorage.getItem(key);
   if (!sid) {
     sid = crypto.randomUUID();
-    // Clear old session IDs
+
     for (let i = 0; i < sessionStorage.length; i++) {
       const k = sessionStorage.key(i);
       if (k && k.startsWith('ff_sid_') && k !== key) {
@@ -57,7 +56,7 @@ export function trackPageview(path?: string) {
 
   const pagePath = path || window.location.pathname;
 
-  // Don't track admin pages or duplicate pageviews in same navigation
+
   if (pagePath.startsWith('/admin')) return;
   if (tracked.has(pagePath)) return;
   tracked.add(pagePath);
@@ -73,12 +72,12 @@ export function trackPageview(path?: string) {
     session_id: sessionId,
   };
 
-  // Use sendBeacon for reliability (won't block navigation)
+
   const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
   navigator.sendBeacon('/api/analytics/track', blob);
 }
 
-// Reset tracked pages (call on route change)
+
 export function resetTracking() {
   tracked.clear();
 }

@@ -1,11 +1,4 @@
-/**
- * Update generic contractor descriptions to richer versions.
- * Only updates contractors whose description matches the old generic pattern.
- * Does NOT overwrite custom/manually-written descriptions.
- *
- * Usage:
- *   NEXT_PUBLIC_SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npx tsx scripts/update-descriptions.ts
- */
+
 
 import { createClient } from '@supabase/supabase-js';
 
@@ -64,7 +57,7 @@ async function main() {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // Fetch contractors with the old generic description pattern
+
   const { data: contractors, error } = await supabase
     .from('contractors')
     .select('id, name, city, state, rating, review_count, materials, services, description')
