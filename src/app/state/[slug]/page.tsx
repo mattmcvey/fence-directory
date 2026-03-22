@@ -1,4 +1,4 @@
-import { getStates, getContractorsByState, getCitiesByState } from '@/lib/data';
+import { getStates, getStatesWithCounts, getContractorsByState, getCitiesByState } from '@/lib/data';
 import ContractorCard from '@/components/ContractorCard';
 import SearchBar from '@/components/SearchBar';
 import Link from 'next/link';
@@ -14,7 +14,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const states = getStates();
+  const states = await getStatesWithCounts();
   const state = states.find((s) => s.slug === slug);
   if (!state) return { title: 'State Not Found — FenceFind' };
   return {
@@ -30,7 +30,7 @@ export async function generateStaticParams() {
 
 export default async function StatePage({ params }: PageProps) {
   const { slug } = await params;
-  const states = getStates();
+  const states = await getStatesWithCounts();
   const state = states.find((s) => s.slug === slug);
   if (!state) notFound();
 
