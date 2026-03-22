@@ -200,28 +200,42 @@ export async function getSiteStats(): Promise<{
     return { contractorCount: 0, avgRating: '0', cityCount: 0, freeEstimatePercent: 0 };
   }
 
-  const [countRes, ratingRes, cityRes, estimateRes] = await Promise.all([
+  const [countRes, cityRes] = await Promise.all([
     supabase.from('contractors').select('id', { count: 'exact', head: true }),
-    supabase.from('contractors').select('rating'),
     supabase.from('cities').select('id', { count: 'exact', head: true }),
-    supabase.from('contractors').select('free_estimates'),
   ]);
 
   const contractorCount = countRes.count || 0;
   const cityCount = cityRes.count || 0;
 
-  const ratings = (ratingRes.data || [])
-    .map(r => parseFloat(r.rating))
-    .filter(r => r > 0);
-  const avgRating = ratings.length > 0
-    ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1)
-    : '0';
+  let ratingSum = 0;
+  let ratingCount = 0;
+  let freeCount = 0;
+  let totalCount = 0;
+  let offset = 0;
+  const pageSize = 1000;
 
-  const estimates = estimateRes.data || [];
-  const freeCount = estimates.filter(e => e.free_estimates === true).length;
-  const freeEstimatePercent = estimates.length > 0
-    ? Math.round((freeCount / estimates.length) * 100)
-    : 0;
+  while (true) {
+    const { data, error } = await supabase
+      .from('contractors')
+      .select('rating, free_estimates')
+      .range(offset, offset + pageSize - 1);
+
+    if (error || !data || data.length === 0) break;
+
+    for (const row of data) {
+      const r = parseFloat(row.rating);
+      if (r > 0) { ratingSum += r; ratingCount++; }
+      if (row.free_estimates === true) freeCount++;
+      totalCount++;
+    }
+
+    if (data.length < pageSize) break;
+    offset += pageSize;
+  }
+
+  const avgRating = ratingCount > 0 ? (ratingSum / ratingCount).toFixed(1) : '0';
+  const freeEstimatePercent = totalCount > 0 ? Math.round((freeCount / totalCount) * 100) : 0;
 
   return { contractorCount, avgRating, cityCount, freeEstimatePercent };
 }
@@ -291,15 +305,24 @@ export function getStates(): State[] {
 export async function getStatesWithCounts(): Promise<State[]> {
   if (!isSupabaseConfigured) return getStates();
 
-  const { data, error } = await supabase
-    .from('contractors')
-    .select('state');
-
   const counts: Record<string, number> = {};
-  if (!error && data) {
+  let offset = 0;
+  const pageSize = 1000;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from('contractors')
+      .select('state')
+      .range(offset, offset + pageSize - 1);
+
+    if (error || !data || data.length === 0) break;
+
     for (const row of data) {
       counts[row.state] = (counts[row.state] || 0) + 1;
     }
+
+    if (data.length < pageSize) break;
+    offset += pageSize;
   }
 
   return ALL_STATES.map(s => ({
