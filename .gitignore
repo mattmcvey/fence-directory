@@ -43,3 +43,6 @@ supabase/.temp/
 
 # Google service account key
 gsc-service-account.json
+
+# Scraper cache (staging data before Supabase import)
+/data/

@@ -1,8 +1,8 @@
 /**
- * Data access layer — reads from Supabase, falls back to seed data if not configured.
+ * Data access layer — reads from Supabase.
+ * Returns empty results when Supabase is not configured (local dev without env vars).
  */
 import { supabase } from './supabase';
-import { SEED_CONTRACTORS, SEED_CITIES, MAJOR_STATES } from './seed-data';
 import { Contractor, City, State } from '@/types';
 
 const isSupabaseConfigured = !!(
@@ -23,7 +23,7 @@ function rowToContractor(row: any): Contractor {
     city: row.city,
     state: row.state,
     zip: row.zip || '',
-    lat: 0, // extracted from location if needed
+    lat: 0,
     lng: 0,
     rating: parseFloat(row.rating) || 0,
     reviewCount: row.review_count || 0,
@@ -44,7 +44,7 @@ function rowToContractor(row: any): Contractor {
 }
 
 export async function getFeaturedContractors(): Promise<Contractor[]> {
-  if (!isSupabaseConfigured) return SEED_CONTRACTORS.filter(c => c.featured);
+  if (!isSupabaseConfigured) return [];
 
   const { data, error } = await supabase
     .from('contractors')
@@ -53,14 +53,12 @@ export async function getFeaturedContractors(): Promise<Contractor[]> {
     .order('rating', { ascending: false })
     .limit(6);
 
-  if (error || !data) return SEED_CONTRACTORS.filter(c => c.featured);
+  if (error || !data) return [];
   return data.map(rowToContractor);
 }
 
 export async function getContractorBySlug(slug: string): Promise<Contractor | null> {
-  if (!isSupabaseConfigured) {
-    return SEED_CONTRACTORS.find(c => c.slug === slug) || null;
-  }
+  if (!isSupabaseConfigured) return null;
 
   const { data, error } = await supabase
     .from('contractors')
@@ -68,24 +66,12 @@ export async function getContractorBySlug(slug: string): Promise<Contractor | nu
     .eq('slug', slug)
     .single();
 
-  if (error || !data) return SEED_CONTRACTORS.find(c => c.slug === slug) || null;
+  if (error || !data) return null;
   return rowToContractor(data);
 }
 
 export async function searchContractors(query: string): Promise<Contractor[]> {
-  if (!isSupabaseConfigured) {
-    const q = query.toLowerCase();
-    return SEED_CONTRACTORS.filter(c =>
-      c.city.toLowerCase().includes(q) ||
-      c.state.toLowerCase().includes(q) ||
-      c.zip.includes(q) ||
-      c.name.toLowerCase().includes(q)
-    ).sort((a, b) => {
-      if (a.featured && !b.featured) return -1;
-      if (!a.featured && b.featured) return 1;
-      return b.rating - a.rating;
-    });
-  }
+  if (!isSupabaseConfigured) return [];
 
   const { data, error } = await supabase
     .from('contractors')
@@ -100,14 +86,7 @@ export async function searchContractors(query: string): Promise<Contractor[]> {
 }
 
 export async function getContractorsByState(stateCode: string): Promise<Contractor[]> {
-  if (!isSupabaseConfigured) {
-    return SEED_CONTRACTORS.filter(c => c.state === stateCode)
-      .sort((a, b) => {
-        if (a.featured && !b.featured) return -1;
-        if (!a.featured && b.featured) return 1;
-        return b.rating - a.rating;
-      });
-  }
+  if (!isSupabaseConfigured) return [];
 
   const { data, error } = await supabase
     .from('contractors')
@@ -122,11 +101,7 @@ export async function getContractorsByState(stateCode: string): Promise<Contract
 }
 
 export async function getContractorsByCity(cityName: string, stateCode: string): Promise<Contractor[]> {
-  if (!isSupabaseConfigured) {
-    return SEED_CONTRACTORS.filter(c =>
-      c.city.toLowerCase() === cityName.toLowerCase() && c.state === stateCode
-    );
-  }
+  if (!isSupabaseConfigured) return [];
 
   const { data, error } = await supabase
     .from('contractors')
@@ -142,25 +117,25 @@ export async function getContractorsByCity(cityName: string, stateCode: string):
 }
 
 export async function getAllContractorSlugs(): Promise<string[]> {
-  if (!isSupabaseConfigured) return SEED_CONTRACTORS.map(c => c.slug);
+  if (!isSupabaseConfigured) return [];
 
   const { data, error } = await supabase
     .from('contractors')
     .select('slug');
 
-  if (error || !data) return SEED_CONTRACTORS.map(c => c.slug);
+  if (error || !data) return [];
   return data.map(d => d.slug);
 }
 
 export async function getCities(): Promise<City[]> {
-  if (!isSupabaseConfigured) return SEED_CITIES;
+  if (!isSupabaseConfigured) return [];
 
   const { data, error } = await supabase
     .from('cities')
     .select('*')
     .order('population', { ascending: false });
 
-  if (error || !data) return SEED_CITIES;
+  if (error || !data) return [];
   return data.map(row => ({
     name: row.name,
     state: row.state,
@@ -174,7 +149,7 @@ export async function getCities(): Promise<City[]> {
 }
 
 export async function getCitiesByState(stateCode: string): Promise<City[]> {
-  if (!isSupabaseConfigured) return SEED_CITIES.filter(c => c.stateCode === stateCode);
+  if (!isSupabaseConfigured) return [];
 
   const { data, error } = await supabase
     .from('cities')
@@ -182,7 +157,7 @@ export async function getCitiesByState(stateCode: string): Promise<City[]> {
     .eq('state_code', stateCode)
     .order('population', { ascending: false });
 
-  if (error || !data) return SEED_CITIES.filter(c => c.stateCode === stateCode);
+  if (error || !data) return [];
   return data.map(row => ({
     name: row.name,
     state: row.state,
@@ -196,7 +171,7 @@ export async function getCitiesByState(stateCode: string): Promise<City[]> {
 }
 
 export async function getCityBySlug(slug: string): Promise<City | null> {
-  if (!isSupabaseConfigured) return SEED_CITIES.find(c => c.slug === slug) || null;
+  if (!isSupabaseConfigured) return null;
 
   const { data, error } = await supabase
     .from('cities')
@@ -204,7 +179,7 @@ export async function getCityBySlug(slug: string): Promise<City | null> {
     .eq('slug', slug)
     .single();
 
-  if (error || !data) return SEED_CITIES.find(c => c.slug === slug) || null;
+  if (error || !data) return null;
   return {
     name: data.name,
     state: data.state,
@@ -224,12 +199,7 @@ export async function getSiteStats(): Promise<{
   freeEstimatePercent: number;
 }> {
   if (!isSupabaseConfigured) {
-    return {
-      contractorCount: SEED_CONTRACTORS.length,
-      avgRating: '4.5',
-      cityCount: SEED_CITIES.length,
-      freeEstimatePercent: 100,
-    };
+    return { contractorCount: 0, avgRating: '0', cityCount: 0, freeEstimatePercent: 0 };
   }
 
   const [countRes, ratingRes, cityRes, estimateRes] = await Promise.all([
@@ -242,7 +212,6 @@ export async function getSiteStats(): Promise<{
   const contractorCount = countRes.count || 0;
   const cityCount = cityRes.count || 0;
 
-  // Calculate average rating from non-zero ratings
   const ratings = (ratingRes.data || [])
     .map(r => parseFloat(r.rating))
     .filter(r => r > 0);
@@ -250,7 +219,6 @@ export async function getSiteStats(): Promise<{
     ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1)
     : '0';
 
-  // Calculate free estimate percentage
   const estimates = estimateRes.data || [];
   const freeCount = estimates.filter(e => e.free_estimates === true).length;
   const freeEstimatePercent = estimates.length > 0
@@ -260,9 +228,87 @@ export async function getSiteStats(): Promise<{
   return { contractorCount, avgRating, cityCount, freeEstimatePercent };
 }
 
+// All 50 US states — static reference data
+const ALL_STATES: { name: string; code: string; slug: string }[] = [
+  { name: 'Alabama', code: 'AL', slug: 'alabama' },
+  { name: 'Alaska', code: 'AK', slug: 'alaska' },
+  { name: 'Arizona', code: 'AZ', slug: 'arizona' },
+  { name: 'Arkansas', code: 'AR', slug: 'arkansas' },
+  { name: 'California', code: 'CA', slug: 'california' },
+  { name: 'Colorado', code: 'CO', slug: 'colorado' },
+  { name: 'Connecticut', code: 'CT', slug: 'connecticut' },
+  { name: 'Delaware', code: 'DE', slug: 'delaware' },
+  { name: 'Florida', code: 'FL', slug: 'florida' },
+  { name: 'Georgia', code: 'GA', slug: 'georgia' },
+  { name: 'Hawaii', code: 'HI', slug: 'hawaii' },
+  { name: 'Idaho', code: 'ID', slug: 'idaho' },
+  { name: 'Illinois', code: 'IL', slug: 'illinois' },
+  { name: 'Indiana', code: 'IN', slug: 'indiana' },
+  { name: 'Iowa', code: 'IA', slug: 'iowa' },
+  { name: 'Kansas', code: 'KS', slug: 'kansas' },
+  { name: 'Kentucky', code: 'KY', slug: 'kentucky' },
+  { name: 'Louisiana', code: 'LA', slug: 'louisiana' },
+  { name: 'Maine', code: 'ME', slug: 'maine' },
+  { name: 'Maryland', code: 'MD', slug: 'maryland' },
+  { name: 'Massachusetts', code: 'MA', slug: 'massachusetts' },
+  { name: 'Michigan', code: 'MI', slug: 'michigan' },
+  { name: 'Minnesota', code: 'MN', slug: 'minnesota' },
+  { name: 'Mississippi', code: 'MS', slug: 'mississippi' },
+  { name: 'Missouri', code: 'MO', slug: 'missouri' },
+  { name: 'Montana', code: 'MT', slug: 'montana' },
+  { name: 'Nebraska', code: 'NE', slug: 'nebraska' },
+  { name: 'Nevada', code: 'NV', slug: 'nevada' },
+  { name: 'New Hampshire', code: 'NH', slug: 'new-hampshire' },
+  { name: 'New Jersey', code: 'NJ', slug: 'new-jersey' },
+  { name: 'New Mexico', code: 'NM', slug: 'new-mexico' },
+  { name: 'New York', code: 'NY', slug: 'new-york' },
+  { name: 'North Carolina', code: 'NC', slug: 'north-carolina' },
+  { name: 'North Dakota', code: 'ND', slug: 'north-dakota' },
+  { name: 'Ohio', code: 'OH', slug: 'ohio' },
+  { name: 'Oklahoma', code: 'OK', slug: 'oklahoma' },
+  { name: 'Oregon', code: 'OR', slug: 'oregon' },
+  { name: 'Pennsylvania', code: 'PA', slug: 'pennsylvania' },
+  { name: 'Rhode Island', code: 'RI', slug: 'rhode-island' },
+  { name: 'South Carolina', code: 'SC', slug: 'south-carolina' },
+  { name: 'South Dakota', code: 'SD', slug: 'south-dakota' },
+  { name: 'Tennessee', code: 'TN', slug: 'tennessee' },
+  { name: 'Texas', code: 'TX', slug: 'texas' },
+  { name: 'Utah', code: 'UT', slug: 'utah' },
+  { name: 'Vermont', code: 'VT', slug: 'vermont' },
+  { name: 'Virginia', code: 'VA', slug: 'virginia' },
+  { name: 'Washington', code: 'WA', slug: 'washington' },
+  { name: 'West Virginia', code: 'WV', slug: 'west-virginia' },
+  { name: 'Wisconsin', code: 'WI', slug: 'wisconsin' },
+  { name: 'Wyoming', code: 'WY', slug: 'wyoming' },
+];
+
 export function getStates(): State[] {
-  // States are static for now
-  return MAJOR_STATES;
+  return ALL_STATES.map(s => ({
+    ...s,
+    cities: [],
+    contractorCount: 0,
+  }));
+}
+
+export async function getStatesWithCounts(): Promise<State[]> {
+  if (!isSupabaseConfigured) return getStates();
+
+  const { data, error } = await supabase
+    .from('contractors')
+    .select('state');
+
+  const counts: Record<string, number> = {};
+  if (!error && data) {
+    for (const row of data) {
+      counts[row.state] = (counts[row.state] || 0) + 1;
+    }
+  }
+
+  return ALL_STATES.map(s => ({
+    ...s,
+    cities: [],
+    contractorCount: counts[s.code] || 0,
+  }));
 }
 
 export async function submitClaimRequest(data: {
@@ -275,7 +321,7 @@ export async function submitClaimRequest(data: {
   website?: string;
   message?: string;
 }): Promise<boolean> {
-  if (!isSupabaseConfigured) return true; // Fake success in dev
+  if (!isSupabaseConfigured) return true;
 
   const { error } = await supabase
     .from('claim_requests')

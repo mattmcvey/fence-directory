@@ -1,5 +1,13 @@
 import Link from 'next/link';
-import { MAJOR_STATES } from '@/lib/seed-data';
+
+const POPULAR_STATES = [
+  { name: 'Texas', slug: 'texas' },
+  { name: 'California', slug: 'california' },
+  { name: 'Florida', slug: 'florida' },
+  { name: 'Colorado', slug: 'colorado' },
+  { name: 'Georgia', slug: 'georgia' },
+  { name: 'North Carolina', slug: 'north-carolina' },
+];
 
 export default function Footer() {
   return (
@@ -15,8 +23,8 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">Popular States</h4>
             <ul className="space-y-2 text-sm">
-              {MAJOR_STATES.slice(0, 6).map((state) => (
-                <li key={state.code}>
+              {POPULAR_STATES.map((state) => (
+                <li key={state.slug}>
                   <Link href={`/state/${state.slug}`} className="hover:text-green-400 transition-colors">
                     {state.name} Fence Contractors
                   </Link>
