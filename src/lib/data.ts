@@ -217,6 +217,49 @@ export async function getCityBySlug(slug: string): Promise<City | null> {
   };
 }
 
+export async function getSiteStats(): Promise<{
+  contractorCount: number;
+  avgRating: string;
+  cityCount: number;
+  freeEstimatePercent: number;
+}> {
+  if (!isSupabaseConfigured) {
+    return {
+      contractorCount: SEED_CONTRACTORS.length,
+      avgRating: '4.5',
+      cityCount: SEED_CITIES.length,
+      freeEstimatePercent: 100,
+    };
+  }
+
+  const [countRes, ratingRes, cityRes, estimateRes] = await Promise.all([
+    supabase.from('contractors').select('id', { count: 'exact', head: true }),
+    supabase.from('contractors').select('rating'),
+    supabase.from('cities').select('id', { count: 'exact', head: true }),
+    supabase.from('contractors').select('free_estimates'),
+  ]);
+
+  const contractorCount = countRes.count || 0;
+  const cityCount = cityRes.count || 0;
+
+  // Calculate average rating from non-zero ratings
+  const ratings = (ratingRes.data || [])
+    .map(r => parseFloat(r.rating))
+    .filter(r => r > 0);
+  const avgRating = ratings.length > 0
+    ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1)
+    : '0';
+
+  // Calculate free estimate percentage
+  const estimates = estimateRes.data || [];
+  const freeCount = estimates.filter(e => e.free_estimates === true).length;
+  const freeEstimatePercent = estimates.length > 0
+    ? Math.round((freeCount / estimates.length) * 100)
+    : 0;
+
+  return { contractorCount, avgRating, cityCount, freeEstimatePercent };
+}
+
 export function getStates(): State[] {
   // States are static for now
   return MAJOR_STATES;

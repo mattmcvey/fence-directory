@@ -1,6 +1,6 @@
 import SearchBar from '@/components/SearchBar';
 import ContractorCard from '@/components/ContractorCard';
-import { getFeaturedContractors, getCities, getStates } from '@/lib/data';
+import { getFeaturedContractors, getCities, getStates, getSiteStats } from '@/lib/data';
 import { Shield, Star, DollarSign, Users, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { websiteSchema, ogMeta } from '@/lib/seo';
@@ -20,8 +20,11 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const featuredContractors = await getFeaturedContractors();
-  const cities = await getCities();
+  const [featuredContractors, cities, stats] = await Promise.all([
+    getFeaturedContractors(),
+    getCities(),
+    getSiteStats(),
+  ]);
   const states = getStates();
 
   return (
@@ -54,23 +57,23 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div className="flex flex-col items-center">
               <Users className="w-8 h-8 text-green-600 mb-2" />
-              <span className="text-2xl font-bold text-gray-900">10,000+</span>
+              <span className="text-2xl font-bold text-gray-900">{stats.contractorCount.toLocaleString()}+</span>
               <span className="text-sm text-gray-500">Contractors Listed</span>
             </div>
             <div className="flex flex-col items-center">
               <Star className="w-8 h-8 text-yellow-500 mb-2" />
-              <span className="text-2xl font-bold text-gray-900">4.7</span>
+              <span className="text-2xl font-bold text-gray-900">{stats.avgRating}</span>
               <span className="text-sm text-gray-500">Average Rating</span>
             </div>
             <div className="flex flex-col items-center">
               <Shield className="w-8 h-8 text-blue-500 mb-2" />
-              <span className="text-2xl font-bold text-gray-900">100%</span>
-              <span className="text-sm text-gray-500">Licensed & Insured</span>
+              <span className="text-2xl font-bold text-gray-900">{stats.cityCount}+</span>
+              <span className="text-sm text-gray-500">Cities Covered</span>
             </div>
             <div className="flex flex-col items-center">
               <DollarSign className="w-8 h-8 text-green-600 mb-2" />
-              <span className="text-2xl font-bold text-gray-900">Free</span>
-              <span className="text-sm text-gray-500">Estimates Available</span>
+              <span className="text-2xl font-bold text-gray-900">{stats.freeEstimatePercent}%</span>
+              <span className="text-sm text-gray-500">Offer Free Estimates</span>
             </div>
           </div>
         </div>
