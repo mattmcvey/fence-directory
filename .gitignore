@@ -46,3 +46,6 @@ gsc-service-account.json
 
 # Scraper cache (staging data before Supabase import)
 /data/
+
+# Progress log
+progress.txt

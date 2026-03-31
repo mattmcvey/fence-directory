@@ -1,6 +1,6 @@
 import { getCityBySlug, getContractorsByCity, getCities } from '@/lib/data';
 import { stateCodeToName } from '@/lib/utils';
-import { breadcrumbSchema, faqSchema, getCostData, ogMeta } from '@/lib/seo';
+import { breadcrumbSchema, faqSchema, getCostData, getRegionData, COST_MATERIAL_NAMES, ogMeta } from '@/lib/seo';
 import ContractorCard from '@/components/ContractorCard';
 import SearchBar from '@/components/SearchBar';
 import Link from 'next/link';
@@ -41,6 +41,7 @@ export default async function CityPage({ params }: PageProps) {
   const stateName = stateCodeToName(city.stateCode);
   const contractors = await getContractorsByCity(city.name, city.stateCode);
   const costs = getCostData(city.stateCode);
+  const region = getRegionData(city.stateCode);
 
   const faqs = [
     {
@@ -52,8 +53,24 @@ export default async function CityPage({ params }: PageProps) {
       a: `Fence installation in ${city.name} typically costs $${costs.project.low.toLocaleString()}–$${costs.project.high.toLocaleString()} depending on material and fence length. Wood privacy fences average $${costs.materials.wood.avg}/ft, vinyl $${costs.materials.vinyl.avg}/ft, and chain link $${costs.materials.chainLink.avg}/ft installed.`,
     },
     {
+      q: `What's the best fence material for ${city.name}?`,
+      a: `${city.name} has a ${region.label} climate. ${region.materialTip}`,
+    },
+    {
+      q: `Do I need a permit to build a fence in ${city.name}?`,
+      a: `Most municipalities in ${stateName} require a permit for new fence installations. Contact the ${city.name} building department for height limits, setback rules, and application requirements. Typical permit costs range from $20–$200.`,
+    },
+    {
       q: `What should I look for in a ${city.name} fence contractor?`,
-      a: `Look for contractors who are licensed and insured in ${stateName}, have strong reviews, offer free written estimates, and have experience with your preferred fence material. Get at least 3 quotes.`,
+      a: `Look for contractors who are licensed and insured in ${stateName}, have strong reviews, offer free written estimates, and have experience with your preferred fence material. Get at least 3 quotes and ask for references from recent projects in your area.`,
+    },
+    {
+      q: `When is the best time to install a fence in ${city.name}?`,
+      a: `The best time to install a fence in ${city.name} is ${region.bestSeason}. ${region.weatherConsideration}`,
+    },
+    {
+      q: `Should I install a fence myself or hire a contractor?`,
+      a: `DIY fence installation can save 40–50% on labor costs, but it requires proper tools, physical labor, and knowledge of local building codes. Mistakes in post depth or alignment can lead to leaning or failing fences. For most homeowners, hiring a licensed contractor ensures the job meets code requirements and comes with a workmanship warranty.`,
     },
   ];
 
@@ -174,28 +191,93 @@ export default async function CityPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* SEO content + FAQ */}
-      <div className="mt-10 bg-green-50 rounded-xl p-6 sm:p-8">
+      {/* Fence costs summary */}
+      <section className="mt-10">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          Fence Installation in {city.name}, {city.stateCode}
+          Fence Installation Costs in {city.name}
         </h2>
-        <div className="prose prose-green max-w-none text-gray-700">
+        <p className="text-gray-600 mb-4">
+          Average fence installation in {city.name} costs <strong>${costs.project.low.toLocaleString()}–${costs.project.high.toLocaleString()}</strong> for
+          a typical 150-linear-foot project. Here&apos;s what each material costs per linear foot installed:
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="text-left px-4 py-3 font-semibold text-gray-900">Material</th>
+                <th className="text-left px-4 py-3 font-semibold text-gray-900">Cost per Foot</th>
+                <th className="text-left px-4 py-3 font-semibold text-gray-900">150 ft Project</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(costs.materials).map(([key, mat]) => (
+                <tr key={key} className="border-t border-gray-100">
+                  <td className="px-4 py-3 text-gray-900 font-medium">{COST_MATERIAL_NAMES[key] || key}</td>
+                  <td className="px-4 py-3 text-gray-600">${mat.low}–${mat.high}/ft</td>
+                  <td className="px-4 py-3 text-gray-600">${(150 * mat.low).toLocaleString()}–${(150 * mat.high).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-sm text-gray-500 mt-2">
+          Prices reflect {stateName} averages including materials and labor.{' '}
+          <Link href={`/fence-cost/${slug}`} className="text-green-600 hover:text-green-700 font-medium">
+            See full cost breakdown →
+          </Link>
+        </p>
+      </section>
+
+      {/* Climate-specific material recommendations */}
+      <section className="mt-10 bg-green-50 rounded-xl p-6 sm:p-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          Choosing a Fence Material in {city.name}
+        </h2>
+        <div className="text-gray-700 space-y-3">
           <p>
-            Looking for a fence contractor in {city.name}, {stateName}? FenceFind connects
-            homeowners with {city.contractorCount}+ licensed and insured fence professionals serving the
-            {' '}{city.name} area.
+            {city.name} has a {region.label} climate, which is an important factor when choosing
+            fence materials. The most popular options for {stateName} homeowners
+            are {region.topMaterials.join(', ')}.
           </p>
           <p>
-            Popular fence types in {city.name} include wood privacy fences, vinyl fencing, chain link, and
-            ornamental iron. Most contractors in the area offer free estimates and can complete residential
-            fence installation within 1–3 days.
+            {region.materialTip}
           </p>
           <p>
-            To get started, search above or browse our listed contractors. We recommend getting at least
-            3 quotes before making your decision.
+            {region.weatherConsideration}
+          </p>
+          <p className="text-sm">
+            <Link href="/guides/choosing-material" className="text-green-600 hover:text-green-700 font-medium">
+              Read our full material comparison guide →
+            </Link>
           </p>
         </div>
-      </div>
+      </section>
+
+      {/* Hiring tips */}
+      <section className="mt-10">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          How to Hire a Fence Contractor in {city.name}
+        </h2>
+        <div className="text-gray-700 space-y-3">
+          <p>
+            Finding the right fence contractor in {city.name} starts with comparing multiple quotes.
+            We recommend getting at least 3 written estimates so you can compare pricing, timelines,
+            and warranty terms.
+          </p>
+          <ul className="list-disc pl-5 space-y-2 text-gray-600">
+            <li><strong>Verify licensing and insurance</strong> — Ask for proof of liability insurance and a valid contractor license in {stateName}. This protects you if something goes wrong during installation.</li>
+            <li><strong>Check reviews and references</strong> — Look at Google reviews and ask for 2–3 references from recent fence projects in your area.</li>
+            <li><strong>Get written estimates</strong> — A detailed quote should include materials, labor, permits, post depth, cleanup, and warranty terms. Avoid contractors who only give verbal estimates.</li>
+            <li><strong>Ask about permits</strong> — A professional contractor should handle the permit process or clearly explain what&apos;s required in {city.name}.</li>
+            <li><strong>Confirm the timeline</strong> — Most residential fence installations take 1–3 days, but scheduling can vary by season. The best time to install in {city.name} is {region.bestSeason}.</li>
+          </ul>
+          <p className="text-sm">
+            <Link href="/guides/getting-quotes" className="text-green-600 hover:text-green-700 font-medium">
+              Read our guide to getting fence quotes →
+            </Link>
+          </p>
+        </div>
+      </section>
 
       {/* FAQ */}
       <section className="mt-10">

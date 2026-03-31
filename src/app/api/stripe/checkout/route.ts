@@ -3,7 +3,7 @@ import { stripe } from '@/lib/stripe';
 
 export async function POST(request: NextRequest) {
   try {
-    const priceId = process.env.STRIPE_PRICE_ID_PRO;
+    const priceId = process.env.STRIPE_PRICE_ID_PRO?.trim();
     if (!priceId) {
       console.error('STRIPE_PRICE_ID_PRO is not set');
       return NextResponse.json(

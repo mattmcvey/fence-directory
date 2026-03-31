@@ -215,3 +215,81 @@ export const COST_MATERIAL_NAMES: Record<string, string> = {
   wroughtIron: 'Wrought Iron',
   composite: 'Composite',
 };
+
+
+type ClimateZone = 'hot-humid' | 'hot-arid' | 'cold' | 'moderate' | 'coastal' | 'tropical';
+
+interface RegionData {
+  climate: ClimateZone;
+  label: string;
+  topMaterials: string[];
+  materialTip: string;
+  bestSeason: string;
+  weatherConsideration: string;
+}
+
+const CLIMATE_BY_STATE: Record<string, ClimateZone> = {
+  AL: 'hot-humid', AK: 'cold', AZ: 'hot-arid', AR: 'hot-humid',
+  CA: 'moderate', CO: 'cold', CT: 'cold', DE: 'moderate',
+  FL: 'tropical', GA: 'hot-humid', HI: 'tropical', ID: 'cold',
+  IL: 'cold', IN: 'cold', IA: 'cold', KS: 'moderate',
+  KY: 'moderate', LA: 'hot-humid', ME: 'cold', MD: 'moderate',
+  MA: 'cold', MI: 'cold', MN: 'cold', MS: 'hot-humid',
+  MO: 'moderate', MT: 'cold', NE: 'cold', NV: 'hot-arid',
+  NH: 'cold', NJ: 'moderate', NM: 'hot-arid', NY: 'cold',
+  NC: 'moderate', ND: 'cold', OH: 'cold', OK: 'hot-humid',
+  OR: 'moderate', PA: 'cold', RI: 'cold', SC: 'hot-humid',
+  SD: 'cold', TN: 'moderate', TX: 'hot-humid', UT: 'hot-arid',
+  VT: 'cold', VA: 'moderate', WA: 'moderate', WV: 'moderate',
+  WI: 'cold', WY: 'cold',
+};
+
+const CLIMATE_DATA: Record<ClimateZone, Omit<RegionData, 'climate'>> = {
+  'hot-humid': {
+    label: 'hot and humid',
+    topMaterials: ['vinyl', 'aluminum', 'chain link'],
+    materialTip: 'Vinyl and aluminum resist moisture, rot, and insects — major concerns in humid climates. Wood fences can work but require regular sealing and staining to prevent warping and decay.',
+    bestSeason: 'fall or early spring',
+    weatherConsideration: 'High humidity and heavy rain accelerate wood rot. Termites are also a concern — choose pressure-treated wood if going with a wood fence.',
+  },
+  'hot-arid': {
+    label: 'hot and dry',
+    topMaterials: ['vinyl', 'wrought iron', 'aluminum'],
+    materialTip: 'Intense sun and UV exposure cause wood to crack, split, and fade quickly. Vinyl, wrought iron, and aluminum hold up best. If choosing wood, cedar is more UV-resistant than pine.',
+    bestSeason: 'fall through early spring',
+    weatherConsideration: 'Extreme heat can make soil hard-packed and difficult to dig, which may increase installation labor costs. Monsoon season (summer) can delay outdoor projects.',
+  },
+  'cold': {
+    label: 'cold with harsh winters',
+    topMaterials: ['vinyl', 'wood', 'aluminum'],
+    materialTip: 'Freeze-thaw cycles can shift fence posts — proper post depth (below the frost line) is critical. Vinyl handles temperature swings well without cracking. Cedar and pressure-treated wood are also strong choices.',
+    bestSeason: 'late spring through early fall',
+    weatherConsideration: 'Ground freezes in winter, making installation difficult or impossible. Plan projects for warmer months. Snow load can stress fences, so heavier-gauge materials and proper bracing are important.',
+  },
+  'moderate': {
+    label: 'moderate',
+    topMaterials: ['wood', 'vinyl', 'composite'],
+    materialTip: 'Most fence materials perform well in moderate climates. Wood privacy fences are the most popular choice. Composite offers a low-maintenance alternative with a wood-like appearance.',
+    bestSeason: 'spring or fall',
+    weatherConsideration: 'Moderate climates are forgiving for all fence types. Focus on the look and maintenance level you want rather than weather resistance.',
+  },
+  'coastal': {
+    label: 'coastal',
+    topMaterials: ['vinyl', 'aluminum', 'composite'],
+    materialTip: 'Salt air corrodes metal and accelerates wood decay. Vinyl and aluminum are the best choices for coastal properties. Avoid wrought iron unless powder-coated, and expect more frequent maintenance on any metal fence.',
+    bestSeason: 'spring or fall',
+    weatherConsideration: 'Salt spray, high winds, and storms are the main concerns. Choose flexible materials that can handle wind load, and make sure posts are set deep enough to resist storm forces.',
+  },
+  'tropical': {
+    label: 'tropical',
+    topMaterials: ['vinyl', 'aluminum', 'chain link'],
+    materialTip: 'Year-round humidity and heavy rainfall make vinyl and aluminum the best options. Wood fences deteriorate quickly without aggressive treatment. Chain link with vinyl coating is a budget-friendly option that holds up well.',
+    bestSeason: 'dry season (winter months)',
+    weatherConsideration: 'Hurricane and tropical storm risk means fences should be built to withstand high winds. Posts should be set in concrete at least 2–3 feet deep. Avoid solid panel fences in high-wind areas — semi-privacy designs reduce wind load.',
+  },
+};
+
+export function getRegionData(stateCode: string): RegionData {
+  const climate = CLIMATE_BY_STATE[stateCode] || 'moderate';
+  return { climate, ...CLIMATE_DATA[climate] };
+}
