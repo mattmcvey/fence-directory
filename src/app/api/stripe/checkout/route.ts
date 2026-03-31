@@ -3,6 +3,15 @@ import { stripe } from '@/lib/stripe';
 
 export async function POST(request: NextRequest) {
   try {
+    const priceId = process.env.STRIPE_PRICE_ID_PRO;
+    if (!priceId) {
+      console.error('STRIPE_PRICE_ID_PRO is not set');
+      return NextResponse.json(
+        { error: 'Checkout is not configured. Please contact support.' },
+        { status: 500 }
+      );
+    }
+
     const body = await request.json();
     const { contractorId, claimId, contractorName, email } = body;
 
@@ -12,8 +21,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    // not used seems to be a leftover
-    const refId = contractorId || claimId || 'new';
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -21,7 +28,7 @@ export async function POST(request: NextRequest) {
       customer_email: email,
       line_items: [
         {
-          price: process.env.STRIPE_PRICE_ID_PRO!,
+          price: priceId,
           quantity: 1,
         },
       ],
@@ -47,7 +54,12 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: session.url });
   } catch (error: any) {
-    console.error('Stripe checkout error:', error);
+    console.error('Stripe checkout error:', {
+      message: error.message,
+      type: error.type,
+      code: error.code,
+      statusCode: error.statusCode,
+    });
     return NextResponse.json(
       { error: error.message || 'Failed to create checkout session' },
       { status: 500 }

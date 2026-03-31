@@ -1,3 +1,7 @@
 import Stripe from 'stripe';
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.error('STRIPE_SECRET_KEY is not set — Stripe calls will fail');
+}
+
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
