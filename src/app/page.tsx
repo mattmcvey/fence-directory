@@ -141,7 +141,7 @@ export default async function HomePage() {
           ))}
         </div>
         <div className="text-center mt-8">
-          <Link href="/states" className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1">
+          <Link href="/cities" className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1">
             View all cities <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
