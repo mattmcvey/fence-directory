@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
+    // not used seems to be a leftover
     const refId = contractorId || claimId || 'new';
 
     const session = await stripe.checkout.sessions.create({

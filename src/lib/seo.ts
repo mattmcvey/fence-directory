@@ -103,6 +103,23 @@ export function serviceSchema(city: string, state: string) {
 }
 
 
+export function organizationSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${SITE_URL}/#organization`,
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: 'Find trusted fence contractors near you. Compare ratings, read reviews, and get free estimates from licensed professionals.',
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      url: `${SITE_URL}/about`,
+    },
+  };
+}
+
+
 export function websiteSchema() {
   return {
     '@context': 'https://schema.org',

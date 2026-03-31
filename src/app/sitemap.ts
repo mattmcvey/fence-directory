@@ -6,8 +6,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://getfencefind.com';
 
 
-  const CONTENT_UPDATED = '2026-03-01';
-  const SITE_UPDATED = '2026-03-05';
+  const today = new Date().toISOString().split('T')[0];
+  const CONTENT_UPDATED = today;
+  const SITE_UPDATED = today;
 
   const [cities, contractorSlugs, states] = await Promise.all([
     getCities(),
@@ -22,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/claim`, lastModified: CONTENT_UPDATED, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/pricing`, lastModified: CONTENT_UPDATED, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/about`, lastModified: CONTENT_UPDATED, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/advertise`, lastModified: CONTENT_UPDATED, changeFrequency: 'monthly', priority: 0.6 },
   ];
 
 
