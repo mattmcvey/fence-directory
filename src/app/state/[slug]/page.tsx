@@ -4,6 +4,7 @@ import SearchBar from '@/components/SearchBar';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { ogMeta } from '@/lib/seo';
 import { MapPin } from 'lucide-react';
 
 export const revalidate = 3600;
@@ -20,6 +21,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `Fence Contractors in ${state.name} — Top Rated | FenceFind`,
     description: `Find the best fence contractors in ${state.name}. Compare ${state.contractorCount}+ licensed fence installers, read reviews, and get free estimates.`,
+    ...ogMeta({
+      title: `Fence Contractors in ${state.name} — Top Rated | FenceFind`,
+      description: `Find the best fence contractors in ${state.name}. Compare ${state.contractorCount}+ licensed fence installers, read reviews, and get free estimates.`,
+      path: `/state/${slug}`,
+    }),
   };
 }
 

@@ -1,10 +1,16 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { BookOpen } from 'lucide-react';
+import { ogMeta } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Fence Guides & Resources — Expert Advice | FenceFind',
   description: 'Expert fence guides: costs, materials, permits, installation timelines, ROI, and more. Everything you need to know before hiring a fence contractor.',
+  ...ogMeta({
+    title: 'Fence Guides & Resources — Expert Advice | FenceFind',
+    description: 'Expert fence guides: costs, materials, permits, installation timelines, ROI, and more. Everything you need to know before hiring a fence contractor.',
+    path: '/guides',
+  }),
 };
 
 const guides = [

@@ -1,12 +1,18 @@
 import { getStatesWithCounts } from '@/lib/data';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { ogMeta } from '@/lib/seo';
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'Browse Fence Contractors by State — FenceFind',
   description: 'Find fence contractors in all 50 states. Browse our directory of licensed, insured fence installers near you.',
+  ...ogMeta({
+    title: 'Browse Fence Contractors by State — FenceFind',
+    description: 'Find fence contractors in all 50 states. Browse our directory of licensed, insured fence installers near you.',
+    path: '/states',
+  }),
 };
 
 export default async function StatesPage() {

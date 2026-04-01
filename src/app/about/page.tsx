@@ -1,10 +1,16 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Shield, Search, Star, Users } from 'lucide-react';
+import { ogMeta } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'About FenceFind — Trusted Fence Contractor Directory',
   description: 'FenceFind helps homeowners find licensed, insured fence contractors in their area. Learn about our mission and how we vet contractors.',
+  ...ogMeta({
+    title: 'About FenceFind — Trusted Fence Contractor Directory',
+    description: 'FenceFind helps homeowners find licensed, insured fence contractors in their area. Learn about our mission and how we vet contractors.',
+    path: '/about',
+  }),
 };
 
 export default function AboutPage() {

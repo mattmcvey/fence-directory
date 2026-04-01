@@ -6,6 +6,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Search Fence Contractors — FenceFind',
   description: 'Search for fence contractors in your area. Compare ratings, read reviews, and get free estimates.',
+  robots: { index: false, follow: true },
 };
 
 export default async function SearchPage({

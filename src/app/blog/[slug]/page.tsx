@@ -55,8 +55,8 @@ export default async function BlogPostPage({ params }: PageProps) {
             description: post.metaDescription,
             author: { '@type': 'Organization', name: 'FenceFind' },
             publisher: { '@type': 'Organization', name: 'FenceFind', url: 'https://getfencefind.com' },
-            datePublished: '2026-03-01',
-            dateModified: '2026-03-01',
+            datePublished: post.isoDate,
+            dateModified: post.isoDate,
             mainEntityOfPage: `https://getfencefind.com/blog/${slug}`,
           }),
         }}

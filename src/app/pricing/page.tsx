@@ -1,10 +1,16 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Check, X, Zap, TrendingUp, Shield } from 'lucide-react';
+import { faqSchema, ogMeta } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Pricing — FenceFind for Contractors',
   description: 'Get listed on FenceFind. Free basic listings or upgrade to Pro for featured placement, unlimited leads, and priority visibility. Starting at $199/month.',
+  ...ogMeta({
+    title: 'Pricing — FenceFind for Contractors',
+    description: 'Get listed on FenceFind. Free basic listings or upgrade to Pro for featured placement, unlimited leads, and priority visibility.',
+    path: '/pricing',
+  }),
 };
 
 const freeFeatures = [
@@ -30,8 +36,20 @@ const proFeatures = [
 ];
 
 export default function PricingPage() {
+  const faqs = [
+    { q: 'What does "unlimited leads" mean?', a: 'Every homeowner who requests a quote in your service area gets sent directly to you. No caps, no per-lead charges, no shared leads. If 50 people request quotes this month, you get all 50.' },
+    { q: 'Can I cancel anytime?', a: 'Yes. Pro is month-to-month with no contracts or cancellation fees. Cancel anytime from your dashboard and your listing reverts to the free tier at the end of your billing period.' },
+    { q: 'Is there a free trial?', a: "Yes — Pro comes with a 14-day free trial. Try it risk-free. You won't be charged until day 15, and you can cancel anytime during the trial." },
+    { q: 'How is FenceFind different from HomeAdvisor or Angi?', a: "We're focused exclusively on fence contractors. No shared leads, no bidding wars, no per-lead fees. You pay one flat monthly rate and get every lead in your area. Homeowners contact you directly — we don't sell the same lead to 5 competitors." },
+    { q: 'How do I claim my existing listing?', a: 'If your business already appears on FenceFind, click "Claim This Listing" on your profile page. We\'ll verify your ownership via phone or email. Claiming is free — you only pay if you upgrade to Pro.' },
+  ];
+
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(faqs)) }}
+      />
       <div className="text-center mb-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Grow Your Fence Business</h1>
         <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
