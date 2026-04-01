@@ -12,6 +12,7 @@ function ClaimFormInner() {
   const prefillState = searchParams.get('state') || '';
   const contractorId = searchParams.get('id') || '';
   const plan = searchParams.get('plan') || '';
+  const isNewBusiness = !contractorId;
 
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -93,10 +94,12 @@ function ClaimFormInner() {
         {/* Left: Benefits */}
         <div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            List Your Fence Business
+            {isNewBusiness ? 'Add Your Fence Business' : 'Claim Your Listing'}
           </h1>
           <p className="text-gray-600 text-lg mb-8">
-            Join thousands of fence contractors on FenceFind and connect with homeowners actively searching for your services.
+            {isNewBusiness
+              ? "Don\u2019t see your business on FenceFind? Add it for free and start connecting with homeowners searching for fence contractors in your area."
+              : 'Verify your business and take control of your listing. Update your info, respond to leads, and grow your online presence.'}
           </p>
 
           <div className="space-y-6">
@@ -160,7 +163,7 @@ function ClaimFormInner() {
         <div>
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              {plan === 'pro' ? 'Start Your Pro Trial' : 'Get Started — Free'}
+              {plan === 'pro' ? 'Start Your Pro Trial' : isNewBusiness ? 'Add Your Business — Free' : 'Claim Your Listing — Free'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
@@ -272,6 +275,22 @@ function ClaimFormInner() {
               </p>
             </form>
           </div>
+
+          {/* Context-aware helper text below form */}
+          {!isNewBusiness && (
+            <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-5 text-center">
+              <p className="font-semibold text-gray-900 mb-1">Can&apos;t find your business?</p>
+              <p className="text-gray-600 text-sm mb-3">
+                If your company isn&apos;t listed on FenceFind yet, you can add it for free.
+              </p>
+              <a
+                href="/claim"
+                className="inline-block text-sm font-medium text-green-700 hover:text-green-800 underline underline-offset-2"
+              >
+                Add a new business instead
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>
