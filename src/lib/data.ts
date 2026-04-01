@@ -36,6 +36,7 @@ function rowToContractor(row: any): Contractor {
     featured: row.featured || false,
     verified: row.verified || false,
     claimed: row.claimed || false,
+    userId: row.user_id || undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

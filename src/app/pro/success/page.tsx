@@ -47,13 +47,13 @@ export default function ProSuccessPage() {
 
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link
-          href="/"
+          href="/dashboard"
           className="inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
         >
-          View Your Listing <ArrowRight className="w-4 h-4" />
+          Go to Dashboard <ArrowRight className="w-4 h-4" />
         </Link>
         <Link
-          href="/pricing"
+          href="/dashboard/subscription"
           className="inline-flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
         >
           Manage Subscription

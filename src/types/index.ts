@@ -25,6 +25,7 @@ export interface Contractor {
   featured: boolean;
   verified: boolean;
   claimed: boolean;
+  userId?: string;
   createdAt: string;
   updatedAt: string;
 }

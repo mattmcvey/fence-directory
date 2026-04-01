@@ -1,16 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServiceClient } from '@/lib/supabase';
+import { getServiceClient, createAuthServerClient } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
+  // Check Supabase auth (admin role)
+  const supabase = await createAuthServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  const authKey = request.headers.get('x-admin-key');
-  const expectedKey = process.env.ANALYTICS_ADMIN_KEY;
+  if (!user) {
+    // Fallback: legacy API key auth during transition
+    const authKey = request.headers.get('x-admin-key');
+    const expectedKey = process.env.ANALYTICS_ADMIN_KEY;
+    if (!expectedKey || authKey !== expectedKey) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+  } else {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
 
-  if (!expectedKey || authKey !== expectedKey) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!profile || profile.role !== 'admin') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
   }
 
-  const supabase = getServiceClient();
+  const serviceClient = getServiceClient();
   const { searchParams } = new URL(request.url);
 
   const days = parseInt(searchParams.get('days') || '30');
@@ -19,7 +34,7 @@ export async function GET(request: NextRequest) {
   const sinceISO = since.toISOString();
 
 
-  const { data: pageviews, error } = await supabase
+  const { data: pageviews, error } = await serviceClient
     .from('pageviews')
     .select('*')
     .gte('created_at', sinceISO)
