@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import RelatedLinks from '@/components/RelatedLinks';
+import { breadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Chain Link Fence Cost, Installation & Buying Guide (2026) | FenceFind',
@@ -125,6 +126,11 @@ export default function ChainLinkFencePage() {
         description: 'Complete guide to chain link fencing — costs, gauges, coatings, privacy options, and installation.',
         publisher: { '@type': 'Organization', name: 'FenceFind', url: 'https://getfencefind.com' },
       })}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Guides', url: '/guides' },
+        { name: 'Chain Link Fence Guide', url: '/guides/chain-link-fence' },
+      ]))}} />
     </div>
   );
 }

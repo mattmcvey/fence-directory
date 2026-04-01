@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import RelatedLinks from '@/components/RelatedLinks';
+import { breadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Privacy Fence Ideas, Costs & Installation Guide (2026) | FenceFind',
@@ -117,6 +118,11 @@ export default function PrivacyFencePage() {
         description: 'Complete guide to privacy fences including materials, costs, styles, and height regulations.',
         publisher: { '@type': 'Organization', name: 'FenceFind', url: 'https://getfencefind.com' },
       })}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Guides', url: '/guides' },
+        { name: 'Privacy Fence Guide', url: '/guides/privacy-fence' },
+      ]))}} />
     </div>
   );
 }

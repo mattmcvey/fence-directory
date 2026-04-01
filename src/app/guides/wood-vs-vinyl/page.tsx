@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import RelatedLinks from '@/components/RelatedLinks';
+import { breadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Wood vs Vinyl Fence: Pros, Cons & Cost Comparison (2026) | FenceFind',
@@ -176,6 +177,11 @@ export default function WoodVsVinylPage() {
         description: 'Comprehensive comparison of wood and vinyl fencing — costs, durability, maintenance, and climate performance.',
         publisher: { '@type': 'Organization', name: 'FenceFind', url: 'https://getfencefind.com' },
       })}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Guides', url: '/guides' },
+        { name: 'Wood vs Vinyl Fence', url: '/guides/wood-vs-vinyl' },
+      ]))}} />
     </div>
   );
 }

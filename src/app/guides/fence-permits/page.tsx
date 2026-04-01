@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import RelatedLinks from '@/components/RelatedLinks';
+import { breadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Do You Need a Permit to Build a Fence? State-by-State Guide | FenceFind',
@@ -115,6 +116,11 @@ export default function FencePermitsPage() {
         description: 'Fence permit requirements, height limits, setback rules, and HOA regulations explained.',
         publisher: { '@type': 'Organization', name: 'FenceFind', url: 'https://getfencefind.com' },
       })}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Guides', url: '/guides' },
+        { name: 'Fence Permit Guide', url: '/guides/fence-permits' },
+      ]))}} />
     </div>
   );
 }

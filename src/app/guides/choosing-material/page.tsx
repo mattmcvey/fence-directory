@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import SearchBar from '@/components/SearchBar';
 import Link from 'next/link';
 import RelatedLinks from '@/components/RelatedLinks';
+import { breadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'How to Choose the Right Fence Material — Complete Guide | FenceFind',
@@ -109,6 +110,16 @@ export default function ChoosingMaterialPage() {
               acceptedAnswer: { '@type': 'Answer', text: a },
             })),
           }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'Guides', url: '/guides' },
+            { name: 'Choosing Fence Material', url: '/guides/choosing-material' },
+          ])),
         }}
       />
       <h1 className="text-4xl font-bold text-gray-900 mb-4">

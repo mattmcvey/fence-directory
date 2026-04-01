@@ -1,9 +1,9 @@
 import SearchBar from '@/components/SearchBar';
 import ContractorCard from '@/components/ContractorCard';
 import { getFeaturedContractors, getCities, getStatesWithCounts, getSiteStats } from '@/lib/data';
-import { Shield, Star, DollarSign, Users, ChevronRight } from 'lucide-react';
+import { Shield, Star, DollarSign, Users, ChevronRight, BookOpen } from 'lucide-react';
 import Link from 'next/link';
-import { websiteSchema, ogMeta } from '@/lib/seo';
+import { websiteSchema, faqSchema, ogMeta } from '@/lib/seo';
 import { Metadata } from 'next';
 
 export const revalidate = 3600;
@@ -34,6 +34,29 @@ export default async function HomePage() {
     .filter(c => c.contractorCount > 0)
     .sort((a, b) => b.contractorCount - a.contractorCount)
     .slice(0, 10);
+
+  const homeFaqs = [
+    {
+      q: 'How much does a fence cost to install?',
+      a: 'Most homeowners spend between $1,800 and $9,500 on fence installation, with the national average around $4,500 for a 150-linear-foot privacy fence. Costs vary by material — wood runs $15–$35 per foot, vinyl $20–$40, and chain link $8–$18. Get free estimates from local contractors on FenceFind to compare pricing in your area.',
+    },
+    {
+      q: 'What is the best fence material for my home?',
+      a: 'It depends on your priorities. Wood is the most popular for privacy and aesthetics ($15–$35/ft). Vinyl is best for low maintenance ($20–$40/ft). Chain link is the most affordable ($8–$18/ft). Aluminum works well for pools and decorative fencing. Consider your climate, budget, and how much maintenance you want to do.',
+    },
+    {
+      q: 'Do I need a permit to build a fence?',
+      a: 'In most areas, yes — especially for fences over 6 feet tall or in front yards. Permit requirements vary by city and county. Check with your local building department before starting. Many fence contractors will handle the permit process for you as part of the job.',
+    },
+    {
+      q: 'How long does fence installation take?',
+      a: 'Most residential fence installations take 1–3 days for the actual work. The total timeline from getting quotes to completion is typically 2–6 weeks, depending on contractor availability, permits, and the season. Summer is the busiest time with the longest wait.',
+    },
+    {
+      q: 'How do I find a good fence contractor?',
+      a: 'Get at least 3 written estimates, verify licensing and insurance, check online reviews, and ask for references. A good contractor will provide a detailed written contract, pull permits if needed, and offer a warranty on their work. FenceFind makes it easy to compare top-rated contractors in your area.',
+    },
+  ];
 
   return (
     <div>
@@ -147,6 +170,51 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Guides & Resources */}
+      <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3 mb-2">
+            <BookOpen className="w-7 h-7 text-green-600" />
+            <h2 className="text-3xl font-bold text-gray-900">Planning Your Fence Project</h2>
+          </div>
+          <p className="text-gray-600 mb-8">Expert guides to help you make informed decisions</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Link href="/guides/fence-cost" className="p-5 border border-gray-200 rounded-xl hover:border-green-300 hover:bg-green-50 transition-all group">
+              <p className="font-semibold text-gray-900 group-hover:text-green-600">Fence Cost Guide (2026)</p>
+              <p className="text-sm text-gray-500 mt-1">Average prices by material — wood, vinyl, chain link, and more</p>
+            </Link>
+            <Link href="/guides/choosing-material" className="p-5 border border-gray-200 rounded-xl hover:border-green-300 hover:bg-green-50 transition-all group">
+              <p className="font-semibold text-gray-900 group-hover:text-green-600">Choosing Fence Material</p>
+              <p className="text-sm text-gray-500 mt-1">Compare durability, cost, and maintenance for every material</p>
+            </Link>
+            <Link href="/guides/fence-permits" className="p-5 border border-gray-200 rounded-xl hover:border-green-300 hover:bg-green-50 transition-all group">
+              <p className="font-semibold text-gray-900 group-hover:text-green-600">Do You Need a Permit?</p>
+              <p className="text-sm text-gray-500 mt-1">Permit requirements, height limits, and setback rules by state</p>
+            </Link>
+            <Link href="/guides/getting-quotes" className="p-5 border border-gray-200 rounded-xl hover:border-green-300 hover:bg-green-50 transition-all group">
+              <p className="font-semibold text-gray-900 group-hover:text-green-600">How to Get Fence Quotes</p>
+              <p className="text-sm text-gray-500 mt-1">What to ask, red flags to watch for, and how to compare bids</p>
+            </Link>
+            <Link href="/guides/best-time-to-install" className="p-5 border border-gray-200 rounded-xl hover:border-green-300 hover:bg-green-50 transition-all group">
+              <p className="font-semibold text-gray-900 group-hover:text-green-600">Best Time to Install</p>
+              <p className="text-sm text-gray-500 mt-1">Save 10–25% by choosing the right season for your project</p>
+            </Link>
+            <Link href="/guides/fence-roi" className="p-5 border border-gray-200 rounded-xl hover:border-green-300 hover:bg-green-50 transition-all group">
+              <p className="font-semibold text-gray-900 group-hover:text-green-600">Does a Fence Add Home Value?</p>
+              <p className="text-sm text-gray-500 mt-1">ROI by fence type and what appraisers look for</p>
+            </Link>
+          </div>
+          <div className="flex items-center gap-6 mt-8">
+            <Link href="/guides" className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1">
+              View all 11 guides <ChevronRight className="w-4 h-4" />
+            </Link>
+            <Link href="/blog" className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1">
+              Read our blog <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* SEO Content */}
       <section className="bg-green-50 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -170,6 +238,28 @@ export default async function HomePage() {
               $1,800 and $9,500 on a new fence, with most projects falling in the $2,500–$5,000 range. Wood privacy
               fences typically cost $15–$35 per linear foot, while vinyl runs $20–$40 per linear foot installed.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(homeFaqs)) }}
+          />
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            {homeFaqs.map((faq, i) => (
+              <details key={i} className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 group">
+                <summary className="font-semibold text-gray-900 cursor-pointer list-none flex justify-between items-center">
+                  {faq.q}
+                  <span className="text-green-600 group-open:rotate-45 transition-transform text-xl ml-2">+</span>
+                </summary>
+                <p className="text-gray-600 mt-3 leading-relaxed">{faq.a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>

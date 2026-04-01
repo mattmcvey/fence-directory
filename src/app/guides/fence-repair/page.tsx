@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import RelatedLinks from '@/components/RelatedLinks';
+import { breadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Fence Repair Guide: Common Issues, DIY vs Pro, Costs (2026) | FenceFind',
@@ -117,6 +118,11 @@ export default function FenceRepairPage() {
         description: 'How to diagnose and fix common fence problems, with cost estimates and DIY guidance.',
         publisher: { '@type': 'Organization', name: 'FenceFind', url: 'https://getfencefind.com' },
       })}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Guides', url: '/guides' },
+        { name: 'Fence Repair Guide', url: '/guides/fence-repair' },
+      ]))}} />
     </div>
   );
 }

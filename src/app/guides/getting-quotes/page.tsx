@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import RelatedLinks from '@/components/RelatedLinks';
+import { breadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'How to Get Fence Quotes: What to Ask & Red Flags (2026) | FenceFind',
@@ -112,6 +113,11 @@ export default function GettingQuotesPage() {
         description: 'Guide to getting fence estimates, comparing bids, and choosing the right contractor.',
         publisher: { '@type': 'Organization', name: 'FenceFind', url: 'https://getfencefind.com' },
       })}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Guides', url: '/guides' },
+        { name: 'Getting Fence Quotes', url: '/guides/getting-quotes' },
+      ]))}} />
     </div>
   );
 }

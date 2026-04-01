@@ -1,7 +1,7 @@
 import { getStatesWithCounts } from '@/lib/data';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { ogMeta } from '@/lib/seo';
+import { ogMeta, breadcrumbSchema } from '@/lib/seo';
 
 export const revalidate = 3600;
 
@@ -20,6 +20,15 @@ export default async function StatesPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'States', url: '/states' },
+          ])),
+        }}
+      />
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Fence Contractors by State</h1>
       <p className="text-gray-600 mb-10">Find licensed fence installers in all 50 states</p>
 

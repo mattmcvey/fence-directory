@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import RelatedLinks from '@/components/RelatedLinks';
+import { breadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Does a Fence Increase Home Value? ROI Guide (2026) | FenceFind',
@@ -96,6 +97,11 @@ export default function FenceRoiPage() {
         description: 'How fences affect property values, ROI by fence type, and what makes a fence add the most resale value.',
         publisher: { '@type': 'Organization', name: 'FenceFind', url: 'https://getfencefind.com' },
       })}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Guides', url: '/guides' },
+        { name: 'Fence ROI Guide', url: '/guides/fence-roi' },
+      ]))}} />
     </div>
   );
 }

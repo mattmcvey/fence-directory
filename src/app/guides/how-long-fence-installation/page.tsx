@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import RelatedLinks from '@/components/RelatedLinks';
+import { breadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'How Long Does Fence Installation Take? Timeline Guide | FenceFind',
@@ -101,6 +102,11 @@ export default function HowLongFenceInstallationPage() {
         description: 'Fence installation timelines by type, what causes delays, and how to prepare.',
         publisher: { '@type': 'Organization', name: 'FenceFind', url: 'https://getfencefind.com' },
       })}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Guides', url: '/guides' },
+        { name: 'Installation Timeline', url: '/guides/how-long-fence-installation' },
+      ]))}} />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import SearchBar from '@/components/SearchBar';
 import RelatedLinks from '@/components/RelatedLinks';
+import { breadcrumbSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Fence Installation Cost Guide 2026 — Average Prices by Material | FenceFind',
@@ -138,6 +139,16 @@ export default function FenceCostGuidePage() {
             datePublished: '2026-03-01',
             dateModified: '2026-03-01',
           }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'Guides', url: '/guides' },
+            { name: 'Fence Cost Guide', url: '/guides/fence-cost' },
+          ])),
         }}
       />
     </div>
