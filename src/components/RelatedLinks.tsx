@@ -2,14 +2,16 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { getCities } from '@/lib/data';
 
-type PageType = 'guide' | 'city' | 'contractor';
+type PageType = 'guide' | 'city' | 'contractor' | 'state';
 
 interface RelatedLinksProps {
   pageType: PageType;
   currentSlug?: string;
   cityName?: string;
   stateCode?: string;
+  stateName?: string;
   guideSlug?: string;
+  topCities?: { name: string; slug: string; stateCode: string }[];
 }
 
 const GUIDE_INFO: Record<string, { title: string; tags: string[] }> = {
@@ -56,7 +58,9 @@ export default async function RelatedLinks({
   currentSlug,
   cityName,
   stateCode,
+  stateName,
   guideSlug,
+  topCities,
 }: RelatedLinksProps) {
   const links: { href: string; label: string }[] = [];
 
@@ -95,6 +99,27 @@ export default async function RelatedLinks({
         href: `/fence-permits/${currentSlug}`,
         label: `Fence permits in ${cityName || 'your city'}`,
       });
+    }
+  } else if (pageType === 'state') {
+
+    const relatedGuides = getRelatedGuides();
+    for (const guide of relatedGuides) {
+      links.push({
+        href: `/guides/${guide.slug}`,
+        label: guide.title,
+      });
+    }
+    links.push({
+      href: '/states',
+      label: 'Browse all states',
+    });
+    if (topCities) {
+      for (const city of topCities.slice(0, 3)) {
+        links.push({
+          href: `/city/${city.slug}`,
+          label: `Fence contractors in ${city.name}, ${city.stateCode}`,
+        });
+      }
     }
   } else if (pageType === 'contractor') {
 
