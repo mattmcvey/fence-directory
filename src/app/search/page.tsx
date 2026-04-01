@@ -29,15 +29,41 @@ export default async function SearchPage({
         {query ? ` near "${query}"` : ''}
       </p>
       {results.length > 0 ? (
-        <div className="space-y-6">
-          {results.map((contractor) => (
-            <ContractorCard key={contractor.id} contractor={contractor} />
-          ))}
-        </div>
+        <>
+          <div className="space-y-6">
+            {results.map((contractor) => (
+              <ContractorCard key={contractor.id} contractor={contractor} />
+            ))}
+          </div>
+          <div className="mt-10 bg-blue-50 border border-blue-200 rounded-xl p-5 text-center">
+            <p className="font-semibold text-gray-900 mb-1">Are you a fence contractor?</p>
+            <p className="text-gray-600 text-sm mb-3">
+              Claim your free listing or add your business to start getting leads from homeowners in your area.
+            </p>
+            <a
+              href="/claim"
+              className="inline-block text-sm font-medium text-green-700 hover:text-green-800 underline underline-offset-2"
+            >
+              List your business on FenceFind →
+            </a>
+          </div>
+        </>
       ) : (
         <div className="text-center py-16">
-          <p className="text-gray-500 text-lg mb-4">No contractors found for that location.</p>
-          <p className="text-gray-400">Try searching for a nearby city or a different zip code.</p>
+          <p className="text-gray-500 text-lg mb-2">No contractors found for that search.</p>
+          <p className="text-gray-400 mb-8">Try searching for a nearby city, zip code, or company name.</p>
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 max-w-md mx-auto">
+            <p className="font-semibold text-gray-900 mb-1">Are you a fence contractor?</p>
+            <p className="text-gray-600 text-sm mb-3">
+              Can&apos;t find your business? Add it to FenceFind for free and start reaching local homeowners.
+            </p>
+            <a
+              href="/claim"
+              className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-colors"
+            >
+              Add Your Business
+            </a>
+          </div>
         </div>
       )}
     </div>

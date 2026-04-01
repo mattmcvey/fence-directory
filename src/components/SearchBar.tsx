@@ -32,7 +32,7 @@ export default function SearchBar({ size = 'md', defaultValue = '', className = 
           type="text"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          placeholder={isLarge ? 'City or zip code...' : 'Enter your city or zip code...'}
+          placeholder={isLarge ? 'City, zip, or company name...' : 'Search by city, zip, or company name...'}
           className={`flex-1 min-w-0 outline-none bg-transparent text-gray-800 placeholder-gray-400 ${isLarge ? 'px-2 sm:px-4 py-2.5 sm:py-3 text-base sm:text-lg' : 'px-3 py-2 text-base'}`}
         />
         <button
