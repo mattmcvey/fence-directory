@@ -40,6 +40,33 @@ export async function notifyClaimSubmission(claim: {
   }
 }
 
+export async function notifyContactMessage(contact: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}) {
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: NOTIFY_EMAIL,
+      replyTo: contact.email,
+      subject: `📩 Contact: ${contact.subject}`,
+      html: `
+        <h2>New Contact Message on FenceFind</h2>
+        <table style="border-collapse: collapse; width: 100%; max-width: 500px;">
+          <tr><td style="padding: 8px; font-weight: bold;">Name</td><td style="padding: 8px;">${contact.name}</td></tr>
+          <tr><td style="padding: 8px; font-weight: bold;">Email</td><td style="padding: 8px;"><a href="mailto:${contact.email}">${contact.email}</a></td></tr>
+          <tr><td style="padding: 8px; font-weight: bold;">Subject</td><td style="padding: 8px;">${contact.subject}</td></tr>
+          <tr><td style="padding: 8px; font-weight: bold;">Message</td><td style="padding: 8px;">${contact.message}</td></tr>
+        </table>
+      `,
+    });
+  } catch (error) {
+    console.error('Failed to send contact notification email:', error);
+  }
+}
+
 export async function notifyQuoteRequest(quote: {
   contractorName: string;
   name: string;

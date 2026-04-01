@@ -25,6 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/about`, lastModified: CONTENT_UPDATED, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/advertise`, lastModified: CONTENT_UPDATED, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/cities`, lastModified: CONTENT_UPDATED, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/contact`, lastModified: CONTENT_UPDATED, changeFrequency: 'monthly', priority: 0.5 },
   ];
 
 
