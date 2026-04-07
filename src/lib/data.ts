@@ -115,6 +115,14 @@ export async function getContractorsByCity(cityName: string, stateCode: string):
   return data.map(rowToContractor);
 }
 
+export async function getContractorCount(): Promise<number> {
+  if (!isSupabaseConfigured) return 0;
+  const { count } = await supabase
+    .from('contractors')
+    .select('id', { count: 'exact', head: true });
+  return count || 0;
+}
+
 export async function getAllContractorSlugs(): Promise<string[]> {
   if (!isSupabaseConfigured) return [];
 

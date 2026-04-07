@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getCities, getAllContractorSlugs, getStates } from '@/lib/data';
+import { getCities, getAllContractorSlugs, getContractorCount, getStates } from '@/lib/data';
 import { BLOG_POSTS } from '@/lib/blog-data';
 
 const baseUrl = 'https://getfencefind.com';
@@ -13,8 +13,8 @@ const CONTRACTORS_PER_SITEMAP = 500;
 // 4+ = contractor pages (500 per sitemap)
 
 export async function generateSitemaps() {
-  const contractorSlugs = await getAllContractorSlugs();
-  const contractorSitemapCount = Math.ceil(contractorSlugs.length / CONTRACTORS_PER_SITEMAP);
+  const total = await getContractorCount();
+  const contractorSitemapCount = Math.ceil(total / CONTRACTORS_PER_SITEMAP);
 
   const ids = [];
   for (let i = 0; i < 4 + contractorSitemapCount; i++) {

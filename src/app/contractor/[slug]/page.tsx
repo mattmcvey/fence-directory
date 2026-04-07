@@ -27,9 +27,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
+  // Pre-render first 500 at build time; rest generate on-demand via ISR
   const slugs = await getAllContractorSlugs();
-  return slugs.map((slug) => ({ slug }));
+  return slugs.slice(0, 500).map((slug) => ({ slug }));
 }
 
 export default async function ContractorPage({ params }: PageProps) {
