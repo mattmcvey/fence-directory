@@ -118,12 +118,23 @@ export async function getContractorsByCity(cityName: string, stateCode: string):
 export async function getAllContractorSlugs(): Promise<string[]> {
   if (!isSupabaseConfigured) return [];
 
-  const { data, error } = await supabase
-    .from('contractors')
-    .select('slug');
+  const allSlugs: string[] = [];
+  const pageSize = 1000;
+  let from = 0;
 
-  if (error || !data) return [];
-  return data.map(d => d.slug);
+  while (true) {
+    const { data, error } = await supabase
+      .from('contractors')
+      .select('slug')
+      .range(from, from + pageSize - 1);
+
+    if (error || !data || data.length === 0) break;
+    allSlugs.push(...data.map(d => d.slug));
+    if (data.length < pageSize) break;
+    from += pageSize;
+  }
+
+  return allSlugs;
 }
 
 export async function getCities(): Promise<City[]> {

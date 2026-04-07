@@ -42,13 +42,15 @@ BEGIN
   INSERT INTO profiles (id, email, full_name, role)
   VALUES (
     NEW.id,
-    NEW.email,
+    COALESCE(NEW.email, ''),
     COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
-    COALESCE(NEW.raw_user_meta_data->>'role', 'contractor')
+    'contractor'
   );
   RETURN NEW;
+EXCEPTION WHEN OTHERS THEN
+  RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
