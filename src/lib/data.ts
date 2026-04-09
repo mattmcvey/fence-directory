@@ -115,6 +115,27 @@ export async function getContractorsByCity(cityName: string, stateCode: string):
   return data.map(rowToContractor);
 }
 
+export async function getContractorsByCityAndMaterial(
+  cityName: string,
+  stateCode: string,
+  material: string,
+): Promise<Contractor[]> {
+  if (!isSupabaseConfigured) return [];
+
+  const { data, error } = await supabase
+    .from('contractors')
+    .select('*')
+    .ilike('city', cityName)
+    .eq('state', stateCode)
+    .contains('materials', [material])
+    .order('featured', { ascending: false })
+    .order('rating', { ascending: false })
+    .limit(50);
+
+  if (error || !data) return [];
+  return data.map(rowToContractor);
+}
+
 export async function getContractorCount(): Promise<number> {
   if (!isSupabaseConfigured) return 0;
   const { count } = await supabase

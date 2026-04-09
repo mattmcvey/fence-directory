@@ -1,6 +1,7 @@
 import { getCityBySlug, getContractorsByCity, getCities } from '@/lib/data';
 import { stateCodeToName } from '@/lib/utils';
 import { breadcrumbSchema, faqSchema, getCostData, getRegionData, COST_MATERIAL_NAMES, ogMeta } from '@/lib/seo';
+import { MATERIALS } from '@/lib/materials';
 import ContractorCard from '@/components/ContractorCard';
 import SearchBar from '@/components/SearchBar';
 import Link from 'next/link';
@@ -250,6 +251,28 @@ export default async function CityPage({ params }: PageProps) {
               Read our full material comparison guide →
             </Link>
           </p>
+        </div>
+      </section>
+
+      {/* Browse by material */}
+      <section className="mt-10">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          Browse {city.name} Fence Installers by Material
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {MATERIALS.map((m) => {
+            const mCost = costs.materials[m.costKey];
+            return (
+              <Link
+                key={m.slug}
+                href={`/fence-installers/${m.slug}/${slug}`}
+                className="bg-white rounded-xl border p-4 hover:border-green-300 hover:shadow-sm transition-all"
+              >
+                <div className="font-semibold text-gray-900">{m.name} Fence</div>
+                <div className="text-sm text-gray-500">${mCost.low}–${mCost.high}/ft installed</div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 

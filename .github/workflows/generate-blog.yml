@@ -1,0 +1,110 @@
+name: Generate Blog Post
+
+on:
+  schedule:
+    # Runs on the 1st and 15th of each month at 9:00 AM UTC
+    - cron: '0 9 1,15 * *'
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: 'Blog topic/keyword (leave empty to use next keyword from rotation)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Determine blog topic
+        id: topic
+        run: |
+          # If a manual topic was provided, use it
+          if [ -n "${{ github.event.inputs.topic }}" ]; then
+            echo "topic=${{ github.event.inputs.topic }}" >> "$GITHUB_OUTPUT"
+            echo "Using manual topic: ${{ github.event.inputs.topic }}"
+            exit 0
+          fi
+
+          # Predefined keyword rotation list
+          TOPICS=(
+            "best fence for windy areas"
+            "how to choose between wood and vinyl fencing"
+            "fence maintenance tips by season"
+            "best fences for small yards"
+            "how long does a wood fence last"
+            "fence ideas for sloped yards"
+            "best fence for pool safety"
+            "metal vs wood fence comparison"
+            "how to prepare your yard for fence installation"
+            "fence styles that increase home value"
+            "best fence for noise reduction"
+            "temporary fence solutions for renters"
+            "eco friendly fencing materials"
+            "fence gate ideas and hardware guide"
+            "ranch and farm fencing options"
+            "best fence for hot climates"
+            "fence lighting ideas for security and curb appeal"
+            "composite fencing pros and cons"
+            "how to fix a leaning fence"
+            "best fence options for corner lots"
+            "aluminum fence vs wrought iron"
+            "fence staining and painting guide"
+            "what to know about fence easements and property lines"
+            "best fences for front yards"
+          )
+
+          TOTAL=${#TOPICS[@]}
+
+          # Determine index based on months elapsed since a reference point
+          # Reference: January 2026, with 2 posts per month
+          YEAR=$(date +%Y)
+          MONTH=$(date +%-m)
+          DAY=$(date +%-d)
+
+          # Months since Jan 2026
+          MONTHS_ELAPSED=$(( (YEAR - 2026) * 12 + MONTH - 1 ))
+
+          # 2 posts per month: index = months_elapsed * 2 + (0 if 1st, 1 if 15th)
+          if [ "$DAY" -le 7 ]; then
+            HALF=0
+          else
+            HALF=1
+          fi
+
+          INDEX=$(( (MONTHS_ELAPSED * 2 + HALF) % TOTAL ))
+          SELECTED="${TOPICS[$INDEX]}"
+
+          echo "topic=$SELECTED" >> "$GITHUB_OUTPUT"
+          echo "Selected topic #$INDEX: $SELECTED"
+
+      - name: Generate blog post
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npx tsx scripts/generate-blog-post.ts "${{ steps.topic.outputs.topic }}"
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "blog: add post for '${{ steps.topic.outputs.topic }}'"
+          git push
