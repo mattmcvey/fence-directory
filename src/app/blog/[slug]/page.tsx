@@ -8,6 +8,7 @@ import AverageFenceCosts from './posts/average-fence-costs';
 import FiveQuestions from './posts/five-questions';
 import BestFenceForDogs from './posts/best-fence-for-dogs';
 import CheapFenceIdeasPrivacy from './posts/cheap-fence-ideas-privacy';
+import MetalVsWoodFenceComparison from './posts/metal-vs-wood-fence-comparison';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -34,6 +35,7 @@ export function generateStaticParams() {
 }
 
 const POST_CONTENT: Record<string, React.ReactNode> = {
+  'metal-vs-wood-fence-comparison': <MetalVsWoodFenceComparison />,
   'best-fence-for-dogs': <BestFenceForDogs />,
   'cheap-fence-ideas-for-privacy': <CheapFenceIdeasPrivacy />,
   'average-fence-installation-costs-2026': <AverageFenceCosts />,

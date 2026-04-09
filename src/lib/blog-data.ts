@@ -11,6 +11,16 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'metal-vs-wood-fence-comparison',
+    title: 'Metal vs Wood Fence: Complete Cost & Durability Comparison 2024',
+    excerpt: 'Choosing between metal and wood fencing? Compare costs, durability, and maintenance to find the perfect fence for your property.',
+    date: 'April 9, 2026',
+    isoDate: '2026-04-09',
+    category: 'Materials',
+    readTime: '8 min read',
+    metaDescription: 'Metal vs wood fence comparison: costs, durability, maintenance & installation. Expert guide to choosing the best fencing material for your home in 2024.',
+  },
+  {
     slug: 'best-fence-for-dogs',
     title: 'Best Fence for Dogs: A Complete Guide by Breed Size and Behavior',
     excerpt: 'From escape artists to diggers, find the right fence type, height, and material to keep your dog safe — plus costs and DIY vs. pro advice.',
