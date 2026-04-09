@@ -11,6 +11,26 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'best-fence-for-dogs',
+    title: 'Best Fence for Dogs: A Complete Guide by Breed Size and Behavior',
+    excerpt: 'From escape artists to diggers, find the right fence type, height, and material to keep your dog safe — plus costs and DIY vs. pro advice.',
+    date: 'April 9, 2026',
+    isoDate: '2026-04-09',
+    category: 'Pet Fencing',
+    readTime: '8 min read',
+    metaDescription: 'Best fence for dogs by breed size and behavior. Compare wood, vinyl, chain link, and aluminum fences for dogs. Height guides, dig-proof tips, and costs.',
+  },
+  {
+    slug: 'cheap-fence-ideas-for-privacy',
+    title: '8 Cheap Fence Ideas for Privacy (That Actually Look Good)',
+    excerpt: 'Privacy fencing doesn\'t have to cost a fortune. These budget-friendly options start at $1 per foot and still give you the seclusion you want.',
+    date: 'April 9, 2026',
+    isoDate: '2026-04-09',
+    category: 'Budget Guide',
+    readTime: '8 min read',
+    metaDescription: 'Cheap fence ideas for privacy: 8 budget-friendly options from $1-25/ft. DIY and pro options including bamboo, stockade, privacy slats, and more.',
+  },
+  {
     slug: 'average-fence-installation-costs-2026',
     title: 'Average Fence Installation Costs in 2026: A Complete Breakdown',
     excerpt: 'From wood privacy fences to vinyl and chain link, here\'s what you\'ll actually pay for fence installation in 2026 — plus smart ways to save.',
@@ -19,16 +39,6 @@ export const BLOG_POSTS: BlogPost[] = [
     category: 'Cost Guide',
     readTime: '8 min read',
     metaDescription: 'Complete breakdown of fence installation costs in 2026. Average prices for wood ($15-35/ft), vinyl ($20-40/ft), chain link ($8-18/ft), and more. Tips to save money.',
-  },
-  {
-    slug: 'wood-vs-vinyl-fencing',
-    title: 'Wood vs Vinyl Fencing: Which Is Right for Your Home?',
-    excerpt: 'Comparing the two most popular fence materials head-to-head on cost, durability, maintenance, appearance, and long-term value.',
-    date: 'February 25, 2026',
-    isoDate: '2026-02-25',
-    category: 'Material Guide',
-    readTime: '7 min read',
-    metaDescription: 'Wood vs vinyl fencing comparison: cost, durability, maintenance, and appearance. Find out which fence material is the best choice for your home and budget.',
   },
   {
     slug: '5-questions-before-hiring-fence-contractor',
