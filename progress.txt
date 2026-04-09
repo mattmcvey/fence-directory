@@ -1,0 +1,425 @@
+# FenceFind Progress Log
+
+Last Updated: 2026-04-09
+Full build history: `~/.openclaw/workspace/fencefind-progress.md`
+
+## Project Status
+- **Site:** https://getfencefind.com
+- **Repo:** github.com/mattmcvey/fence-directory
+- **Stage:** Pre-traction — building organic SEO traffic to attract contractors
+- **Data:** 5,100+ contractors across 494 cities in all 50 states
+- **Indexable URLs:** ~2,200+
+- **Revenue:** 0 Pro subscribers ($199/mo plan live with 14-day trial)
+- **Claims:** 1 organic claim — Fenceworks of Georgia (Austin Owen, March 13)
+- **Stripe:** Live mode — Product `prod_UA2JQfJ0HvOKQl`, Price `price_1TBiFCQx18mjum7xZWL6Daob`
+
+---
+
+## Build History (summary)
+
+### 2026-03-01 — Project Kickoff
+- Built MVP: homepage, search, contractor profiles, state/city pages, claim page, sitemap, Schema.org
+- Research: 150K+ monthly searches, no dedicated fence directory existed
+
+### 2026-03-02 — Launch
+- Deployed to Vercel, domain configured
+- Scraped 1,438 contractors across 91 cities via Google Places API
+- Quote request form, email notifications (Resend → matt.mcvey49@gmail.com)
+- GSC verified, sitemap submitted
+
+### 2026-03-03 — SEO & Content
+- Fixed sitemap (was only 34 URLs, now 1,400+)
+- Wrote 8 SEO guide pages (wood vs vinyl, permits, privacy fence, chain link, repair, installation timeline, ROI, getting quotes)
+- Outreach templates written (`outreach/email-templates.md`) — deferred until organic traffic exists
+
+### 2026-03-04 — Programmatic Pages + Monetization
+- 91 fence-cost pages, 91 fence-permit pages, fence-cost-by-state comparison
+- Best-time-to-install guide
+- Full structured data: FAQ, BreadcrumbList, LocalBusiness, WebSite, Service schemas
+- Self-hosted analytics (Supabase pageviews + admin dashboard)
+- Stripe integration: $199/mo Pro with 14-day trial
+- Audited 987 contractor websites, cleaned 18 dead URLs
+- Featured contractors set to real high-rated businesses
+
+### 2026-03-11 — Supabase Cleanup
+- Dropped unused PostGIS extension + spatial functions (app uses JS Haversine)
+
+### 2026-03-13 — First Organic Claim
+- Fenceworks of Georgia (Atlanta) — Austin Owen claimed listing via claim form, no outreach
+- Validates: site is indexed, discoverable, claim flow works
+
+### 2026-03-16 — Google Workspace + Stripe Live
+- Google Workspace: matt@getfencefind.com ($6/mo), DNS configured (DKIM, SPF, DMARC)
+- Stripe switched to live mode, all Vercel env vars updated
+- Austin Owen's listing marked as claimed/approved
+
+### 2026-03-22 — Data Expansion + Interview Prep
+- 91 cities / 1,438 contractors → 494 cities / 5,121 contractors
+- Added dark mode, rewrote README, stripped comments
+
+---
+
+## Completed (this session)
+
+### 2026-04-02 — Priority 7: Authentication & Dashboards (Supabase Auth)
+
+**Priority 7: Authentication & dashboards — DONE**
+
+Chunk 1 — Auth Foundation:
+- Installed `@supabase/ssr`, added `createAuthBrowserClient()` and `createAuthServerClient()` to supabase.ts
+- SQL migration: `profiles` table (id → auth.users, email, full_name, role, contractor_id) + `user_id` column on contractors
+- Trigger `handle_new_user()` auto-creates profile on signup (needed `SET search_path = public` + EXCEPTION block to work with RLS)
+- Middleware protects `/dashboard/*` (auth required) and `/admin/*` (admin role required)
+- Server helpers: `requireAuth()`, `requireAdmin()`, `getAuthUser()`
+- Auth pages: login, signup, reset-password, callback, update-password
+- AuthProvider context + Header updated with Login/Dashboard links
+- Added `userId` to Contractor type + data.ts mapping
+
+Chunk 2 — Contractor Dashboard:
+- Dashboard layout with sidebar nav (Overview, Edit Profile, Quotes, Subscription)
+- Home page: stat cards (listing, quote count, plan) + quick actions, or "Claim your business" prompt if no listing linked
+- Profile edit form: name, phone, email, website, description, services, materials, service radius
+- Quotes page: table of incoming quote requests filtered by contractor
+- Subscription page: plan/status card, Manage Billing (Stripe portal), Upgrade to Pro link
+- Stripe portal route updated with auth check
+
+Chunk 3 — Admin Dashboard:
+- Admin layout with sidebar nav (Overview, Claims, Contractors, Analytics)
+- Admin home with summary stats (total contractors, pending claims, total quotes)
+- Claims management: Pending/Approved/Rejected tabs, approve/reject buttons
+- Claim approval flow: creates contractor record (if new) → creates auth user → links user↔contractor → sends password reset email
+- Contractor management: search/filter, feature/unfeature toggle, verify/unverify toggle, view public listing
+- Analytics auth upgraded: Supabase auth + API key fallback for transition
+- RLS policies migration for contractors, claim_requests, quote_requests, pageviews
+- Pro success page updated to link to `/dashboard`
+
+Setup notes:
+- Run `20260401_auth_profiles.sql` then `20260401_rls_policies.sql` in Supabase SQL Editor
+- Sign up at `/auth/signup`, confirm email, then promote: `UPDATE profiles SET role = 'admin' WHERE email = 'matt@getfencefind.com';`
+- Supabase URL Configuration must have Site URL set to production domain + redirect URLs for `/auth/callback` and `/auth/update-password`
+- Existing `Public read contractors` policy may already exist — skip if duplicate error on RLS migration
+- 40 files changed, 2,637 insertions, 334 deletions
+
+**Commit pushed to main (auto-deployed to Vercel):**
+- `8c390cb` — feat: add authentication, contractor dashboard, and admin dashboard (P7)
+
+---
+
+### 2026-04-01 — Priority 6.5: Contractor Search + Claim Funnel
+
+**Priority 6.5: Contractor search + claim funnel — DONE**
+- Updated SearchBar placeholder to "City, zip, or company name..." (search already supported company names, UX didn't surface it)
+- Added "Are you a fence contractor?" CTA on `/search` — both with results (blue banner below) and 0 results (green button to `/claim`)
+- Added business name lookup on `/claim` page — debounced search input above form shows matching contractors with "Claim this listing" links
+- New `/api/contractors/search` GET endpoint for client-side contractor lookup
+- 4 files changed, 129 insertions, 10 deletions
+
+**Commit pushed to main (auto-deployed to Vercel):**
+- `1e830ae` — feat: contractor search + claim funnel improvements (P6.5)
+
+---
+
+### 2026-04-01 — Priority 6: Rebuild State Pages
+
+**Priority 6: Rebuild state pages — DONE**
+- Full rewrite of `/state/[slug]` page from ~100 lines / ~300 words to ~250 lines / ~1,200+ words
+- Added BreadcrumbList schema (Home → State) + visible breadcrumb nav
+- Added FAQPage schema with 7 state-specific FAQs (contractor count, cost, materials, permits, hiring, best season, DIY vs pro)
+- Added ItemList schema with top 10 contractors as LocalBusiness entries
+- Added cost summary table (all 6 materials) using regional cost multipliers from `getCostData()`
+- Added climate-specific material recommendations section using `getRegionData()`
+- Added hiring tips section with 5-point checklist
+- Added FAQ accordion with `<details>` elements matching city page pattern
+- Added RelatedLinks component with new `state` page type (guides + browse all states + top 3 cities)
+- Added "Are You a Fence Contractor?" CTA section with claim + pro links
+- Enhanced metadata: year in title, cost range in description
+- Updated `RelatedLinks.tsx` to support `'state'` page type with `topCities` prop
+- 2 files changed, 278 insertions, 35 deletions
+
+**Commit pushed to main (auto-deployed to Vercel):**
+- `bc67683` — seo: rebuild state pages with cost data, climate recs, FAQs, schema (P6)
+
+---
+
+### 2026-04-01 — Priority 5: Internal Linking + Schema
+
+**Priority 5: Fix internal linking + add schema to guides — DONE**
+- Homepage: added "Planning Your Fence Project" section linking to 6 top guides + blog
+- Homepage: added FAQ section with 5 homeowner-focused questions + FAQPage JSON-LD schema
+- All 11 guide pages: added BreadcrumbList schema (Home > Guides > [Guide Name])
+- Guides index, blog index, /states page: added BreadcrumbList schema
+- Guide → city backlinks already handled by existing `RelatedLinks` component (no changes needed)
+- 14 files touched
+
+**Commit pushed to main (auto-deployed to Vercel):**
+- `5912664` — seo: internal linking + BreadcrumbList schema across site (P5)
+
+---
+
+### 2026-04-01 — Priority 4: Claim Page + Contact Page
+
+**Priority 4: "Add Your Business" flow — DONE**
+- Context-aware claim page: "Add Your Fence Business" heading when no `?id=` param, "Claim Your Listing" when claiming existing
+- "Can't find your business?" callout shown below form when claiming an existing listing, links to add-new flow
+- Updated page metadata to "List or Claim Your Fence Business"
+- Deferred auto-create contractor records to P7 (admin dashboard)
+
+**Contact page added**
+- New `/contact` page with form (name, email, subject, message)
+- Sends to matt@getfencefind.com via Resend with reply-to set to sender
+- Left sidebar shows email address + links to claim, pricing, search
+- Added "Contact Us" link to footer
+- Added `/contact` to sitemap
+
+**Commits pushed to main (auto-deployed to Vercel):**
+- `2339bb3` — feat: context-aware claim page with "Add Your Business" flow
+- `d1572ea` — feat: add /contact page with form
+
+---
+
+### 2026-04-01 — Priority 2 & 3: Quick SEO Wins + /cities Page Overhaul
+
+**Priority 2: Quick SEO wins — DONE**
+- Noindexed `/search` page (`robots: { index: false, follow: true }`) — prevents crawl dilution from infinite `?q=` URLs
+- Added FAQPage JSON-LD schema to `/pricing` page (5 existing FAQs now structured data) + added `ogMeta()` for canonical/OG
+- Fixed blog post dates — added `isoDate` field to blog-data.ts, Article schema now uses per-post dates instead of hardcoded `2026-03-01`
+- Added canonical URLs (`ogMeta()`) to 5 pages missing them: `/about`, `/guides`, `/states`, `/state/[slug]`, `/pricing`
+
+**Priority 3: /cities page overhaul — DONE**
+- Added keyword-rich intro paragraph below H1 with dynamic city count
+- Added BreadcrumbList + ItemList JSON-LD schema (top 50 cities)
+- Added FAQPage schema with 4 visible FAQ `<details>` elements
+- Linked each state H2 to its `/state/{slug}` page (internal linking)
+- Added client-side city filter (`CitySearch.tsx` component) with instant DOM filtering
+- Made metadata dynamic via `generateMetadata()` — title/description pull live city count
+- Added "Are You a Fence Contractor?" CTA section at bottom
+
+**Commit pushed to main (auto-deployed to Vercel):**
+- `6fb95df` — seo: noindex search, FAQ schema on pricing, fix blog dates, canonical URLs, improve /cities page
+
+---
+
+### 2026-03-31 — Marketing Skills + SEO Fixes + Stripe Fix
+
+**Marketing skills installed**
+- Installed 34 marketing skills from coreyhaines31/marketingskills into `.agents/skills/`
+- Created `.agents/product-marketing-context.md` with full product positioning, ICP, competitive landscape, brand voice
+
+**SEO audit completed (score: 7.5/10)**
+- Schema markup: excellent (LocalBusiness on contractor pages, BreadcrumbList, FAQPage)
+- City pages: strong with real data and structured content
+- URL structure: clean and crawlable
+- Sitemap: comprehensive with 1,100+ URLs
+
+**SEO quick fixes deployed**
+- Added metadata to `/claim` and `/pro/signup` pages (were client components with no meta)
+- Extracted client components (`ClaimForm.tsx`, `ProSignupForm.tsx`) so pages export metadata
+- Made sitemap dates dynamic (were hardcoded to old dates)
+- Added Organization schema (JSON-LD) to root layout
+- Added `/advertise` to sitemap
+
+**Stripe checkout fixed**
+- Was broken after switching from test to live keys
+- Root cause: trailing `\n` in STRIPE_PRICE_ID_PRO env var in Vercel
+- Added env var validation and better error logging to checkout route
+- Added `.trim()` to price ID to prevent whitespace issues
+- Added STRIPE_SECRET_KEY warning in stripe.ts init
+
+**City pages expanded (Priority 1 from SEO plan)**
+- Went from ~500 words / 3 FAQs to ~1,200-1,500 words / 7 FAQs
+- Added inline cost comparison table (all 6 materials, per-foot + project costs)
+- Added climate-specific material recommendations (6 climate zones mapped to all 50 states)
+- Added hiring checklist section with 5 actionable tips
+- Added 4 new FAQ questions: best material for climate, permits, best season, DIY vs pro
+- All FAQs backed by schema markup
+- Internal links to 3 guides (choosing material, getting quotes, fence cost)
+
+**Created /cities page**
+- New browse-all-cities page at `/cities` — 490+ cities grouped by state with jump-link nav
+- Fixed homepage "View all cities" link (was pointing to `/states`)
+- Added `/cities` to sitemap
+
+**Commits pushed to main (auto-deployed to Vercel):**
+- `a07f6a3` — seo: add metadata to conversion pages, dynamic sitemap dates, org schema
+- `68a5a79` — fix: add Stripe env var validation and better error logging
+- `62f5411` — seo: expand city pages with cost table, climate recs, hiring tips, 7 FAQs
+- `7b0e0d9` — feat: add /cities page, fix "View all cities" homepage link
+
+---
+
+### 2026-03-31 — Deep SEO & Keyword Research
+
+**Full content audit completed across all page types:**
+- City pages (~500 words) — too thin to rank, only 3 FAQs, main traffic driver but weakest content
+- State pages (~300 words) — no schema, no FAQs, no state-specific content at all
+- Fence cost pages (~1500 words) — decent but templated across cities
+- Fence permit pages (~2000 words) — strongest content, unique differentiator vs competitors
+- Guides (~2000+ words each, 11 total) — strong but underlinked from homepage
+- Blog — only 3 posts, one duplicates a guide topic
+- Homepage — doesn't link to guides or blog
+
+**Keyword research findings:**
+- 1.1M+ monthly fence-related searches in US
+- Best opportunity: city + cost long-tail keywords (low competition, high intent)
+- Permit pages are a real differentiator — Angi/HomeAdvisor don't cover this well
+- DIY keywords are massive volume (10-15K/mo) and convert to "hire a pro"
+- "Near me" head terms too competitive for now — need domain authority first
+- Competitive advantage: fence-only vertical specialization vs Angi's 500-category spread
+
+**Internal linking gaps identified:**
+- Homepage doesn't link to guides or blog
+- Guides don't link back to city pages (one-way only)
+- State pages don't link to guides or blog
+- No FAQ schema on homepage
+
+---
+
+## Action Plan (prioritized)
+
+*Full site SEO audit completed 2026-04-01 — score: 7.5/10*
+
+### Priority 1: Beef up city pages (highest impact) — DONE
+- [x] Expand content from ~500 to 1000-1500 words
+- [x] Add climate-appropriate material recommendations
+- [x] Expand from 3 to 6-8 FAQs with schema
+- [x] Add inline cost summary (use existing cost multiplier data from seo.ts)
+- [x] Better internal links to guides
+
+### Priority 2: Quick wins (low effort, immediate impact) — DONE
+- [x] Noindex the search page (prevent crawl dilution — infinite crawlable URLs via `?q=` params)
+- [x] Add FAQPage schema to pricing page (FAQ content already exists, just needs JSON-LD)
+- [x] Fix blog post dates (hardcoded to `2026-03-01` for all posts — should use actual publish dates)
+- [x] Add canonical URLs to pages missing them (state pages, guides index, states index, about page — add `ogMeta()` calls)
+
+### Priority 3: Fix /cities page (audit completed 2026-04-01) — DONE
+- [x] Add intro paragraph — 2-3 sentences of keyword-rich copy below the H1
+- [x] Add BreadcrumbList + ItemList JSON-LD schema
+- [x] Link each state H2 to its `/state/{slug}` page (internal linking)
+- [x] Add client-side search/filter for cities
+- [x] Add contractor CTA section at bottom (reuse homepage pattern)
+- [x] Make metadata dynamic — pull actual city count into title/description
+- [x] Add FAQ section with schema at bottom
+
+### Priority 4: "Add Your Business" flow + claim page improvements — DONE
+- [x] Add "Can't find your business?" callout on `/claim` page (shown when claiming existing listing)
+- [x] Context-aware headings: "Add Your Business" for new submissions, "Claim Your Listing" for existing
+- [x] Updated metadata to cover both flows ("List or Claim Your Fence Business")
+- [x] Form already supports new business submissions (nullable `contractor_id`) — no backend changes needed
+- *Deferred to P7 (auth/admin):* Auto-create contractor record when approving a new business claim
+
+### Priority 5: Fix internal linking + add schema to guides — DONE
+- [x] Homepage → link to guides and blog from body content
+- [x] Guides → link back to relevant city pages (already handled by RelatedLinks component)
+- [x] Add FAQ section with schema to homepage
+- [x] Add BreadcrumbList schema to all 11 guide pages
+- [x] Add BreadcrumbList to guides index, blog index, /states page
+
+### Priority 6: Rebuild state pages — DONE
+- [x] Add state-specific cost data (use existing region multiplier)
+- [x] Add climate/material guidance
+- [x] Add FAQ section with schema (7 FAQs)
+- [x] Add BreadcrumbList schema + ItemList schema
+- [x] Add canonical/OG meta (state pages don't call `ogMeta()`) — done in Priority 2
+- [x] Add links to guides via RelatedLinks component + hiring tips guide links
+- [x] Expand content from ~300 words to 1,200+ (cost table, climate recs, hiring tips, FAQs, CTA)
+
+### Priority 6.5: Contractor search + claim funnel (quick win) — DONE
+- [x] Update SearchBar placeholder: "Search by city, zip, or company name"
+- [x] Add "Are you a fence contractor?" CTA on `/search` results page (both with and without results)
+- [x] Add business name lookup on `/claim` page with debounced search + "Claim this listing" links
+- [x] New `/api/contractors/search` endpoint for client-side lookup
+
+### Priority 7: Authentication & dashboards (Supabase Auth) — DONE
+
+**Chunk 1: Auth foundation**
+- [x] Install `@supabase/ssr` for Next.js server/browser auth helpers
+- [x] Update `supabase.ts` — add `createBrowserClient()` and `createServerClient()` alongside existing service role client
+- [x] Create `middleware.ts` — protect `/admin/*` and `/dashboard/*` routes, redirect unauthenticated users to `/auth/login`
+- [x] Auth pages: `/auth/login`, `/auth/signup`, `/auth/reset-password`, `/auth/callback`, `/auth/update-password`
+- [x] Auth provider in root layout (session context)
+- [x] Database migration: `profiles` table linked to `auth.users` with role + contractor_id
+- [x] Link contractors ↔ auth users (add `user_id` to contractors table)
+
+**Chunk 2: Contractor dashboard**
+- [x] Protected `/dashboard` route — contractor's home base after login
+- [x] Edit profile: name, phone, email, website, description, services, materials, service radius
+- [x] View incoming quote requests (from `quote_requests` table filtered by `contractor_id`)
+- [x] Subscription status card + Stripe billing portal link (existing portal route)
+- [x] Wire claim approval → contractor user account creation (admin approves claim → creates auth user + contractor record)
+
+**Chunk 3: Admin dashboard upgrade**
+- [x] Replace static API key auth with Supabase Auth + admin role check
+- [x] Claims management UI: list pending claims, approve/reject, auto-create contractor record on approve
+- [x] Contractor management: search/filter, feature/unfeature, verify/unverify
+- [x] Add RLS policies: contractors can only edit own row, admins have full access, anon can read
+
+**Not doing (yet):**
+- Homeowner accounts — keep quote flow frictionless to maximize conversions
+- Contractor reviews/responses — need lead volume first
+
+### Priority 8: Blog content (2x/month) ✅ Completed 2026-04-09
+- [x] Target: "best fence for dogs" (3-4.5K/mo), "cheap fence ideas for privacy" (5-7K/mo)
+- [x] DIY content with "when to hire a pro" CTAs
+- [x] Each post links to 2-4 city/cost pages
+- [x] Remove duplicate wood-vs-vinyl blog post (guide already covers this)
+- [x] Refactored blog posts into separate files under `src/app/blog/[slug]/posts/`
+- Blog now has 4 posts: best-fence-for-dogs, cheap-fence-ideas-for-privacy, average-fence-installation-costs-2026, 5-questions-before-hiring-fence-contractor
+
+### Priority 9: Automated blog generation ✅ Completed 2026-04-09
+- [x] Refactor blog from single-file JSX components to separate files per post (done in P8)
+- [x] Build generation script using Claude API to write SEO-optimized posts
+- [x] Set up GitHub Actions cron to auto-generate + deploy 2 posts/month
+- [x] 24 predefined keywords rotate automatically (2 per month)
+- Script: `npx tsx scripts/generate-blog-post.ts "topic"` or `npm run generate-blog -- "topic"`
+- Workflow: `.github/workflows/generate-blog.yml` runs 1st + 15th of each month
+- **Setup required:** Add `ANTHROPIC_API_KEY` secret in GitHub repo Settings → Secrets
+
+### Priority 10: Programmatic material pages ✅ Completed 2026-04-09
+- [x] Material-specific pages per city at `/fence-installers/{material}/{city-slug}`
+- [x] 6 materials: wood, vinyl, chain-link, aluminum, wrought-iron, composite
+- [x] 557 cities × 6 materials = 3,342 new pages (top 50 cities pre-rendered, rest ISR)
+- [x] Each page: cost breakdown, material pros/cons, local contractors filtered by material, FAQ, compare-other-materials grid
+- [x] City pages now link to material sub-pages via "Browse by Material" section
+- [x] Material config in `src/lib/materials.ts`, data function `getContractorsByCityAndMaterial` in `src/lib/data.ts`
+
+---
+
+## Growth Thesis
+1. Organic homeowner traffic via SEO (city pages, guides, programmatic pages)
+2. Homeowners submit quote requests → proof of lead volume
+3. Contractors see value → claim listings → upgrade to Pro ($199/mo)
+
+---
+
+## Open Items
+- [x] Follow up with Austin Owen (Fenceworks of Georgia) — reached out, no response
+- [ ] Monitor organic traffic via analytics + GSC
+- [ ] Outreach templates ready at `outreach/email-templates.md` — start once traffic justifies it
+
+---
+
+## Key Metrics to Track
+- Google Search Console impressions/clicks
+- Quote request submissions
+- Claim requests
+- Pro subscription conversions
+
+---
+
+## Infrastructure
+| Service | Details |
+|---------|---------|
+| Hosting | Vercel (auto-deploys on push to main) |
+| Database | Supabase (PostgreSQL) |
+| Domain | Namecheap |
+| Email (business) | Google Workspace — matt@getfencefind.com ($6/mo) |
+| Email (transactional) | Resend — send.getfencefind.com |
+| Analytics | Vercel Analytics + self-hosted (Supabase pageviews) |
+| SEO | GSC (domain verified, service account: fencefind-bot@fence-find.iam.gserviceaccount.com) |
+| Payments | Stripe LIVE ($199/mo Pro, 14-day trial) |
+
+## Lessons Learned
+- Supabase default 1,000 row limit — must use `.range()` pagination
+- Personal Gmail gets better open rates than business email for cold outreach
+- No dedicated fence contractor directory existed online — that was the opportunity
+- Trailing whitespace in Vercel env vars can silently break Stripe API calls
