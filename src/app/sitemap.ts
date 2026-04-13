@@ -32,6 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const guidePages: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/guides`, lastModified: today, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/fence-cost-by-state`, lastModified: today, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/fence-permits`, lastModified: today, changeFrequency: 'monthly', priority: 0.8 },
     ...guides.map((guide) => ({
       url: `${baseUrl}/guides/${guide}`,
       lastModified: today,
