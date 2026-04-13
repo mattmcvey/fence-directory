@@ -1,6 +1,6 @@
 # FenceFind Progress Log
 
-Last Updated: 2026-04-09
+Last Updated: 2026-04-13
 Full build history: `~/.openclaw/workspace/fencefind-progress.md`
 
 ## Project Status
@@ -363,7 +363,7 @@ Setup notes:
 - [x] Each post links to 2-4 city/cost pages
 - [x] Remove duplicate wood-vs-vinyl blog post (guide already covers this)
 - [x] Refactored blog posts into separate files under `src/app/blog/[slug]/posts/`
-- Blog now has 4 posts: best-fence-for-dogs, cheap-fence-ideas-for-privacy, average-fence-installation-costs-2026, 5-questions-before-hiring-fence-contractor
+- Blog now has 5 posts: best-fence-for-dogs, cheap-fence-ideas-for-privacy, average-fence-installation-costs-2026, 5-questions-before-hiring-fence-contractor, metal-vs-wood-fence-comparison (auto-generated)
 
 ### Priority 9: Automated blog generation ✅ Completed 2026-04-09
 - [x] Refactor blog from single-file JSX components to separate files per post (done in P8)
@@ -372,7 +372,7 @@ Setup notes:
 - [x] 24 predefined keywords rotate automatically (2 per month)
 - Script: `npx tsx scripts/generate-blog-post.ts "topic"` or `npm run generate-blog -- "topic"`
 - Workflow: `.github/workflows/generate-blog.yml` runs 1st + 15th of each month
-- **Setup required:** Add `ANTHROPIC_API_KEY` secret in GitHub repo Settings → Secrets
+- [x] `ANTHROPIC_API_KEY` secret added to GitHub repo, manual run verified working 2026-04-09
 
 ### Priority 10: Programmatic material pages ✅ Completed 2026-04-09
 - [x] Material-specific pages per city at `/fence-installers/{material}/{city-slug}`
