@@ -69,28 +69,42 @@ jobs:
           )
 
           TOTAL=${#TOPICS[@]}
+          POSTS_DIR="src/app/blog/[slug]/posts"
 
-          # Determine index based on months elapsed since a reference point
-          # Reference: January 2026, with 2 posts per month
+          # Determine starting index based on months elapsed since Jan 2026
           YEAR=$(date +%Y)
           MONTH=$(date +%-m)
           DAY=$(date +%-d)
-
-          # Months since Jan 2026
           MONTHS_ELAPSED=$(( (YEAR - 2026) * 12 + MONTH - 1 ))
 
-          # 2 posts per month: index = months_elapsed * 2 + (0 if 1st, 1 if 15th)
           if [ "$DAY" -le 7 ]; then
             HALF=0
           else
             HALF=1
           fi
 
-          INDEX=$(( (MONTHS_ELAPSED * 2 + HALF) % TOTAL ))
-          SELECTED="${TOPICS[$INDEX]}"
+          START_INDEX=$(( (MONTHS_ELAPSED * 2 + HALF) % TOTAL ))
+
+          # Loop through topics starting at START_INDEX, skip any that already exist
+          SELECTED=""
+          for (( i=0; i<TOTAL; i++ )); do
+            INDEX=$(( (START_INDEX + i) % TOTAL ))
+            CANDIDATE="${TOPICS[$INDEX]}"
+            SLUG=$(echo "$CANDIDATE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//')
+            if [ ! -f "$POSTS_DIR/$SLUG.tsx" ]; then
+              SELECTED="$CANDIDATE"
+              echo "Selected topic #$INDEX: $SELECTED (skipped $i existing)"
+              break
+            fi
+            echo "Skipping topic #$INDEX (already exists): $CANDIDATE"
+          done
+
+          if [ -z "$SELECTED" ]; then
+            echo "All topics have been used. No new post to generate."
+            exit 0
+          fi
 
           echo "topic=$SELECTED" >> "$GITHUB_OUTPUT"
-          echo "Selected topic #$INDEX: $SELECTED"
 
       - name: Generate blog post
         env:
