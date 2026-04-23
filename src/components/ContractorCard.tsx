@@ -81,35 +81,37 @@ export default function ContractorCard({ contractor, distance }: ContractorCardP
         </div>
 
         {/* CTA buttons */}
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 border-t border-gray-100">
+        <div className="pt-3 border-t border-gray-100 space-y-2">
           <Link
             href={`/contractor/${contractor.slug}#quote`}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white text-center py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-green-600 hover:bg-green-700 text-white text-center py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
           >
             <MessageSquare className="w-4 h-4" />
             Get a Free Quote
           </Link>
-          <TrackableLink
-            href={`tel:${contractor.phone}`}
-            contractorId={contractor.id}
-            eventType="phone_click"
-            className="px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
-          >
-            <Phone className="w-4 h-4" />
-            {formatPhone(contractor.phone)}
-          </TrackableLink>
-          {contractor.featured && contractor.website && (
+          <div className="flex gap-2">
             <TrackableLink
-              href={contractor.website}
+              href={`tel:${contractor.phone}`}
               contractorId={contractor.id}
-              eventType="website_click"
-              external
-              className="px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+              eventType="phone_click"
+              className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
             >
-              <Globe className="w-4 h-4" />
-              Website
+              <Phone className="w-4 h-4" />
+              {formatPhone(contractor.phone)}
             </TrackableLink>
-          )}
+            {contractor.featured && contractor.website && (
+              <TrackableLink
+                href={contractor.website}
+                contractorId={contractor.id}
+                eventType="website_click"
+                external
+                className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+              >
+                <Globe className="w-4 h-4" />
+                Website
+              </TrackableLink>
+            )}
+          </div>
         </div>
       </div>
     </div>
