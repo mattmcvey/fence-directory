@@ -123,7 +123,7 @@ export default async function ContractorPage({ params }: PageProps) {
               <Phone className="w-5 h-5" />
               Call {formatPhone(contractor.phone)}
             </TrackableLink>
-            {contractor.website && (
+            {contractor.featured && contractor.website && (
               <TrackableLink
                 href={contractor.website}
                 contractorId={contractor.id}
