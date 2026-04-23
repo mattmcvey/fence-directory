@@ -38,6 +38,11 @@ export async function POST(request: Request) {
       );
     }
 
+    // Track as engagement event
+    await supabase.from('events').insert({
+      contractor_id: contractorId,
+      event_type: 'quote_request',
+    }).then(() => {});
 
     await notifyQuoteRequest({
       contractorName: contractorName || 'Unknown',

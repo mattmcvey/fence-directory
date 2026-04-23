@@ -5,7 +5,7 @@ import { faqSchema, ogMeta } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Pricing — FenceFind for Contractors',
-  description: 'Get listed on FenceFind. Free basic listings or upgrade to Pro for featured placement, unlimited leads, and priority visibility. Starting at $199/month.',
+  description: 'Get listed on FenceFind. Free basic listings or upgrade to Pro for featured placement, unlimited leads, and priority visibility. Starting at $79/month.',
   ...ogMeta({
     title: 'Pricing — FenceFind for Contractors',
     description: 'Get listed on FenceFind. Free basic listings or upgrade to Pro for featured placement, unlimited leads, and priority visibility.',
@@ -15,24 +15,23 @@ export const metadata: Metadata = {
 
 const freeFeatures = [
   'Business profile page',
-  'Contact info displayed',
+  'Contact info displayed (phone)',
   'Service area listing',
   'Up to 3 photos',
   'Listed in search results',
+  'Monthly profile view stats',
+  'Quote request notifications',
 ];
 
 const proFeatures = [
   'Everything in Free, plus:',
-  'Unlimited leads in your area',
-  'Featured placement in city search',
+  'Website link on profile AND search results',
+  'Featured placement on city pages',
   'Verified Pro badge',
-  'Priority on city & state pages',
-  'Lead notifications (email + SMS)',
+  'Priority in search results',
+  'Lead analytics dashboard (views, clicks, quotes)',
   'Unlimited photos & portfolio',
-  'Quote request form on your profile',
-  'Profile analytics dashboard',
   'Google review integration',
-  'Priority support',
 ];
 
 export default function PricingPage() {
@@ -109,10 +108,10 @@ export default function PricingPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Pro</h2>
           <p className="text-gray-500 mb-6">Unlimited leads + featured placement</p>
           <div className="mb-2">
-            <span className="text-5xl font-bold text-gray-900">$199</span>
+            <span className="text-5xl font-bold text-gray-900">$79</span>
             <span className="text-gray-500">/month</span>
           </div>
-          <p className="text-sm text-green-700 mb-6">One fence job pays for a full year</p>
+          <p className="text-sm text-green-700 mb-6">One fence job pays for 4+ years</p>
           <Link
             href="/pro/signup"
             className="block w-full text-center bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition-colors mb-8"
@@ -141,7 +140,7 @@ export default function PricingPage() {
         <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">The Math is Simple</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
           <div>
-            <div className="text-3xl font-bold text-gray-900">$199</div>
+            <div className="text-3xl font-bold text-gray-900">$79</div>
             <div className="text-sm text-gray-600">Monthly cost</div>
           </div>
           <div>
@@ -149,12 +148,12 @@ export default function PricingPage() {
             <div className="text-sm text-gray-600">Average fence job</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-green-600">22x ROI</div>
+            <div className="text-3xl font-bold text-green-600">57x ROI</div>
             <div className="text-sm text-gray-600">From just one job</div>
           </div>
         </div>
         <p className="text-center text-gray-600 mt-4 text-sm">
-          Close just one lead per month and FenceFind pays for itself 22 times over.
+          Close just one lead and FenceFind pays for itself 57 times over.
         </p>
       </div>
 

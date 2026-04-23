@@ -373,6 +373,70 @@ export async function getStatesWithCounts(): Promise<State[]> {
   }));
 }
 
+export async function getContractorEvents(
+  contractorId: string,
+  days: number = 30,
+): Promise<Record<string, number>> {
+  if (!isSupabaseConfigured) return {};
+
+  const since = new Date();
+  since.setDate(since.getDate() - days);
+
+  const { data, error } = await supabase
+    .from('events')
+    .select('event_type')
+    .eq('contractor_id', contractorId)
+    .gte('created_at', since.toISOString());
+
+  if (error || !data) return {};
+
+  const counts: Record<string, number> = {};
+  for (const row of data) {
+    counts[row.event_type] = (counts[row.event_type] || 0) + 1;
+  }
+  return counts;
+}
+
+export async function getContractorEventTrend(
+  contractorId: string,
+): Promise<{ current: Record<string, number>; previous: Record<string, number> }> {
+  if (!isSupabaseConfigured) return { current: {}, previous: {} };
+
+  const now = new Date();
+  const thirtyAgo = new Date(now);
+  thirtyAgo.setDate(thirtyAgo.getDate() - 30);
+  const sixtyAgo = new Date(now);
+  sixtyAgo.setDate(sixtyAgo.getDate() - 60);
+
+  const [currentRes, previousRes] = await Promise.all([
+    supabase
+      .from('events')
+      .select('event_type')
+      .eq('contractor_id', contractorId)
+      .gte('created_at', thirtyAgo.toISOString()),
+    supabase
+      .from('events')
+      .select('event_type')
+      .eq('contractor_id', contractorId)
+      .gte('created_at', sixtyAgo.toISOString())
+      .lt('created_at', thirtyAgo.toISOString()),
+  ]);
+
+  const tally = (rows: any[] | null) => {
+    const counts: Record<string, number> = {};
+    if (!rows) return counts;
+    for (const row of rows) {
+      counts[row.event_type] = (counts[row.event_type] || 0) + 1;
+    }
+    return counts;
+  };
+
+  return {
+    current: tally(currentRes.data),
+    previous: tally(previousRes.data),
+  };
+}
+
 export async function submitClaimRequest(data: {
   businessName: string;
   contactName: string;

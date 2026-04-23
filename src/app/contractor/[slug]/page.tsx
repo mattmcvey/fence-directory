@@ -6,6 +6,8 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import QuoteForm from '@/components/QuoteForm';
 import RelatedLinks from '@/components/RelatedLinks';
+import ProfileViewTracker from '@/components/ProfileViewTracker';
+import TrackableLink from '@/components/TrackableLink';
 import { localBusinessSchema, breadcrumbSchema, ogMeta } from '@/lib/seo';
 
 export const revalidate = 3600;
@@ -60,6 +62,8 @@ export default async function ContractorPage({ params }: PageProps) {
         }}
       />
 
+      <ProfileViewTracker contractorId={contractor.id} />
+
       {/* Breadcrumbs */}
       <nav className="text-sm text-gray-500 mb-4 flex flex-wrap gap-1">
         <Link href="/" className="hover:text-green-600">Home</Link>
@@ -110,23 +114,26 @@ export default async function ContractorPage({ params }: PageProps) {
 
           {/* Contact buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
-            <a
+            <TrackableLink
               href={`tel:${contractor.phone}`}
+              contractorId={contractor.id}
+              eventType="phone_click"
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
             >
               <Phone className="w-5 h-5" />
               Call {formatPhone(contractor.phone)}
-            </a>
+            </TrackableLink>
             {contractor.website && (
-              <a
+              <TrackableLink
                 href={contractor.website}
-                target="_blank"
-                rel="noopener noreferrer"
+                contractorId={contractor.id}
+                eventType="website_click"
+                external
                 className="border border-gray-300 hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
               >
                 <Globe className="w-5 h-5" />
                 Visit Website
-              </a>
+              </TrackableLink>
             )}
           </div>
 
@@ -224,7 +231,7 @@ export default async function ContractorPage({ params }: PageProps) {
         </div>
 
         {/* Sidebar */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1" id="quote">
           <div className="sticky top-8">
             <QuoteForm contractorId={contractor.id} contractorName={contractor.name} />
           </div>

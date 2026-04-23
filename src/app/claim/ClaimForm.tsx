@@ -175,7 +175,7 @@ function ClaimFormInner() {
                 </ul>
               </div>
               <div>
-                <p className="font-medium text-green-600 mb-2">Pro — $199/mo</p>
+                <p className="font-medium text-green-600 mb-2">Pro — $79/mo</p>
                 <ul className="space-y-1 text-gray-600">
                   <li>✓ Unlimited leads</li>
                   <li>✓ Featured placement</li>

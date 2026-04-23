@@ -62,7 +62,7 @@ function ProSignupFormInner() {
           <p className="text-gray-600">
             Unlimited leads, featured placement, verified badge.
             <br />
-            <strong>$199/mo</strong> after trial — cancel anytime.
+            <strong>$79/mo</strong> after trial — cancel anytime.
           </p>
         </div>
 
@@ -73,7 +73,7 @@ function ProSignupFormInner() {
               'Unlimited leads in your area',
               'Featured at the top of your city page',
               'Verified Pro badge on your profile',
-              'One fence job pays for a full year',
+              'One fence job pays for 4+ years',
             ].map((b) => (
               <div key={b} className="flex items-center gap-2 text-green-800">
                 <Check className="w-4 h-4 flex-shrink-0" />

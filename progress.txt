@@ -1,6 +1,6 @@
 # FenceFind Progress Log
 
-Last Updated: 2026-04-13
+Last Updated: 2026-04-22
 Full build history: `~/.openclaw/workspace/fencefind-progress.md`
 
 ## Project Status
@@ -9,7 +9,7 @@ Full build history: `~/.openclaw/workspace/fencefind-progress.md`
 - **Stage:** Pre-traction — building organic SEO traffic to attract contractors
 - **Data:** 5,100+ contractors across 494 cities in all 50 states
 - **Indexable URLs:** ~2,200+
-- **Revenue:** 0 Pro subscribers ($199/mo plan live with 14-day trial)
+- **Revenue:** 0 Pro subscribers ($79/mo plan live with 14-day trial)
 - **Claims:** 1 organic claim — Fenceworks of Georgia (Austin Owen, March 13)
 - **Stripe:** Live mode — Product `prod_UA2JQfJ0HvOKQl`, Price `price_1TBiFCQx18mjum7xZWL6Daob`
 
@@ -60,6 +60,71 @@ Full build history: `~/.openclaw/workspace/fencefind-progress.md`
 ---
 
 ## Completed (this session)
+
+### 2026-04-22 — Priority 11: Lead Capture, Click Tracking, Pricing Restructure
+
+**Problem:** FenceFind was getting 200+ daily visitors but had a leaky bucket — homeowners could see a contractor's website and phone for free, click through, and leave. No way to measure or prove the value delivered to contractors, and no compelling upgrade pitch.
+
+**Sprint 1: Click & Event Tracking**
+- Created `events` table (contractor_id, event_type, visitor_id, referrer, user_agent, created_at) with indexes
+- New `/api/events` POST endpoint — validates event_type against allowed values, fire-and-forget
+- New `TrackableLink.tsx` — wraps phone/website links, fires `navigator.sendBeacon()` on click
+- New `ProfileViewTracker.tsx` — fires `profile_view` event on contractor page load
+- Modified contractor profile page to use TrackableLink for phone/website buttons
+- Modified `/api/quotes/route.ts` to log `quote_request` events
+
+**Sprint 2: Lead Capture Redesign**
+- **ContractorCard redesign:** "Get a Free Quote" is now primary CTA (links to `/contractor/[slug]#quote`), phone is secondary, website link only shown for Pro/featured contractors
+- New `CityQuoteForm.tsx` — multi-contractor quote form on city pages (name, email, phone, fence type, message)
+- New `/api/quotes/multi/route.ts` — finds top 3 contractors in city, creates quote_request for each, sends email notifications
+- Added CityQuoteForm to city pages above contractor list
+- Added `#quote` anchor to contractor profile sidebar
+
+**Sprint 3: Dashboard Value**
+- New data functions: `getContractorEvents()` and `getContractorEventTrend()` in data.ts
+- Dashboard now shows 4 engagement stat cards: Profile Views, Phone Clicks, Quote Requests, Website Clicks
+- Each stat shows 30-day count with trend arrow vs previous 30 days (↑ 23% / ↓ 15%)
+- Website clicks card shows "Upgrade to Pro" nudge for free contractors
+- Engagement-based upgrade prompt: shown when free contractor has ≥10 profile views ("47 homeowners viewed your profile this month")
+
+**Sprint 4: Pricing Restructure**
+- Pro price lowered from $199/mo to $79/mo across all pages
+- Updated: pricing page, subscription card, pro signup form, claim form, pro signup metadata
+- Updated ROI calculator: $79/mo → $4,500 avg job → 57x ROI
+- Updated messaging: "One fence job pays for 4+ years"
+- Updated feature lists: Free tier now includes profile view stats + quote notifications; Pro tier emphasizes website link in search results + lead analytics dashboard
+- **Action needed:** Create new $79/mo Stripe Price on existing Product, update `STRIPE_PRICE_ID_PRO` in Vercel env vars
+
+**Files created:**
+- `src/app/api/events/route.ts`
+- `src/components/TrackableLink.tsx`
+- `src/components/ProfileViewTracker.tsx`
+- `src/components/CityQuoteForm.tsx`
+- `src/app/api/quotes/multi/route.ts`
+
+**Files modified:**
+- `src/components/ContractorCard.tsx` — redesigned CTAs
+- `src/app/contractor/[slug]/page.tsx` — tracking + quote anchor
+- `src/app/api/quotes/route.ts` — log quote events
+- `src/app/city/[slug]/page.tsx` — added CityQuoteForm
+- `src/lib/data.ts` — event query functions
+- `src/app/dashboard/page.tsx` — engagement stats + trends + upgrade prompts
+- `src/app/pricing/page.tsx` — $79, updated features, ROI
+- `src/app/dashboard/subscription/SubscriptionCard.tsx` — $79
+- `src/app/pro/signup/ProSignupForm.tsx` — $79
+- `src/app/pro/signup/page.tsx` — $79 metadata
+- `src/app/claim/ClaimForm.tsx` — $79
+
+**SQL migration needed:** Create `events` table in Supabase (table + indexes + RLS policies)
+
+---
+
+### 2026-04-15 — Misc fixes
+
+- Fixed `/fence-permits` 404 — created index page at `src/app/fence-permits/page.tsx` with state-level overview (permit costs, height limits, fines across all 50 states), added to sitemap
+- Fixed auto blog generation workflow — topic rotation was failing when it selected a topic that already had a post. Updated `.github/workflows/generate-blog.yml` to loop through topics and skip existing ones.
+
+---
 
 ### 2026-04-02 — Priority 7: Authentication & Dashboards (Supabase Auth)
 
@@ -386,8 +451,9 @@ Setup notes:
 
 ## Growth Thesis
 1. Organic homeowner traffic via SEO (city pages, guides, programmatic pages)
-2. Homeowners submit quote requests → proof of lead volume
-3. Contractors see value → claim listings → upgrade to Pro ($199/mo)
+2. Track engagement (profile views, phone clicks, website clicks, quote requests) to prove value
+3. Capture leads through quote forms instead of letting traffic leak to contractor websites
+4. Show contractors their engagement data → upgrade to Pro ($79/mo) for website links in search results + featured placement
 
 ---
 
@@ -395,6 +461,8 @@ Setup notes:
 - [x] Follow up with Austin Owen (Fenceworks of Georgia) — reached out, no response
 - [ ] Monitor organic traffic via analytics + GSC
 - [ ] Outreach templates ready at `outreach/email-templates.md` — start once traffic justifies it
+- [ ] **Create `events` table in Supabase** — run SQL migration (table + indexes + RLS policies) before deploying P11
+- [ ] **Create new $79/mo Stripe Price** — on existing Product, update `STRIPE_PRICE_ID_PRO` in Vercel env vars
 
 ---
 
@@ -416,7 +484,8 @@ Setup notes:
 | Email (transactional) | Resend — send.getfencefind.com |
 | Analytics | Vercel Analytics + self-hosted (Supabase pageviews) |
 | SEO | GSC (domain verified, service account: fencefind-bot@fence-find.iam.gserviceaccount.com) |
-| Payments | Stripe LIVE ($199/mo Pro, 14-day trial) |
+| Payments | Stripe LIVE ($79/mo Pro, 14-day trial) — **TODO:** Create new $79 Stripe Price, update STRIPE_PRICE_ID_PRO env var |
+| Event Tracking | Supabase `events` table — profile_view, phone_click, website_click, quote_request |
 
 ## Lessons Learned
 - Supabase default 1,000 row limit — must use `.range()` pagination

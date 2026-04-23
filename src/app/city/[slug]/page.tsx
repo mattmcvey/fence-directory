@@ -4,6 +4,7 @@ import { breadcrumbSchema, faqSchema, getCostData, getRegionData, COST_MATERIAL_
 import { MATERIALS } from '@/lib/materials';
 import ContractorCard from '@/components/ContractorCard';
 import SearchBar from '@/components/SearchBar';
+import CityQuoteForm from '@/components/CityQuoteForm';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
@@ -141,6 +142,13 @@ export default async function CityPage({ params }: PageProps) {
       <p className="text-gray-600 mb-8">
         {city.contractorCount}+ rated fence installers serving the {city.name} area
       </p>
+
+      {/* Multi-contractor quote form */}
+      {contractors.length > 0 && (
+        <div className="mb-8">
+          <CityQuoteForm cityName={city.name} stateCode={city.stateCode} citySlug={slug} />
+        </div>
+      )}
 
       {contractors.length > 0 ? (
         <div className="space-y-6">
