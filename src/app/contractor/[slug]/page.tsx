@@ -178,7 +178,7 @@ export default async function ContractorPage({ params }: PageProps) {
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Fence Materials</h2>
               <div className="flex flex-wrap gap-2">
                 {contractor.materials.map((m) => (
-                  <span key={m} className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-sm font-medium">
+                  <span key={m} className="bg-green-50 text-green-700 border border-green-200 px-3 py-1.5 rounded-full text-sm font-medium">
                     {MATERIAL_LABELS[m] || m}
                   </span>
                 ))}

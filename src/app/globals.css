@@ -133,6 +133,17 @@
     background-color: #052e16 !important;
   }
 
+  /* ===== GRADIENTS: Green/Emerald ===== */
+  .from-green-50 {
+    --tw-gradient-from: #052e16 !important;
+  }
+  .to-emerald-50 {
+    --tw-gradient-to: #052e16 !important;
+  }
+  .bg-gradient-to-r.from-green-50.to-emerald-50 {
+    background: linear-gradient(to right, #052e16, #052e1a) !important;
+  }
+
   /* ===== BACKGROUNDS: Blues ===== */
   .bg-blue-50 {
     background-color: #0c1a2e !important;

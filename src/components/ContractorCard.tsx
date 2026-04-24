@@ -49,7 +49,7 @@ export default function ContractorCard({ contractor, distance }: ContractorCardP
         {/* Materials */}
         <div className="flex flex-wrap gap-1.5 mb-4">
           {contractor.materials.slice(0, 4).map((m) => (
-            <span key={m} className="bg-gray-100 text-gray-700 text-xs px-2.5 py-1 rounded-full">
+            <span key={m} className="bg-green-50 text-green-700 border border-green-200 text-xs px-2.5 py-1 rounded-full">
               {MATERIAL_LABELS[m] || m}
             </span>
           ))}
