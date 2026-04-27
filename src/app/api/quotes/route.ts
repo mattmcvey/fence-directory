@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServiceClient } from '@/lib/supabase';
-import { notifyQuoteRequest } from '@/lib/email';
+import { notifyQuoteRequest, confirmQuoteToHomeowner } from '@/lib/email';
 
 export async function POST(request: Request) {
   try {
@@ -44,17 +44,24 @@ export async function POST(request: Request) {
       event_type: 'quote_request',
     }).then(() => {});
 
-    await notifyQuoteRequest({
-      contractorName: contractorName || 'Unknown',
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone?.trim() || undefined,
-      zip: zip.trim(),
-      fenceType: fenceType?.trim() || undefined,
-      material: material?.trim() || undefined,
-      approximateLength: approximateLength?.trim() || undefined,
-      message: message?.trim() || undefined,
-    });
+    await Promise.all([
+      notifyQuoteRequest({
+        contractorName: contractorName || 'Unknown',
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone?.trim() || undefined,
+        zip: zip.trim(),
+        fenceType: fenceType?.trim() || undefined,
+        material: material?.trim() || undefined,
+        approximateLength: approximateLength?.trim() || undefined,
+        message: message?.trim() || undefined,
+      }),
+      confirmQuoteToHomeowner({
+        homeownerName: name.trim(),
+        homeownerEmail: email.trim(),
+        contractorName: contractorName || 'the contractor',
+      }),
+    ]);
 
     return NextResponse.json({ success: true });
   } catch {

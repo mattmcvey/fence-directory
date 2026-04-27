@@ -67,6 +67,53 @@ export async function notifyContactMessage(contact: {
   }
 }
 
+export async function confirmQuoteToHomeowner(details: {
+  homeownerName: string;
+  homeownerEmail: string;
+  contractorName: string;
+}) {
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: details.homeownerEmail,
+      subject: `Your quote request was sent to ${details.contractorName}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto;">
+          <div style="background: #16a34a; padding: 24px; border-radius: 12px 12px 0 0; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 22px;">Quote Request Sent!</h1>
+          </div>
+          <div style="background: #ffffff; padding: 24px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
+            <p style="color: #374151; font-size: 15px; line-height: 1.6; margin-top: 0;">
+              Hi ${details.homeownerName},
+            </p>
+            <p style="color: #374151; font-size: 15px; line-height: 1.6;">
+              Your quote request has been sent to <strong>${details.contractorName}</strong>. They typically respond within 1–2 business days.
+            </p>
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 20px 0;">
+              <p style="color: #166534; font-size: 14px; margin: 0;"><strong>What happens next?</strong></p>
+              <ul style="color: #166534; font-size: 14px; margin: 8px 0 0; padding-left: 20px;">
+                <li>The contractor will review your request</li>
+                <li>They'll reach out to you via phone or email</li>
+                <li>You can discuss your project and get a detailed estimate</li>
+              </ul>
+            </div>
+            <p style="color: #6b7280; font-size: 13px; line-height: 1.5;">
+              If you don't hear back within a few days, try reaching out to them directly from their
+              <a href="https://getfencefind.com" style="color: #16a34a;">FenceFind profile</a>.
+            </p>
+            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+            <p style="color: #9ca3af; font-size: 12px; text-align: center; margin-bottom: 0;">
+              FenceFind — Find Trusted Fence Contractors Near You
+            </p>
+          </div>
+        </div>
+      `,
+    });
+  } catch (error) {
+    console.error('Failed to send homeowner confirmation email:', error);
+  }
+}
+
 export async function notifyQuoteRequest(quote: {
   contractorName: string;
   name: string;
