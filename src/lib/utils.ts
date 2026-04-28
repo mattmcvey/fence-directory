@@ -78,6 +78,20 @@ export function stateNameToCode(name: string): string {
   return states[name.toLowerCase()] || name;
 }
 
+export function parseCitySlug(slug: string): { cityName: string; stateCode: string } | null {
+  const parts = slug.split('-');
+  if (parts.length < 2) return null;
+
+  const stateCode = parts.pop()!.toUpperCase();
+  // Validate it's a real state code
+  if (stateCodeToName(stateCode) === stateCode) return null;
+
+  const cityName = parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+  if (!cityName) return null;
+
+  return { cityName, stateCode };
+}
+
 export const MATERIAL_LABELS: Record<string, string> = {
   'wood': 'Wood',
   'vinyl': 'Vinyl',

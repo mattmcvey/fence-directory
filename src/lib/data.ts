@@ -84,7 +84,7 @@ export async function searchContractors(query: string): Promise<Contractor[]> {
   return data.map(rowToContractor);
 }
 
-export async function getContractorsByState(stateCode: string): Promise<Contractor[]> {
+export async function getContractorsByState(stateCode: string, limit = 100): Promise<Contractor[]> {
   if (!isSupabaseConfigured) return [];
 
   const { data, error } = await supabase
@@ -93,7 +93,7 @@ export async function getContractorsByState(stateCode: string): Promise<Contract
     .eq('state', stateCode)
     .order('featured', { ascending: false })
     .order('rating', { ascending: false })
-    .limit(100);
+    .limit(limit);
 
   if (error || !data) return [];
   return data.map(rowToContractor);

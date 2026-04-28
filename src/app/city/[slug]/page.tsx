@@ -1,5 +1,5 @@
-import { getCityBySlug, getContractorsByCity, getCities } from '@/lib/data';
-import { stateCodeToName } from '@/lib/utils';
+import { getCityBySlug, getContractorsByCity, getContractorsByState, getCities, getCitiesByState } from '@/lib/data';
+import { stateCodeToName, parseCitySlug } from '@/lib/utils';
 import { breadcrumbSchema, faqSchema, getCostData, getRegionData, COST_MATERIAL_NAMES, ogMeta } from '@/lib/seo';
 import { MATERIALS } from '@/lib/materials';
 import ContractorCard from '@/components/ContractorCard';
@@ -8,7 +8,7 @@ import CityQuoteForm from '@/components/CityQuoteForm';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, MapPin } from 'lucide-react';
 import RelatedLinks from '@/components/RelatedLinks';
 
 export const revalidate = 3600;
@@ -20,7 +20,16 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const city = await getCityBySlug(slug);
-  if (!city) return { title: 'City Not Found — FenceFind' };
+  if (!city) {
+    const parsed = parseCitySlug(slug);
+    if (!parsed) return { title: 'City Not Found — FenceFind' };
+    const stateName = stateCodeToName(parsed.stateCode);
+    return {
+      title: `Fence Contractors Near ${parsed.cityName}, ${parsed.stateCode} — FenceFind`,
+      description: `Find fence contractors near ${parsed.cityName}, ${parsed.stateCode}. Browse top-rated fence installers serving ${stateName}.`,
+      robots: { index: false, follow: true },
+    };
+  }
   const title = `Best Fence Contractors in ${city.name}, ${city.stateCode} (2026) — Rated & Reviewed | FenceFind`;
   const description = `Find the best fence contractors in ${city.name}, ${city.stateCode}. Compare ${city.contractorCount}+ rated & reviewed local fence installers. Get free estimates for wood, vinyl, chain link & more.`;
   return {
@@ -38,7 +47,95 @@ export async function generateStaticParams() {
 export default async function CityPage({ params }: PageProps) {
   const { slug } = await params;
   const city = await getCityBySlug(slug);
-  if (!city) notFound();
+
+  // Unknown city — show fallback with state contractors
+  if (!city) {
+    const parsed = parseCitySlug(slug);
+    if (!parsed) notFound();
+
+    const { cityName, stateCode } = parsed;
+    const stateName = stateCodeToName(stateCode);
+    const stateSlug = stateName.toLowerCase().replace(/\s+/g, '-');
+    const [stateContractors, nearbyCities] = await Promise.all([
+      getContractorsByState(stateCode),
+      getCitiesByState(stateCode),
+    ]);
+
+    return (
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <nav className="text-sm text-gray-500 mb-6 flex flex-wrap gap-1">
+          <Link href="/" className="hover:text-green-600">Home</Link>
+          <span>/</span>
+          <Link href={`/state/${stateSlug}`} className="hover:text-green-600">{stateName}</Link>
+          <span>/</span>
+          <span className="text-gray-900">{cityName}</span>
+        </nav>
+
+        <SearchBar className="mb-8" />
+
+        <div className="text-center py-8 mb-8">
+          <MapPin className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+            Fence Contractors Near {cityName}, {stateCode}
+          </h1>
+          <p className="text-gray-600 max-w-xl mx-auto">
+            We don&apos;t have contractors listed in {cityName} yet, but here are top-rated fence
+            professionals serving {stateName}.
+          </p>
+        </div>
+
+        {stateContractors.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Top Fence Contractors in {stateName}
+            </h2>
+            <div className="space-y-6">
+              {stateContractors.map((contractor) => (
+                <ContractorCard key={contractor.id} contractor={contractor} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {nearbyCities.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Browse {stateName} Cities
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {nearbyCities.slice(0, 12).map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/city/${c.slug}`}
+                  className="p-3 bg-white border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-all"
+                >
+                  <div className="font-medium text-gray-900">{c.name}</div>
+                  <div className="text-sm text-gray-500">{c.contractorCount} contractors</div>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-4">
+              <Link href={`/state/${stateSlug}`} className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1">
+                View all {stateName} contractors <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </section>
+        )}
+
+        <section className="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
+          <h2 className="text-lg font-bold text-gray-900 mb-2">
+            Are you a fence contractor in {cityName}?
+          </h2>
+          <p className="text-gray-600 mb-4">
+            Get listed on FenceFind and connect with homeowners in your area.
+          </p>
+          <Link href="/claim" className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+            List Your Business — It&apos;s Free
+          </Link>
+        </section>
+      </div>
+    );
+  }
 
   const stateName = stateCodeToName(city.stateCode);
   const contractors = await getContractorsByCity(city.name, city.stateCode);
@@ -157,15 +254,7 @@ export default async function CityPage({ params }: PageProps) {
           ))}
         </div>
       ) : (
-        <div className="text-center py-16">
-          <p className="text-gray-500 text-lg mb-4">
-            We&apos;re still building our directory for {city.name}.
-          </p>
-          <p className="text-gray-400 mb-6">Know a great fence contractor here?</p>
-          <Link href="/claim" className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-            Add a Listing
-          </Link>
-        </div>
+        <NearbyContractors cityName={city.name} stateCode={city.stateCode} stateName={stateName} />
       )}
 
       {/* Cost + Permit CTAs */}
@@ -335,6 +424,66 @@ export default async function CityPage({ params }: PageProps) {
         cityName={city.name}
         stateCode={city.stateCode}
       />
+    </div>
+  );
+}
+
+async function NearbyContractors({ cityName, stateCode, stateName }: { cityName: string; stateCode: string; stateName: string }) {
+  const stateSlug = stateName.toLowerCase().replace(/\s+/g, '-');
+  const [stateContractors, nearbyCities] = await Promise.all([
+    getContractorsByState(stateCode),
+    getCitiesByState(stateCode),
+  ]);
+
+  return (
+    <div>
+      <div className="text-center py-8 mb-6">
+        <p className="text-gray-500 text-lg mb-2">
+          We&apos;re still building our directory for {cityName}.
+        </p>
+        <p className="text-gray-400 mb-4">Know a great fence contractor here?</p>
+        <Link href="/claim" className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+          Add a Listing
+        </Link>
+      </div>
+
+      {stateContractors.length > 0 && (
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">
+            Top Fence Contractors in {stateName}
+          </h2>
+          <div className="space-y-6">
+            {stateContractors.slice(0, 6).map((contractor) => (
+              <ContractorCard key={contractor.id} contractor={contractor} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {nearbyCities.length > 0 && (
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">
+            Browse {stateName} Cities
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {nearbyCities.slice(0, 9).map((c) => (
+              <Link
+                key={c.slug}
+                href={`/city/${c.slug}`}
+                className="p-3 bg-white border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-all"
+              >
+                <div className="font-medium text-gray-900">{c.name}</div>
+                <div className="text-sm text-gray-500">{c.contractorCount} contractors</div>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-4">
+            <Link href={`/state/${stateSlug}`} className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1">
+              View all {stateName} contractors <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
