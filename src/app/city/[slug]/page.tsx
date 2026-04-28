@@ -230,7 +230,7 @@ export default async function CityPage({ params }: PageProps) {
           </table>
         </div>
         <p className="text-sm text-gray-500 mt-2">
-          Prices reflect {stateName} averages including materials and labor.{' '}
+          Estimated {stateName} averages including materials and labor. Get quotes from local contractors for exact pricing.{' '}
           <Link href={`/fence-cost/${slug}`} className="text-green-600 hover:text-green-700 font-medium">
             See full cost breakdown →
           </Link>

@@ -96,8 +96,11 @@ export default function FencePermitsPage() {
       <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
         Fence Permit Requirements by State (2026)
       </h1>
-      <p className="text-gray-600 text-lg mb-8">
+      <p className="text-gray-600 text-lg mb-6">
         Compare fence permit costs, height limits, and fine amounts across all 50 states. Click any state to find city-specific permit details.
+      </p>
+      <p className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-8">
+        <strong>Note:</strong> Permit costs, height limits, and fines shown are typical state-level ranges. Requirements vary significantly by city and county. Always contact your local building department for exact rules before starting a fence project.
       </p>
 
       {/* Summary cards */}
@@ -155,7 +158,7 @@ export default function FencePermitsPage() {
           </div>
         </div>
         <p className="text-sm text-gray-500 mt-2">
-          * Permit costs and regulations vary by city within each state. Click a state or search your city below for specific requirements.
+          * Estimated state-level ranges. Permit costs and regulations vary by city and county. Contact your local building department for exact requirements.
         </p>
       </section>
 

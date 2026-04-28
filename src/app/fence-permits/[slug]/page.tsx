@@ -99,9 +99,16 @@ export default async function FencePermitPage({ params }: PageProps) {
       <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
         Fence Permit Requirements in {city.name}, {city.stateCode} (2026)
       </h1>
-      <p className="text-gray-600 text-lg mb-8">
+      <p className="text-gray-600 text-lg mb-6">
         Everything you need to know about fence permits, height restrictions, setback rules, and HOA requirements in {city.name}, {stateName}.
       </p>
+
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 flex items-start gap-3">
+        <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+        <p className="text-sm text-amber-800">
+          <strong>Important:</strong> The figures below are based on typical {stateName} state requirements. Permit rules, costs, and height limits vary by city and county. Always contact the <strong>{city.name} Building Department</strong> to confirm exact requirements before starting your fence project.
+        </p>
+      </div>
 
       {/* Quick facts */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">

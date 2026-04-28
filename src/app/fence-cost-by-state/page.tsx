@@ -160,7 +160,7 @@ export default function FenceCostByStatePage() {
           </div>
         </div>
         <p className="text-sm text-gray-500 mt-2">
-          * Average project based on 150 linear feet of wood privacy fence. Sorted by cost (highest to lowest).
+          * Estimates based on regional cost data for a 150-foot wood privacy fence. Actual costs vary by contractor and project. Sorted highest to lowest.
         </p>
       </section>
 

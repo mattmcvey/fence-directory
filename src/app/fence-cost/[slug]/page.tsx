@@ -101,8 +101,11 @@ export default async function FenceCostPage({ params }: PageProps) {
       <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
         Fence Cost in {city.name}, {city.stateCode} (2026)
       </h1>
-      <p className="text-gray-600 text-lg mb-8">
-        The average fence installation in {city.name} costs <strong>${costs.project.low.toLocaleString()}–${costs.project.high.toLocaleString()}</strong> depending on material, fence height, and total length. Here&apos;s a detailed breakdown.
+      <p className="text-gray-600 text-lg mb-6">
+        The average fence installation in {city.name} costs an estimated <strong>${costs.project.low.toLocaleString()}–${costs.project.high.toLocaleString()}</strong> depending on material, fence height, and total length. Here&apos;s a detailed breakdown.
+      </p>
+      <p className="text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 mb-8">
+        Estimates are based on {stateName} regional averages for materials and professional installation. Actual costs vary by contractor, terrain, and project specifics. Get quotes from local contractors for accurate pricing.
       </p>
 
       {/* Summary cards */}
@@ -157,7 +160,7 @@ export default async function FenceCostPage({ params }: PageProps) {
           </div>
         </div>
         <p className="text-sm text-gray-500 mt-2">
-          * Prices include materials and professional installation. Actual costs may vary based on terrain, fence height, and contractor.
+          * Estimated {stateName} averages including materials and installation. Get quotes from local contractors for exact pricing.
         </p>
       </section>
 
