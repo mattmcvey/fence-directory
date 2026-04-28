@@ -204,9 +204,15 @@ export default async function HomePage() {
               <p className="text-sm text-gray-500 mt-1">ROI by fence type and what appraisers look for</p>
             </Link>
           </div>
-          <div className="flex items-center gap-6 mt-8">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-8">
             <Link href="/guides" className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1">
               View all 11 guides <ChevronRight className="w-4 h-4" />
+            </Link>
+            <Link href="/fence-permits" className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1">
+              Permit requirements by state <ChevronRight className="w-4 h-4" />
+            </Link>
+            <Link href="/fence-cost-by-state" className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1">
+              Fence cost by state <ChevronRight className="w-4 h-4" />
             </Link>
             <Link href="/blog" className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1">
               Read our blog <ChevronRight className="w-4 h-4" />
