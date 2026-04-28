@@ -56,8 +56,17 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="border-t border-gray-800 mt-8 pt-8 text-sm text-center">
-          <p>© {new Date().getFullYear()} FenceFind. All rights reserved.</p>
+        <div className="border-t border-gray-800 mt-8 pt-8 text-sm text-center space-y-3">
+          <p className="text-xs text-gray-500 max-w-2xl mx-auto leading-relaxed">
+            Information on this site is for general reference only and does not constitute professional or legal advice. Permit requirements, costs, and regulations vary by location. Always verify with your local building department before starting a project.
+          </p>
+          <div className="flex items-center justify-center gap-4">
+            <p>© {new Date().getFullYear()} FenceFind. All rights reserved.</p>
+            <span className="text-gray-700">·</span>
+            <Link href="/terms" className="hover:text-green-400 transition-colors">Terms of Use</Link>
+            <span className="text-gray-700">·</span>
+            <Link href="/contact" className="hover:text-green-400 transition-colors">Contact</Link>
+          </div>
         </div>
       </div>
     </footer>
