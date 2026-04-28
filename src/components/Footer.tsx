@@ -52,7 +52,6 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/claim" className="hover:text-green-400 transition-colors">Claim Your Listing</Link></li>
               <li><Link href="/pricing" className="hover:text-green-400 transition-colors">Pro Listings</Link></li>
-              <li><Link href="/advertise" className="hover:text-green-400 transition-colors">Advertise</Link></li>
               <li><Link href="/contact" className="hover:text-green-400 transition-colors">Contact Us</Link></li>
             </ul>
           </div>
