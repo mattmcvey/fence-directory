@@ -11,6 +11,7 @@ interface Props {
     subscription_status: string | null;
     pro_since: string | null;
     featured: boolean;
+    cancel_at: string | null;
   } | null;
 }
 
@@ -116,6 +117,12 @@ export default function SubscriptionCard({ contractor }: Props) {
             Upgrade to Pro — 14-day free trial
           </Link>
         )
+      )}
+
+      {contractor?.cancel_at && isPro && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-700">
+          Your subscription is set to cancel on {new Date(contractor.cancel_at).toLocaleDateString()}. You&apos;ll keep Pro features until then.
+        </div>
       )}
 
       {status === 'past_due' && (

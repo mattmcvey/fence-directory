@@ -19,6 +19,7 @@ export default async function SubscriptionPage() {
     subscription_status: string | null;
     pro_since: string | null;
     featured: boolean;
+    cancel_at: string | null;
   } | null = null;
 
   if (user.contractorId) {
@@ -27,15 +28,13 @@ export default async function SubscriptionPage() {
       .select('stripe_customer_id, stripe_subscription_id, subscription_status, pro_since, featured')
       .eq('id', user.contractorId)
       .single();
-    contractor = data;
+    contractor = data ? { ...data, cancel_at: null } : null;
   }
 
   // Fallback: if no contractor linked, look up Stripe customer by email
-  console.log('[subscription] contractorId:', user.contractorId, '| email:', user.email, '| has stripe_customer_id:', !!contractor?.stripe_customer_id);
   if (!contractor?.stripe_customer_id && user.email) {
     try {
       const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-      console.log('[subscription] Stripe customer lookup for', user.email, '→ found', customers.data.length, 'customers');
       if (customers.data.length > 0) {
         const customer = customers.data[0];
         const subscriptions = await stripe.subscriptions.list({
@@ -49,10 +48,26 @@ export default async function SubscriptionPage() {
           subscription_status: sub?.status || 'free',
           pro_since: sub ? new Date(sub.created * 1000).toISOString() : null,
           featured: sub?.status === 'active' || sub?.status === 'trialing',
+          cancel_at: sub?.cancel_at ? new Date(sub.cancel_at * 1000).toISOString() : null,
         };
       }
     } catch (err) {
       console.error('Stripe customer lookup failed:', err);
+    }
+  }
+
+  // For contractor-linked users, check Stripe for cancellation info
+  if (contractor?.stripe_subscription_id && !contractor.cancel_at) {
+    try {
+      const sub = await stripe.subscriptions.retrieve(contractor.stripe_subscription_id);
+      const subAny = sub as any;
+      if (subAny.cancel_at) {
+        contractor = { ...contractor, cancel_at: new Date(subAny.cancel_at * 1000).toISOString() };
+      } else if (subAny.cancel_at_period_end && subAny.current_period_end) {
+        contractor = { ...contractor, cancel_at: new Date(subAny.current_period_end * 1000).toISOString() };
+      }
+    } catch {
+      // Non-critical
     }
   }
 
