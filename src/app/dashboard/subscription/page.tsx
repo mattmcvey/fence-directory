@@ -31,9 +31,11 @@ export default async function SubscriptionPage() {
   }
 
   // Fallback: if no contractor linked, look up Stripe customer by email
+  console.log('[subscription] contractorId:', user.contractorId, '| email:', user.email, '| has stripe_customer_id:', !!contractor?.stripe_customer_id);
   if (!contractor?.stripe_customer_id && user.email) {
     try {
       const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+      console.log('[subscription] Stripe customer lookup for', user.email, '→ found', customers.data.length, 'customers');
       if (customers.data.length > 0) {
         const customer = customers.data[0];
         const subscriptions = await stripe.subscriptions.list({
