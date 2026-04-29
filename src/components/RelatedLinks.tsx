@@ -83,13 +83,6 @@ export default async function RelatedLinks({
     }
   } else if (pageType === 'city') {
 
-    const relatedGuides = getRelatedGuides();
-    for (const guide of relatedGuides) {
-      links.push({
-        href: `/guides/${guide.slug}`,
-        label: guide.title,
-      });
-    }
     if (currentSlug) {
       links.push({
         href: `/fence-cost/${currentSlug}`,
@@ -100,8 +93,32 @@ export default async function RelatedLinks({
         label: `Fence permits in ${cityName || 'your city'}`,
       });
     }
+    const relatedGuides = getRelatedGuides();
+    for (const guide of relatedGuides) {
+      links.push({
+        href: `/guides/${guide.slug}`,
+        label: guide.title,
+      });
+    }
+    if (stateCode) {
+      const stateSlugVal = stateName ? stateName.toLowerCase().replace(/\s+/g, '-') : '';
+      if (stateSlugVal) {
+        links.push({
+          href: `/state/${stateSlugVal}`,
+          label: `All ${stateName} fence contractors`,
+        });
+      }
+    }
   } else if (pageType === 'state') {
 
+    links.push({
+      href: '/fence-permits',
+      label: `Fence permit requirements by state`,
+    });
+    links.push({
+      href: '/fence-cost-by-state',
+      label: `Compare fence costs by state`,
+    });
     const relatedGuides = getRelatedGuides();
     for (const guide of relatedGuides) {
       links.push({

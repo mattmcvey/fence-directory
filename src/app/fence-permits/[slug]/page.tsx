@@ -1,6 +1,6 @@
 import { getCities, getCityBySlug } from '@/lib/data';
 import { stateCodeToName } from '@/lib/utils';
-import { faqSchema, breadcrumbSchema, ogMeta } from '@/lib/seo';
+import { faqSchema, breadcrumbSchema, howToSchema, ogMeta } from '@/lib/seo';
 import { getPermitData } from '@/lib/permit-data';
 import Link from 'next/link';
 import { Metadata } from 'next';
@@ -16,9 +16,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const city = await getCityBySlug(slug);
   if (!city) return { title: 'City Not Found — FenceFind' };
-  const stateName = stateCodeToName(city.stateCode);
-  const title = `Fence Permit Requirements in ${city.name}, ${city.stateCode} (2026) — Rules & Costs | FenceFind`;
-  const description = `Do you need a fence permit in ${city.name}, ${city.stateCode}? Learn about ${city.name} fence height limits, setback rules, permit costs, HOA requirements, and how to apply. Updated for 2026.`;
+  const permit = getPermitData(city.stateCode);
+  const title = `Do You Need a Fence Permit in ${city.name}, ${city.stateCode}? (2026 Rules & Costs)`;
+  const description = `Fence permits in ${city.name} cost $${permit.permitCostLow}–$${permit.permitCostHigh}. Max height: ${permit.backyardHeight}ft backyard, ${permit.frontyardHeight}ft front. Fines up to $${permit.fineHigh}+ without a permit. See ${city.name} rules, HOA tips, and how to apply step by step.`;
   return {
     title,
     description,
@@ -82,6 +82,25 @@ export default async function FencePermitPage({ params }: PageProps) {
             { name: city.name, url: `/city/${slug}` },
             { name: 'Fence Permits', url: `/fence-permits/${slug}` },
           ])),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(howToSchema({
+            name: `How to Get a Fence Permit in ${city.name}, ${city.stateCode}`,
+            description: `Step-by-step guide to obtaining a fence permit in ${city.name}, ${stateName}. Typical permit cost: $${permit.permitCostLow}–$${permit.permitCostHigh}.`,
+            totalTime: 'P14D',
+            steps: [
+              { name: 'Check if you need a permit', text: `Contact the ${city.name} Building Department or check their website for fence permit requirements in your zone.` },
+              { name: 'Get a property survey', text: 'Know exactly where your property lines are. This prevents disputes and ensures your fence meets setback requirements.' },
+              { name: 'Check HOA rules', text: 'If you have an HOA, review their covenants for fence material, color, height, and style restrictions before applying for a permit.' },
+              { name: 'Prepare your application', text: 'Most applications require a site plan showing fence location, height, materials, and distances from property lines and structures.' },
+              { name: 'Submit and pay', text: `Submit your application to ${city.name}'s building department with the required fee ($${permit.permitCostLow}–$${permit.permitCostHigh}). Processing typically takes ${permit.processingDays}.` },
+              { name: 'Call 811 before you dig', text: 'Call 811 at least 2 business days before digging to have underground utilities marked. This is required by law in all 50 states.' },
+              { name: 'Build and schedule inspection', text: 'Build your fence according to the approved plans. Some jurisdictions require a final inspection before closing the permit.' },
+            ],
+          })),
         }}
       />
 
@@ -156,6 +175,19 @@ export default async function FencePermitPage({ params }: PageProps) {
         </div>
       </section>
 
+      {/* Inline CTA — after first major section */}
+      <div className="mb-10 bg-green-50 border border-green-200 rounded-xl px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <p className="text-green-900 text-sm">
+          <strong>Planning a fence project in {city.name}?</strong> A licensed contractor can handle the permit process for you.
+        </p>
+        <Link
+          href={`/city/${slug}`}
+          className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+        >
+          Compare Local Pros <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+
       {/* Height restrictions */}
       <section className="mb-10">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -226,6 +258,14 @@ export default async function FencePermitPage({ params }: PageProps) {
           ))}
         </div>
       </section>
+
+      {/* Inline CTA — after how-to steps */}
+      <div className="mb-10 text-center text-sm text-gray-600">
+        Don&apos;t want to deal with permits yourself?{' '}
+        <Link href={`/city/${slug}`} className="text-green-600 hover:text-green-700 font-medium">
+          Find {city.name} fence contractors who handle permits for you →
+        </Link>
+      </div>
 
       {/* Common mistakes */}
       <section className="mb-10">

@@ -230,6 +230,38 @@ export default async function StatePage({ params }: PageProps) {
         </div>
       </section>
 
+      {/* Permit & cost resources */}
+      <section className="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-2">
+            Fence Permits in {state.name}
+          </h3>
+          <p className="text-gray-600 text-sm mb-4">
+            Height limits, setback rules, permit costs, and application steps for {state.name} cities.
+          </p>
+          <Link
+            href="/fence-permits"
+            className="inline-flex items-center gap-2 text-amber-700 hover:text-amber-800 font-medium text-sm"
+          >
+            View permit requirements <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-2">
+            Fence Costs in {state.name}
+          </h3>
+          <p className="text-gray-600 text-sm mb-4">
+            Average: ${costs.project.low.toLocaleString()}–${costs.project.high.toLocaleString()}. Compare prices by material and city.
+          </p>
+          <Link
+            href="/fence-cost-by-state"
+            className="inline-flex items-center gap-2 text-blue-700 hover:text-blue-800 font-medium text-sm"
+          >
+            Compare costs by state <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* Cities in this state */}
       {cities.length > 0 && (
         <section className="mb-10">

@@ -1,6 +1,6 @@
 # FenceFind Progress Log
 
-Last Updated: 2026-04-22
+Last Updated: 2026-04-29
 Full build history: `~/.openclaw/workspace/fencefind-progress.md`
 
 ## Project Status
@@ -10,7 +10,8 @@ Full build history: `~/.openclaw/workspace/fencefind-progress.md`
 - **Data:** 5,100+ contractors across 494 cities in all 50 states
 - **Indexable URLs:** ~2,200+
 - **Revenue:** 0 Pro subscribers ($79/mo plan live with 14-day trial)
-- **Claims:** 1 organic claim — Fenceworks of Georgia (Austin Owen, March 13)
+- **Claims:** 2+ organic claims (Austin Owen — Fenceworks of Georgia, Jorge — TBD)
+- **Traffic:** ~400-600 visits/day (Vercel), 103 GSC clicks in last 3 months, 2,944 impressions/day peak
 - **Stripe:** Live mode — Product `prod_UA2JQfJ0HvOKQl`, Price `price_1TBiFCQx18mjum7xZWL6Daob`
 
 ---
@@ -59,7 +60,54 @@ Full build history: `~/.openclaw/workspace/fencefind-progress.md`
 
 ---
 
-## Completed (this session)
+## Completed (recent sessions)
+
+### 2026-04-29 — SEO Optimizations (GSC-Driven)
+
+**GSC Analysis (March 2 – April 26):**
+- 103 total clicks, ~35,000 impressions, 0.3% CTR, avg position 38
+- Impressions grew from ~300/day → 2,944/day (10x in 8 weeks)
+- Permit pages are #1 performers: Kissimmee FL (9 clicks, pos 4), Manchester CT (5 clicks, pos 8), Middletown OH (4 clicks, pos 5)
+- Cost pages are #2: Knoxville TN (3 clicks, pos 7-8), Jacksonville FL (3 clicks)
+- City/state pages get massive impressions but rank page 3-4+ (no clicks)
+- Mobile ranks 20 positions better than desktop (avg pos 22 vs 42)
+- www vs non-www redirect already in place (vercel.json), Google still consolidating
+
+**Changes made:**
+- Improved meta titles to question format for better CTR:
+  - Permit: `Do You Need a Fence Permit in {City}, {ST}? (2026 Rules & Costs)`
+  - Cost: `How Much Does a Fence Cost in {City}, {ST}? (2026 Prices)`
+- Improved meta descriptions with specific numbers (permit costs, heights, fines, per-foot prices)
+- Added HowTo schema to all permit pages (7-step permit guide → rich snippet eligible)
+- Added `howToSchema()` helper to `src/lib/seo.ts`
+- Added permit/cost resource cards to state pages
+- Updated RelatedLinks: state pages now link to permit/cost index pages; city pages now link to parent state
+- Verified canonical tags already in place via `metadataBase` + `ogMeta()`
+
+### 2026-04-28 — City 404 Fallback + Navigation + Legal
+
+**Graceful city fallback:**
+- Unknown cities (e.g., `/city/topeka-ks`) now show fallback page with state contractors + nearby cities instead of bare 404
+- Added `parseCitySlug()` to utils.ts — validates slug against real state codes
+- Added `getContractorsByState()` with configurable limit to data.ts
+- Existing cities with 0 contractors now show `NearbyContractors` component with state-level results
+- Fallback pages use `noindex` robots meta to protect SEO
+- Created global `/not-found.tsx` with search bar + navigation links
+- Truly invalid slugs (e.g., `/city/asdfgh`) still 404 properly
+
+**Navigation improvements:**
+- Added "Permits" link to Header.tsx (desktop + mobile nav)
+- Added "Permit requirements by state" and "Fence cost by state" links to homepage guides section
+- Added "Permits by State" and "Cost by State" to Footer.tsx
+- Removed dead `/advertise` link from footer
+
+**Legal:**
+- Created `/terms` page with Terms of Use (informational disclaimer, no warranty, liability limits)
+- Added disclaimer text to footer: "Information on this site is for general reference only..."
+- Added Terms of Use + Contact links to footer bottom bar
+
+**Files created:** `src/app/not-found.tsx`, `src/app/terms/page.tsx`
+**Files modified:** Header.tsx, Footer.tsx, city/[slug]/page.tsx, data.ts, utils.ts, page.tsx (homepage)
 
 ### 2026-04-22 — Priority 11: Lead Capture, Click Tracking, Pricing Restructure
 
@@ -93,7 +141,7 @@ Full build history: `~/.openclaw/workspace/fencefind-progress.md`
 - Updated ROI calculator: $79/mo → $4,500 avg job → 57x ROI
 - Updated messaging: "One fence job pays for 4+ years"
 - Updated feature lists: Free tier now includes profile view stats + quote notifications; Pro tier emphasizes website link in search results + lead analytics dashboard
-- **Action needed:** Create new $79/mo Stripe Price on existing Product, update `STRIPE_PRICE_ID_PRO` in Vercel env vars
+- **Stripe:** New $79/mo Price created, `STRIPE_PRICE_ID_PRO` updated in Vercel env vars ✅
 
 **Files created:**
 - `src/app/api/events/route.ts`
@@ -115,7 +163,7 @@ Full build history: `~/.openclaw/workspace/fencefind-progress.md`
 - `src/app/pro/signup/page.tsx` — $79 metadata
 - `src/app/claim/ClaimForm.tsx` — $79
 
-**SQL migration needed:** Create `events` table in Supabase (table + indexes + RLS policies)
+**SQL migration:** `events` table created in Supabase (table + indexes + RLS policies) ✅
 
 ---
 
@@ -457,12 +505,73 @@ Setup notes:
 
 ---
 
-## Open Items
+## Open Items (Infrastructure)
 - [x] Follow up with Austin Owen (Fenceworks of Georgia) — reached out, no response
 - [ ] Monitor organic traffic via analytics + GSC
-- [ ] Outreach templates ready at `outreach/email-templates.md` — start once traffic justifies it
-- [ ] **Create `events` table in Supabase** — run SQL migration (table + indexes + RLS policies) before deploying P11
-- [ ] **Create new $79/mo Stripe Price** — on existing Product, update `STRIPE_PRICE_ID_PRO` in Vercel env vars
+- [x] Outreach email template + 34 contact emails compiled — `outreach/outreach-emails.md` + `outreach/backlink-targets.md`
+- [x] **Create `events` table in Supabase** — table + indexes + RLS policies created, P11 code deployed
+- [x] **Create new $79/mo Stripe Price** — done, `STRIPE_PRICE_ID_PRO` updated in Vercel env vars
+- [ ] **Submit to Bing Webmaster Tools** — sitemap + verification (free, immediate)
+
+---
+
+## Next Action Items (Prioritized)
+
+### Priority 12: Conversion Optimization (CRO)
+
+**Problem:** 400-600 daily visits but near-zero conversions. Top pages (permits, costs) serve informational intent — visitors get their answer and leave without seeing quote forms or contractor CTAs.
+
+**12a: Inline CTAs on permit & cost pages** (high impact, code change)
+- [ ] Add mid-page CTA after first major section on permit pages: "Planning a fence project in {City}? Get free estimates from local contractors"
+- [ ] Add mid-page CTA after cost summary on cost pages: "Compare quotes from {City} fence contractors"
+- [ ] Both should link to city page or anchor to quote form
+- [ ] Keep it unobtrusive — single line with link, not a full banner
+
+**12b: Improve claim page conversion** (medium impact, code change)
+- [ ] Add social proof: "Join 5,100+ fence contractors on FenceFind" or show recent claim activity
+- [ ] Add "what you get" summary above the form (profile page, quote notifications, dashboard)
+- [ ] Make the value proposition clearer for free tier
+
+**12c: Admin notifications for signups** (operational, code change)
+- [ ] Add email notification on Pro checkout completion (in Stripe webhook handler)
+- [ ] Add email notification on regular auth signup (new users creating accounts)
+- [ ] These are warm leads — knowing about them immediately lets you follow up
+
+### Priority 13: Backlink Building (Domain Authority)
+
+**Problem:** Ranking position 22-26 for head terms like "fence installation" (1,174 impressions, 0 clicks). Need domain authority to break into page 1.
+
+**13a: Directory submissions** (free, manual, do first)
+- [ ] Submit to Bing Webmaster Tools
+- [ ] Submit to BOTW.org, Jasmine Directory
+- [ ] List on relevant business directories
+
+**13b: Industry outreach** (medium effort, high value)
+- [x] Researched 42 backlink targets across 5 tiers — saved to `outreach/backlink-targets.md`
+- [x] Found contact emails for 34 sites — saved to `outreach/outreach-emails.md` with copy-paste BCC list
+- [x] Wrote cold email template (subject: "fence content idea", ~110 words, links to all 3 data assets)
+- [ ] **NEXT:** Send BCC email to 34 contacts + fill out 5 web forms manually
+- [ ] Follow up in 5-7 days with non-responders
+- [ ] Target: 3-5 backlinks from initial outreach
+
+**13c: HARO / Connectively** (ongoing, low effort)
+- [ ] Sign up for HARO (Help a Reporter Out) / Connectively
+- [ ] Respond to journalist queries about home improvement, fencing costs, permits
+- [ ] Each response that gets published = backlink + brand mention
+
+**13d: Guest posts** (medium effort)
+- [ ] Write 1-2 guest posts for home improvement blogs
+- [ ] Link back to permit data or cost comparison pages
+- [ ] Focus on topics where FenceFind data adds unique value
+
+### Priority 14: Scrape New Cities from 404 Logs
+
+**Problem:** Real demand for cities not in the database (Topeka KS, Daphne AL, etc. showing up in Vercel 404 logs). Graceful fallback is live but real city data is better.
+
+- [ ] Monitor Vercel 404 logs weekly for city slugs
+- [ ] Run scraper for cities that appear 3+ times in logs
+- [ ] Focus on: cities with high search volume first
+- [ ] Known demand cities from April logs: topeka-ks, daphne-al, greer-sc, san-marcos-ca, havelock-nc, port-orange-fl, belleville-il, troy-mi, greenville-nc, suwanee-ga, shawnee-ks, simpsonville-sc, prescott-valley-az, sanford-fl, columbia-tn
 
 ---
 
@@ -471,6 +580,19 @@ Setup notes:
 - Quote request submissions
 - Claim requests
 - Pro subscription conversions
+
+### GSC Snapshot (April 29, 2026)
+| Metric | Value | Trend |
+|--------|-------|-------|
+| Daily impressions | ~2,900 | ↑ 10x from March |
+| Daily clicks | ~8-12 | ↑ from 0-2 |
+| Total clicks (3mo) | 103 | Growing |
+| Average CTR | 0.3% | Low — meta title/desc improvements deployed |
+| Average position | 38 | Improving to ~32-33 |
+| Top page type | Permit pages | 3-8% CTR, positions 3-8 |
+| #2 page type | Cost pages | 0.6-1% CTR, positions 6-8 |
+| Mobile vs Desktop | 70% / 28% clicks | Mobile ranks 20 pos higher |
+| Top query w/ click | "do i need a fence permit" | Position 6 |
 
 ---
 
@@ -484,8 +606,8 @@ Setup notes:
 | Email (transactional) | Resend — send.getfencefind.com |
 | Analytics | Vercel Analytics + self-hosted (Supabase pageviews) |
 | SEO | GSC (domain verified, service account: fencefind-bot@fence-find.iam.gserviceaccount.com) |
-| Payments | Stripe LIVE ($79/mo Pro, 14-day trial) — **TODO:** Create new $79 Stripe Price, update STRIPE_PRICE_ID_PRO env var |
-| Event Tracking | Supabase `events` table — profile_view, phone_click, website_click, quote_request |
+| Payments | Stripe LIVE ($79/mo Pro, 14-day trial) — Price + env var configured |
+| Event Tracking | Supabase `events` table — profile_view, phone_click, website_click, quote_request (LIVE) |
 
 ## Lessons Learned
 - Supabase default 1,000 row limit — must use `.range()` pagination

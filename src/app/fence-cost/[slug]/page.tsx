@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const city = await getCityBySlug(slug);
   if (!city) return { title: 'City Not Found — FenceFind' };
   const costs = getCostData(city.stateCode);
-  const title = `Fence Cost in ${city.name}, ${city.stateCode} (2026) — Prices & Estimates | FenceFind`;
-  const description = `How much does a fence cost in ${city.name}, ${city.stateCode}? Average fence installation costs $${costs.project.low.toLocaleString()}–$${costs.project.high.toLocaleString()}. Compare wood, vinyl, chain link prices per foot + get free estimates.`;
+  const title = `How Much Does a Fence Cost in ${city.name}, ${city.stateCode}? (2026 Prices)`;
+  const description = `Average fence cost in ${city.name}: $${costs.project.low.toLocaleString()}–$${costs.project.high.toLocaleString()}. Wood $${costs.materials.wood.low}–$${costs.materials.wood.high}/ft, vinyl $${costs.materials.vinyl.low}–$${costs.materials.vinyl.high}/ft, chain link $${costs.materials.chainLink.low}–$${costs.materials.chainLink.high}/ft installed. Get free quotes from local contractors.`;
   return {
     title,
     description,
@@ -164,6 +164,19 @@ export default async function FenceCostPage({ params }: PageProps) {
         </p>
       </section>
 
+      {/* Inline CTA — after cost table */}
+      <div className="mb-10 bg-green-50 border border-green-200 rounded-xl px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <p className="text-green-900 text-sm">
+          <strong>Ready to compare prices?</strong> Get free estimates from {city.name} fence contractors.
+        </p>
+        <Link
+          href={`/city/${slug}`}
+          className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+        >
+          Get Free Quotes <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+
       {/* Cost factors */}
       <section className="mb-10">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -180,6 +193,14 @@ export default async function FenceCostPage({ params }: PageProps) {
           </ul>
         </div>
       </section>
+
+      {/* Inline CTA — after cost factors */}
+      <div className="mb-10 text-center text-sm text-gray-600">
+        The best way to know your exact cost?{' '}
+        <Link href={`/city/${slug}`} className="text-green-600 hover:text-green-700 font-medium">
+          Get quotes from {city.name} fence contractors →
+        </Link>
+      </div>
 
       {/* FAQ section */}
       <section className="mb-10">

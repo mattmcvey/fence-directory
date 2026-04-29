@@ -423,6 +423,7 @@ export default async function CityPage({ params }: PageProps) {
         currentSlug={slug}
         cityName={city.name}
         stateCode={city.stateCode}
+        stateName={stateName}
       />
     </div>
   );
