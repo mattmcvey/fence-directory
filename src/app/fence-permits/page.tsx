@@ -1,9 +1,10 @@
-import { getStates } from '@/lib/data';
+import { getStates, getCities } from '@/lib/data';
 import { getPermitData } from '@/lib/permit-data';
 import { faqSchema, breadcrumbSchema, ogMeta } from '@/lib/seo';
+import { stateCodeToName } from '@/lib/utils';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, MapPin } from 'lucide-react';
 
 const title = 'Fence Permit Requirements by State (2026) — Rules, Costs & Height Limits | FenceFind';
 const description = 'Compare fence permit requirements across all 50 states. See permit costs, height limits, fines, and regulations. Find your city\'s specific rules.';
@@ -42,7 +43,17 @@ const ALL_STATES: { name: string; code: string; slug: string }[] = [
   { name: 'Wisconsin', code: 'WI', slug: 'wisconsin' }, { name: 'Wyoming', code: 'WY', slug: 'wyoming' },
 ];
 
-export default function FencePermitsPage() {
+export default async function FencePermitsPage() {
+  const cities = await getCities();
+
+  // Group cities by state
+  const citiesByState: Record<string, { name: string; slug: string }[]> = {};
+  for (const city of cities) {
+    const stateName = stateCodeToName(city.stateCode);
+    if (!citiesByState[stateName]) citiesByState[stateName] = [];
+    citiesByState[stateName].push({ name: city.name, slug: city.slug });
+  }
+
   const statesWithPermits = ALL_STATES.map(s => ({
     ...s,
     permit: getPermitData(s.code),
@@ -193,6 +204,39 @@ export default function FencePermitsPage() {
               <p className="text-gray-600 mt-3 leading-relaxed">{faq.a}</p>
             </details>
           ))}
+        </div>
+      </section>
+
+      {/* City-level permit pages */}
+      <section className="mb-10">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Find Your City&apos;s Fence Permit Requirements
+        </h2>
+        <p className="text-gray-600 mb-6">
+          Select your city for specific permit costs, height limits, setback rules, and step-by-step application instructions.
+        </p>
+        <div className="space-y-6">
+          {ALL_STATES.map((s) => {
+            const stateCities = citiesByState[s.name];
+            if (!stateCities || stateCities.length === 0) return null;
+            return (
+              <div key={s.code}>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{s.name}</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                  {stateCities.map((city) => (
+                    <Link
+                      key={city.slug}
+                      href={`/fence-permits/${city.slug}`}
+                      className="flex items-center gap-1.5 px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-colors"
+                    >
+                      <MapPin className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                      <span className="text-gray-900">{city.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
