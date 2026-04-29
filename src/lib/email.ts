@@ -114,6 +114,56 @@ export async function confirmQuoteToHomeowner(details: {
   }
 }
 
+export async function notifyProCheckout(details: {
+  contractorId: string;
+  contractorName: string;
+  email: string;
+  stripeCustomerId: string;
+}) {
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: NOTIFY_EMAIL,
+      subject: `💰 New Pro Subscriber: ${details.contractorName}`,
+      html: `
+        <h2>New Pro Subscription on FenceFind!</h2>
+        <table style="border-collapse: collapse; width: 100%; max-width: 500px;">
+          <tr><td style="padding: 8px; font-weight: bold;">Contractor</td><td style="padding: 8px;">${details.contractorName}</td></tr>
+          <tr><td style="padding: 8px; font-weight: bold;">Email</td><td style="padding: 8px;"><a href="mailto:${details.email}">${details.email}</a></td></tr>
+          <tr><td style="padding: 8px; font-weight: bold;">Contractor ID</td><td style="padding: 8px;">${details.contractorId}</td></tr>
+          <tr><td style="padding: 8px; font-weight: bold;">Stripe Customer</td><td style="padding: 8px;"><a href="https://dashboard.stripe.com/customers/${details.stripeCustomerId}">${details.stripeCustomerId}</a></td></tr>
+        </table>
+        <p style="margin-top: 20px; color: #16a34a; font-weight: bold;">$79/mo recurring revenue added 🎉</p>
+      `,
+    });
+  } catch (error) {
+    console.error('Failed to send pro checkout notification:', error);
+  }
+}
+
+export async function notifyNewSignup(details: {
+  email: string;
+  fullName: string;
+}) {
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: NOTIFY_EMAIL,
+      subject: `👤 New Signup: ${details.fullName || details.email}`,
+      html: `
+        <h2>New User Signed Up on FenceFind</h2>
+        <table style="border-collapse: collapse; width: 100%; max-width: 500px;">
+          <tr><td style="padding: 8px; font-weight: bold;">Name</td><td style="padding: 8px;">${details.fullName || '(not provided)'}</td></tr>
+          <tr><td style="padding: 8px; font-weight: bold;">Email</td><td style="padding: 8px;"><a href="mailto:${details.email}">${details.email}</a></td></tr>
+        </table>
+        <p style="margin-top: 20px; color: #666;">This user may be a contractor looking to claim or upgrade. Follow up if appropriate.</p>
+      `,
+    });
+  } catch (error) {
+    console.error('Failed to send new signup notification:', error);
+  }
+}
+
 export async function notifyQuoteRequest(quote: {
   contractorName: string;
   name: string;

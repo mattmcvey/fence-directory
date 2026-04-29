@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { getServiceClient } from '@/lib/supabase';
+import { notifyProCheckout } from '@/lib/email';
 import Stripe from 'stripe';
 
 export async function POST(request: NextRequest) {
@@ -40,6 +41,20 @@ export async function POST(request: NextRequest) {
               pro_since: new Date().toISOString(),
             })
             .eq('id', contractorId);
+
+          // Notify admin of new Pro subscriber
+          const { data: contractor } = await supabase
+            .from('contractors')
+            .select('name, email')
+            .eq('id', contractorId)
+            .single();
+
+          notifyProCheckout({
+            contractorId,
+            contractorName: contractor?.name || 'Unknown',
+            email: contractor?.email || session.customer_email || '',
+            stripeCustomerId: session.customer as string,
+          });
 
           console.log(`✅ Contractor ${contractorId} upgraded to Pro`);
         }

@@ -521,21 +521,21 @@ Setup notes:
 
 **Problem:** 400-600 daily visits but near-zero conversions. Top pages (permits, costs) serve informational intent — visitors get their answer and leave without seeing quote forms or contractor CTAs.
 
-**12a: Inline CTAs on permit & cost pages** (high impact, code change)
-- [ ] Add mid-page CTA after first major section on permit pages: "Planning a fence project in {City}? Get free estimates from local contractors"
-- [ ] Add mid-page CTA after cost summary on cost pages: "Compare quotes from {City} fence contractors"
-- [ ] Both should link to city page or anchor to quote form
-- [ ] Keep it unobtrusive — single line with link, not a full banner
+**12a: Inline CTAs on permit & cost pages** — DONE ✅
+- [x] Added green CTA banner after permit "Do you need a permit?" section + text link after how-to steps
+- [x] Added green CTA banner after cost-per-foot table + text link after cost factors section
+- [x] Both link to city page for quotes
+- [x] Unobtrusive — banner CTA + inline text link per page
 
 **12b: Improve claim page conversion** (medium impact, code change)
 - [ ] Add social proof: "Join 5,100+ fence contractors on FenceFind" or show recent claim activity
 - [ ] Add "what you get" summary above the form (profile page, quote notifications, dashboard)
 - [ ] Make the value proposition clearer for free tier
 
-**12c: Admin notifications for signups** (operational, code change)
-- [ ] Add email notification on Pro checkout completion (in Stripe webhook handler)
-- [ ] Add email notification on regular auth signup (new users creating accounts)
-- [ ] These are warm leads — knowing about them immediately lets you follow up
+**12c: Admin notifications for signups** — DONE ✅
+- [x] Email notification on Pro checkout completion — fires from Stripe webhook, includes contractor name, email, Stripe link
+- [x] Email notification on new auth signups — fires from signup page via `/api/notify-signup`, includes name + email
+- [x] Both send to matt@getfencefind.com via Resend (fire-and-forget, never blocks UX)
 
 ### Priority 13: Backlink Building (Domain Authority)
 

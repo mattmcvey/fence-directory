@@ -45,6 +45,13 @@ export default function SignupPage() {
       return;
     }
 
+    // Notify admin of new signup (fire and forget)
+    fetch('/api/notify-signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, fullName }),
+    }).catch(() => {});
+
     setSuccess(true);
     setLoading(false);
   };
