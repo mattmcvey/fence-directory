@@ -226,17 +226,30 @@ export default async function DashboardPage() {
           </div>
         </>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">No listing linked yet</h2>
-          <p className="text-gray-600 mb-6">
-            Claim an existing listing or add your business to start managing it from your dashboard.
-          </p>
-          <Link
-            href="/claim"
-            className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
-          >
-            Claim or Add Your Business
-          </Link>
+        <div className="space-y-4">
+          <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">No listing linked yet</h2>
+            <p className="text-gray-600 mb-6">
+              Claim an existing listing or add your business to start managing it from your dashboard.
+            </p>
+            <Link
+              href="/claim"
+              className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
+            >
+              Claim or Add Your Business
+            </Link>
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-200 p-6">
+            <h2 className="font-semibold text-gray-900 mb-4">Account</h2>
+            <Link
+              href="/dashboard/subscription"
+              className="flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+            >
+              <CreditCard className="w-5 h-5 text-gray-400" />
+              <span className="text-sm font-medium text-gray-700">Manage Subscription</span>
+            </Link>
+          </div>
         </div>
       )}
     </div>

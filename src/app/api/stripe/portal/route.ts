@@ -25,8 +25,17 @@ export async function POST(request: NextRequest) {
       .eq('stripe_customer_id', customerId)
       .single();
 
-    if (!contractor || contractor.user_id !== user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (contractor && contractor.user_id === user.id) {
+      // Verified via contractor record
+    } else {
+      // Fallback: verify by matching Stripe customer email to auth user email
+      const stripeCustomer = await stripe.customers.retrieve(customerId);
+      if (
+        stripeCustomer.deleted ||
+        (stripeCustomer as any).email !== user.email
+      ) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      }
     }
 
     const session = await stripe.billingPortal.sessions.create({
