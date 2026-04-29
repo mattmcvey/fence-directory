@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
             .eq('id', contractorId)
             .single();
 
-          notifyProCheckout({
+          await notifyProCheckout({
             contractorId,
             contractorName: contractor?.name || 'Unknown',
             email: contractor?.email || session.customer_email || '',
