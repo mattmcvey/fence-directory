@@ -11,6 +11,16 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'how-to-prepare-your-yard-for-fence-installation',
+    title: 'How To Prepare Your Yard For Fence Installation: Complete Guide',
+    excerpt: 'Get your property ready for a smooth fence installation with our step-by-step preparation guide. Save time and avoid costly mistakes.',
+    date: 'May 1, 2026',
+    isoDate: '2026-05-01',
+    category: 'Installation',
+    readTime: '8 min read',
+    metaDescription: 'Learn how to prepare your yard for fence installation with our complete guide. Essential steps for property prep, utility marking, and planning tips.',
+  },
+  {
     slug: 'metal-vs-wood-fence-comparison',
     title: 'Metal vs Wood Fence: Complete Cost & Durability Comparison 2024',
     excerpt: 'Choosing between metal and wood fencing? Compare costs, durability, and maintenance to find the perfect fence for your property.',
