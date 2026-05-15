@@ -11,6 +11,16 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'fence-styles-that-increase-home-value',
+    title: '5 Best Fence Styles That Boost Your Home\'s Value in 2024',
+    excerpt: 'Discover which fence styles add the most value to your property and attract potential buyers when it\'s time to sell.',
+    date: 'May 15, 2026',
+    isoDate: '2026-05-15',
+    category: 'Fencing Tips',
+    readTime: '8 min read',
+    metaDescription: 'Learn the top fence styles that increase home value. From privacy fences to decorative options, find the best fencing to boost your property value.',
+  },
+  {
     slug: 'how-to-prepare-your-yard-for-fence-installation',
     title: 'How To Prepare Your Yard For Fence Installation: Complete Guide',
     excerpt: 'Get your property ready for a smooth fence installation with our step-by-step preparation guide. Save time and avoid costly mistakes.',
