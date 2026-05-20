@@ -49,3 +49,8 @@ gsc-service-account.json
 
 # Progress log
 progress.txt
+
+# Claude Code / local tooling
+.claude/
+.agents/
+skills/
