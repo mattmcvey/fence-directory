@@ -11,6 +11,16 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'best-fence-for-noise-reduction',
+    title: '7 Best Noise Reduction Fences That Actually Work in 2024',
+    excerpt: 'Discover the most effective fence types for blocking unwanted noise from traffic, neighbors, and urban sounds in your backyard.',
+    date: 'June 1, 2026',
+    isoDate: '2026-06-01',
+    category: 'Fencing Tips',
+    readTime: '8 min read',
+    metaDescription: 'Find the best noise reduction fences for your property. Compare acoustic fence materials, heights, and costs to block traffic and neighbor noise effectively.',
+  },
+  {
     slug: 'fence-styles-that-increase-home-value',
     title: '5 Best Fence Styles That Boost Your Home\'s Value in 2024',
     excerpt: 'Discover which fence styles add the most value to your property and attract potential buyers when it\'s time to sell.',
