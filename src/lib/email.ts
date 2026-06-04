@@ -164,6 +164,73 @@ export async function notifyNewSignup(details: {
   }
 }
 
+export async function notifyClaimApproved(details: {
+  contractorName: string;
+  contractorEmail: string;
+  city: string;
+  state: string;
+  listingUrl: string;
+  passwordResetLink?: string;
+}) {
+  try {
+    const loginSection = details.passwordResetLink
+      ? `
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 20px 0;">
+              <p style="color: #166534; font-size: 14px; margin: 0 0 12px;"><strong>Set up your account</strong></p>
+              <p style="color: #166534; font-size: 14px; margin: 0 0 12px;">Click the button below to set your password and access your contractor dashboard:</p>
+              <a href="${details.passwordResetLink}" style="display: inline-block; background: #16a34a; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; font-size: 14px;">Set Your Password</a>
+            </div>`
+      : `
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 20px 0;">
+              <p style="color: #166534; font-size: 14px; margin: 0;">Log in at <a href="https://getfencefind.com/auth/login" style="color: #16a34a; font-weight: bold;">getfencefind.com/auth/login</a> to access your contractor dashboard.</p>
+            </div>`;
+
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: details.contractorEmail,
+      subject: `Your listing on FenceFind has been approved!`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto;">
+          <div style="background: #16a34a; padding: 24px; border-radius: 12px 12px 0 0; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 22px;">You're Live on FenceFind!</h1>
+          </div>
+          <div style="background: #ffffff; padding: 24px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
+            <p style="color: #374151; font-size: 15px; line-height: 1.6; margin-top: 0;">
+              Hi,
+            </p>
+            <p style="color: #374151; font-size: 15px; line-height: 1.6;">
+              Your claim for <strong>${details.contractorName}</strong> in ${details.city}, ${details.state} has been approved. Your listing is now live and homeowners in your area can find you and request quotes.
+            </p>
+            <p style="color: #374151; font-size: 15px; line-height: 1.6;">
+              <a href="${details.listingUrl}" style="color: #16a34a; font-weight: bold;">View your listing</a>
+            </p>
+            ${loginSection}
+            <p style="color: #374151; font-size: 15px; line-height: 1.6;">
+              From your dashboard you can:
+            </p>
+            <ul style="color: #374151; font-size: 15px; line-height: 1.8; padding-left: 20px;">
+              <li>Edit your business profile and description</li>
+              <li>View incoming quote requests</li>
+              <li>See how many homeowners are viewing your listing</li>
+              <li>Upgrade to Pro for featured placement and website links</li>
+            </ul>
+            <p style="color: #6b7280; font-size: 13px; line-height: 1.5;">
+              Questions? Reply to this email — we're happy to help.
+            </p>
+            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+            <p style="color: #9ca3af; font-size: 12px; text-align: center; margin-bottom: 0;">
+              FenceFind — Find Trusted Fence Contractors Near You
+            </p>
+          </div>
+        </div>
+      `,
+      replyTo: NOTIFY_EMAIL,
+    });
+  } catch (error) {
+    console.error('Failed to send claim approval email:', error);
+  }
+}
+
 export async function notifyQuoteRequest(quote: {
   contractorName: string;
   name: string;

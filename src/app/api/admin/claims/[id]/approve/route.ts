@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAuthServerClient, getServiceClient } from '@/lib/supabase';
+import { notifyClaimApproved } from '@/lib/email';
 
 export async function POST(
   request: NextRequest,
@@ -72,10 +73,11 @@ export async function POST(
   });
 
   let userId: string | undefined;
+  let isNewUser = false;
 
   if (authError) {
     if (authError.message?.includes('already been registered') || authError.message?.includes('already exists')) {
-      // User already exists — look up their ID
+      // User already exists (they signed up themselves) — look up their ID
       const { data: existingUsers } = await serviceClient.auth.admin.listUsers();
       const existing = existingUsers?.users?.find((u) => u.email === claim.email);
       userId = existing?.id;
@@ -84,6 +86,7 @@ export async function POST(
     }
   } else {
     userId = authUser?.user?.id;
+    isNewUser = true;
   }
 
   if (userId) {
@@ -98,18 +101,40 @@ export async function POST(
       .update({ contractor_id: contractorId })
       .eq('id', userId);
 
-    // 5. Send password reset so contractor can set their password
-    try {
-      await serviceClient.auth.admin.generateLink({
-        type: 'recovery',
-        email: claim.email,
-      });
-    } catch {
-      // Non-critical — they can use forgot password flow
+    // 5. Only generate password reset link for new users (who never set a password)
+    let passwordResetLink: string | undefined;
+    if (isNewUser) {
+      try {
+        const { data: linkData } = await serviceClient.auth.admin.generateLink({
+          type: 'recovery',
+          email: claim.email,
+        });
+        if (linkData?.properties?.action_link) {
+          passwordResetLink = linkData.properties.action_link;
+        }
+      } catch {
+        // Non-critical — they can use forgot password flow
+      }
     }
+
+    // 6. Send approval email to contractor
+    const contractorSlug = await serviceClient
+      .from('contractors')
+      .select('slug')
+      .eq('id', contractorId)
+      .single();
+
+    await notifyClaimApproved({
+      contractorName: claim.business_name,
+      contractorEmail: claim.email,
+      city: claim.city,
+      state: claim.state,
+      listingUrl: `https://getfencefind.com/contractor/${contractorSlug.data?.slug || ''}`,
+      passwordResetLink,
+    });
   }
 
-  // 6. Update claim status
+  // 7. Update claim status
   await serviceClient
     .from('claim_requests')
     .update({ status: 'approved' })
