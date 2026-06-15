@@ -11,6 +11,16 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'temporary-fence-solutions-for-renters',
+    title: 'Best Temporary Fence Solutions for Renters: No-Damage Options',
+    excerpt: 'Discover rental-friendly fencing options that provide privacy and security without damaging your property or losing your deposit.',
+    date: 'June 15, 2026',
+    isoDate: '2026-06-15',
+    category: 'Fencing Tips',
+    readTime: '8 min read',
+    metaDescription: 'Find the best temporary fence solutions for renters. Easy-install, no-damage fencing options for privacy, pets & security. Landlord-approved ideas.',
+  },
+  {
     slug: 'best-fence-for-noise-reduction',
     title: '7 Best Noise Reduction Fences That Actually Work in 2024',
     excerpt: 'Discover the most effective fence types for blocking unwanted noise from traffic, neighbors, and urban sounds in your backyard.',
