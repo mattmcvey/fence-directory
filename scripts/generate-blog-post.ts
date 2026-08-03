@@ -5,7 +5,7 @@ import * as path from 'path';
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
-const MODEL = 'claude-3-5-sonnet-20250219';
+const MODEL = 'claude-sonnet-5';
 const MAX_TOKENS = 8192;
 
 const INTERNAL_LINKS = [
