@@ -11,6 +11,16 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'ranch-and-farm-fencing-options',
+    title: 'Ranch and Farm Fencing Options: A Complete Buyer\'s Guide',
+    excerpt: 'Explore the best ranch and farm fencing options to protect livestock, boost property value, and fit your budget.',
+    date: 'August 3, 2026',
+    isoDate: '2026-08-03',
+    category: 'Fencing Tips',
+    readTime: '8 min read',
+    metaDescription: 'Discover top ranch and farm fencing options, from woven wire to electric and wood, to find durable solutions for livestock and land.',
+  },
+  {
     slug: 'temporary-fence-solutions-for-renters',
     title: 'Best Temporary Fence Solutions for Renters: No-Damage Options',
     excerpt: 'Discover rental-friendly fencing options that provide privacy and security without damaging your property or losing your deposit.',
