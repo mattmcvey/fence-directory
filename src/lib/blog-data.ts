@@ -11,6 +11,16 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'best-fence-for-hot-climates',
+    title: 'Best Fence For Hot Climates: Top Materials That Last',
+    excerpt: 'Discover which fence materials handle extreme heat best, resisting warping, fading, and cracking so your fence stays strong for years.',
+    date: 'August 15, 2026',
+    isoDate: '2026-08-15',
+    category: 'Fencing Tips',
+    readTime: '8 min read',
+    metaDescription: 'Find the best fence for hot climates. Compare heat-resistant materials like vinyl, aluminum, and wrought iron to protect your investment year-round.',
+  },
+  {
     slug: 'ranch-and-farm-fencing-options',
     title: 'Ranch and Farm Fencing Options: A Complete Buyer\'s Guide',
     excerpt: 'Explore the best ranch and farm fencing options to protect livestock, boost property value, and fit your budget.',
