@@ -11,6 +11,16 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'fence-lighting-ideas-for-security-and-curb-appeal',
+    title: 'Fence Lighting Ideas For Security And Curb Appeal',
+    excerpt: 'Discover fence lighting ideas that boost security and curb appeal, from solar caps to LED strips, and transform your yard after dark.',
+    date: 'September 1, 2026',
+    isoDate: '2026-09-01',
+    category: 'Fencing Tips',
+    readTime: '8 min read',
+    metaDescription: 'Explore top fence lighting ideas for security and curb appeal, including solar, LED, and motion-sensor options to illuminate and protect your home.',
+  },
+  {
     slug: 'best-fence-for-hot-climates',
     title: 'Best Fence For Hot Climates: Top Materials That Last',
     excerpt: 'Discover which fence materials handle extreme heat best, resisting warping, fading, and cracking so your fence stays strong for years.',

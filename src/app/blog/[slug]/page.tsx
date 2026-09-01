@@ -15,6 +15,7 @@ import BestFenceForNoiseReduction from './posts/best-fence-for-noise-reduction';
 import TemporaryFenceSolutionsForRenters from './posts/temporary-fence-solutions-for-renters';
 import RanchAndFarmFencingOptions from './posts/ranch-and-farm-fencing-options';
 import BestFenceForHotClimates from './posts/best-fence-for-hot-climates';
+import FenceLightingIdeasForSecurityAndCurbAppeal from './posts/fence-lighting-ideas-for-security-and-curb-appeal';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -41,6 +42,7 @@ export function generateStaticParams() {
 }
 
 const POST_CONTENT: Record<string, React.ReactNode> = {
+  'fence-lighting-ideas-for-security-and-curb-appeal': <FenceLightingIdeasForSecurityAndCurbAppeal />,
   'best-fence-for-hot-climates': <BestFenceForHotClimates />,
   'ranch-and-farm-fencing-options': <RanchAndFarmFencingOptions />,
   'temporary-fence-solutions-for-renters': <TemporaryFenceSolutionsForRenters />,
