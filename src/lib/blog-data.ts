@@ -11,6 +11,16 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'composite-fencing-pros-and-cons',
+    title: 'Composite Fencing Pros and Cons: Is It Worth It?',
+    excerpt: 'Thinking about composite fencing? Discover the key benefits and drawbacks to decide if it\'s the right choice for your yard.',
+    date: 'September 15, 2026',
+    isoDate: '2026-09-15',
+    category: 'Hiring Tips',
+    readTime: '8 min read',
+    metaDescription: 'Explore composite fencing pros and cons, including durability, cost, maintenance, and style, to help you choose the best fencing for your home.',
+  },
+  {
     slug: 'fence-lighting-ideas-for-security-and-curb-appeal',
     title: 'Fence Lighting Ideas For Security And Curb Appeal',
     excerpt: 'Discover fence lighting ideas that boost security and curb appeal, from solar caps to LED strips, and transform your yard after dark.',
