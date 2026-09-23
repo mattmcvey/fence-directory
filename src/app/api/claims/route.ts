@@ -18,6 +18,20 @@ export async function POST(request: Request) {
 
     const supabase = getServiceClient();
 
+    // Check if email is blocked
+    const { data: blockedEmail } = await supabase
+      .from('email_blocklist')
+      .select('email')
+      .eq('email', email.trim().toLowerCase())
+      .single();
+
+    if (blockedEmail) {
+      return NextResponse.json(
+        { error: 'Unable to process request' },
+        { status: 403 }
+      );
+    }
+
     const { data: insertData, error } = await supabase.from('claim_requests').insert({
       business_name: businessName.trim(),
       contact_name: contactName.trim(),
