@@ -1,6 +1,6 @@
 # FenceFind Progress Log
 
-Last Updated: 2026-04-29
+Last Updated: 2026-06-03
 Full build history: `~/.openclaw/workspace/fencefind-progress.md`
 
 ## Project Status
@@ -10,8 +10,9 @@ Full build history: `~/.openclaw/workspace/fencefind-progress.md`
 - **Data:** 5,100+ contractors across 494 cities in all 50 states
 - **Indexable URLs:** ~2,200+
 - **Revenue:** 0 Pro subscribers ($79/mo plan live with 14-day trial)
-- **Claims:** 2+ organic claims (Austin Owen — Fenceworks of Georgia, Jorge — TBD)
-- **Traffic:** ~400-600 visits/day (Vercel), 103 GSC clicks in last 3 months, 2,944 impressions/day peak
+- **Claims:** 4+ organic claims (Austin Owen — Fenceworks of Georgia, Jorge — TBD, + 2 new claims late May)
+- **Traffic:** ~11-24 organic clicks/day (GSC), ~2,900-4,600 impressions/day, 628 clicks in last 3 months
+- **Quote requests forwarded:** 6 (Summit Fence, Fantastic Fence, The Fence Company, Coppens Custom, Freedom Fence, Fences & Landscape)
 - **Stripe:** Live mode — Product `prod_UA2JQfJ0HvOKQl`, Price `price_1TBiFCQx18mjum7xZWL6Daob`
 
 ---
@@ -61,6 +62,30 @@ Full build history: `~/.openclaw/workspace/fencefind-progress.md`
 ---
 
 ## Completed (recent sessions)
+
+### 2026-04-29 — Subscription Management Fix + Navigation Polish
+
+**Subscription management (critical fix):**
+- Users without a claimed business (no `contractorId`) were locked out of subscription management — `/dashboard/subscription` redirected back to overview
+- Removed hard redirect, added Stripe customer lookup by email as fallback
+- Updated portal endpoint to verify ownership by Stripe customer email when no contractor record exists
+- Added "Manage Subscription" link to dashboard overview for users without a claimed business
+- Added pending cancellation display — amber banner shows "Cancels on [date]" when subscription is set to cancel at period end
+- Fixed `checkout.session.completed` webhook: `notifyProCheckout()` was not awaited — Vercel killed the function before email could send
+
+**Navigation improvements:**
+- Added "Costs" link to header nav (desktop + mobile) — `/fence-cost-by-state` was only in footer
+- Added city browser to `/fence-permits` index — all 494 cities grouped by state, linking to `/fence-permits/[slug]`
+- Added city browser to `/fence-cost-by-state` index — same pattern, linking to `/fence-cost/[slug]`
+- Added city pill links to state page permit/cost resource cards (top 5 cities per state)
+
+**Admin notifications (P12c):**
+- Added `notifyProCheckout()` to email.ts — sends to matt@getfencefind.com on Pro checkout
+- Added `notifyNewSignup()` to email.ts — sends on new auth signup
+- Created `/api/notify-signup` endpoint, wired from signup page (fire-and-forget)
+
+**Files modified:** subscription/page.tsx, SubscriptionCard.tsx, portal/route.ts, dashboard/page.tsx, Header.tsx, fence-permits/page.tsx, fence-cost-by-state/page.tsx, state/[slug]/page.tsx, webhook/route.ts, email.ts
+**Files created:** api/notify-signup/route.ts
 
 ### 2026-04-29 — SEO Optimizations (GSC-Driven)
 
@@ -581,6 +606,63 @@ Setup notes:
 - Claim requests
 - Pro subscription conversions
 
+### GSC Snapshot (June 3, 2026)
+| Metric | Value | Trend |
+|--------|-------|-------|
+| Daily impressions | ~2,900-4,600 | ↑ growing, Jun 1 hit 4,608 |
+| Daily clicks | ~9-24 | ↑ consistent double digits |
+| Total clicks (3mo) | 628 | ↑ 115% from 292 (May 13) |
+| Total impressions (3mo) | 164,533 | ↑ 87% from 87,841 (May 13) |
+| Average CTR | 0.38% | ↑ from 0.33% |
+| Weekly peak | Week of May 11 | 136 clicks — new all-time high |
+| #1 page type | Permit pages | 426 clicks, 1.52% CTR (+107% from 206) |
+| #2 page type | Cost pages | 115 clicks, 0.75% CTR — emerging traffic driver |
+| #3 page type | Contractor pages | 52 clicks, 0.22% CTR (+126% from 23) |
+| Biggest opportunity | City pages | 45,229 impressions, only 9 clicks (0.02% CTR) |
+| State pages | 20 clicks, 37,520 impressions | 0.05% CTR |
+| Mobile vs Desktop | 405 / 207 clicks | Mobile 0.89% CTR (pos 17) vs Desktop 0.17% (pos 31) |
+| Top query (by impressions) | "fence installation" | 5 clicks, 6,888 impressions, pos 24 |
+| Top query (0 clicks) | "fence builder" | 4,732 impressions, pos 25.8 |
+| Material pages | 0 clicks, 89 impressions | Just starting to get indexed |
+| Blog | 0 clicks, 33 impressions | Minimal organic traction so far |
+
+### GSC Snapshot (May 13, 2026)
+| Metric | Value | Trend |
+|--------|-------|-------|
+| Daily impressions | ~3,200-3,800 | Stable vs early May |
+| Daily clicks | ~5-25 | Stable, May 11 was best day (25 clicks) |
+| Total clicks (3mo) | 292 | ↑ 45% from 201 (May 6) |
+| Total impressions (3mo) | 87,841 | ↑ significantly |
+| Average CTR | 0.33% | Stable |
+| Total queries | 1,000+ | ↑ from ~750 (May 6) |
+| Top page type | Permit pages | 206 clicks (70% of total), 1.60% CTR — clear winner |
+| #2 page type | Contractor pages | 23 clicks, 18,904 impressions, 0.12% CTR |
+| Biggest opportunity | City pages | 26,031 impressions but only 3 clicks (0.01% CTR) — ranking page 2-3+ |
+| State pages | 12 clicks, 17,717 impressions | 0.07% CTR — high impressions, low position |
+| Mobile vs Desktop | 189 / 99 clicks | Mobile 0.86% CTR (pos 19) vs Desktop 0.15% (pos 34) |
+| Top query (by impressions) | "fence installation" | 4 clicks, 3,057 impressions, pos 23.5 |
+| Top query (by volume, 0 clicks) | "fence builder" | 2,308 impressions, pos 21.4 |
+| Weekly peak | Week of Apr 27 | 91 clicks, 24,419 impressions |
+| Vercel traffic note | Dropped from 500-600/day to ~33 | GSC shows organic is stable — Vercel drop was bot traffic |
+
+### GSC Snapshot (May 6, 2026)
+| Metric | Value | Trend |
+|--------|-------|-------|
+| Daily impressions | ~3,000-4,700 | ↑ 3x from mid-April (~1,200) |
+| Daily clicks | ~7-28 | ↑ from 1-8 in mid-April |
+| Total clicks (3mo) | 201 | ↑ 2x from 103 (Apr 29) |
+| Average CTR | 0.32% | Stable — position gains offset by more impressions |
+| Average position | 22-25 | ↑ from 38 (Apr 29) — breaking into page 2 |
+| Indexed pages | ~2,100 | ↑ from ~1,100 (March) |
+| Top page type | Permit pages | 1-15% CTR, positions 3-10 |
+| #2 page type | Cost pages | 0.6-2% CTR, positions 7-11 |
+| Mobile vs Desktop | 65% / 33% clicks | Mobile 0.87% CTR (pos 20) vs Desktop 0.14% (pos 36) |
+| Top queries (no click) | "fence installation" (2,132 imp, pos 24), "fence builder" (1,760 imp, pos 22) |
+| Best day | Apr 28: 28 clicks, 4,370 impressions, pos 25.7 |
+| Branded search | "fencefind" — 21 impressions |
+| Top market | Colorado Springs — thousands of impressions across dozens of query variations |
+| www/non-www | Still split — e.g. Kissimmee FL has clicks on both domains |
+
 ### GSC Snapshot (April 29, 2026)
 | Metric | Value | Trend |
 |--------|-------|-------|
@@ -614,3 +696,5 @@ Setup notes:
 - Personal Gmail gets better open rates than business email for cold outreach
 - No dedicated fence contractor directory existed online — that was the opportunity
 - Trailing whitespace in Vercel env vars can silently break Stripe API calls
+- Stripe checkout `customer_email` comes from user input, not auth — typos break email-based customer lookups
+- Unawaited async calls in Vercel serverless functions get killed when the response returns — always `await` emails/notifications in webhook handlers
