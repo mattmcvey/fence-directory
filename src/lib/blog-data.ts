@@ -11,6 +11,16 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'how-to-fix-a-leaning-fence',
+    title: 'How to Fix a Leaning Fence: Step-by-Step Repair Guide',
+    excerpt: 'Is your fence leaning or sagging? Learn simple, effective ways to straighten and stabilize it before it falls over completely.',
+    date: 'October 1, 2026',
+    isoDate: '2026-10-01',
+    category: 'Fencing Tips',
+    readTime: '8 min read',
+    metaDescription: 'Learn how to fix a leaning fence with easy DIY steps. Discover tools, techniques, and tips to straighten posts and stabilize your fence for good.',
+  },
+  {
     slug: 'composite-fencing-pros-and-cons',
     title: 'Composite Fencing Pros and Cons: Is It Worth It?',
     excerpt: 'Thinking about composite fencing? Discover the key benefits and drawbacks to decide if it\'s the right choice for your yard.',

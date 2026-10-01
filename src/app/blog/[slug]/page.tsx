@@ -17,6 +17,7 @@ import RanchAndFarmFencingOptions from './posts/ranch-and-farm-fencing-options';
 import BestFenceForHotClimates from './posts/best-fence-for-hot-climates';
 import FenceLightingIdeasForSecurityAndCurbAppeal from './posts/fence-lighting-ideas-for-security-and-curb-appeal';
 import CompositeFencingProsAndCons from './posts/composite-fencing-pros-and-cons';
+import HowToFixALeaningFence from './posts/how-to-fix-a-leaning-fence';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -43,6 +44,7 @@ export function generateStaticParams() {
 }
 
 const POST_CONTENT: Record<string, React.ReactNode> = {
+  'how-to-fix-a-leaning-fence': <HowToFixALeaningFence />,
   'composite-fencing-pros-and-cons': <CompositeFencingProsAndCons />,
   'fence-lighting-ideas-for-security-and-curb-appeal': <FenceLightingIdeasForSecurityAndCurbAppeal />,
   'best-fence-for-hot-climates': <BestFenceForHotClimates />,
