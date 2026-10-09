@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { websiteSchema, faqSchema, ogMeta } from '@/lib/seo';
 import { Metadata } from 'next';
 
-export const revalidate = 3600;
+export const revalidate = 3600; // Updated Oct 9 2026
 
 export const metadata: Metadata = {
   title: 'FenceFind — Find Trusted Fence Contractors Near You | Free Estimates',
