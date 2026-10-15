@@ -11,6 +11,16 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'best-fence-options-for-corner-lots',
+    title: 'Best Fence Options for Corner Lots: A Complete Guide',
+    excerpt: 'Corner lots come with unique fencing challenges. Discover the best fence styles that balance privacy, curb appeal, and local regulations.',
+    date: 'October 15, 2026',
+    isoDate: '2026-10-15',
+    category: 'Fencing Tips',
+    readTime: '8 min read',
+    metaDescription: 'Explore the best fence options for corner lots, including styles that maximize privacy, boost curb appeal, and meet visibility and zoning requirements.',
+  },
+  {
     slug: 'how-to-fix-a-leaning-fence',
     title: 'How to Fix a Leaning Fence: Step-by-Step Repair Guide',
     excerpt: 'Is your fence leaning or sagging? Learn simple, effective ways to straighten and stabilize it before it falls over completely.',
